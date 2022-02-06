@@ -93,36 +93,3 @@ class LeavePlan(db.Model):
     
     employee = db.relationship('Employee', backref='employee_leave_plan')
 
-
-
-# how to run the database
-
-# python3
-# from models import db
-# db.create_all()
-
-# add role
-# from models import Role, Organization, Department, Employee, LeavePlan
-# from datetime import datetime
-# role = Role(name="Manager",code='MAN',description='Role manager')
-# role2 = Role(name="Receptionnist",code='RES',description='Role reception')
-
-# org = Organization(name="Org1", location="oulu")
-# depat = Department(name="dept1", description="department number one")
-# emp = Employee(first_name="anusha", last_name = "pathirana", address = "oulu", gender = "F",date_of_birth=datetime(2018, 11, 21, 11, 20, 30),appointment_date = datetime(2018, 11, 21, 11, 20, 30), active_emp = 1, suffix_title = 'MR', marritial_status = 'SINGLE', mobile_no='21456',basic_salary=10000, account_number="11233565456", role = role, organization=org, department = depat)
-# emp2 = Employee(first_name="sameera", last_name = "panditha", address = "oulu", gender = "M",date_of_birth=datetime(2018, 11, 21, 11, 20, 30),appointment_date = datetime(2018, 11, 21, 11, 20, 30), active_emp = 1, suffix_title = 'MR', marritial_status = 'SINGLE', mobile_no='21456',basic_salary=10000, account_number="11233565456", role = role2, organization=org, department = depat)
-
-# leav = LeavePlan(leave_type='MEDICAL', leave_date=datetime(2018, 11, 21, 11, 20, 30), employee = emp)
-
-
-# db.session.add(role)
-# db.session.add(org)
-# db.session.add(depat)
-# db.session.add(emp)
-# db.session.add(leav)
-
-
-# db.session.commit()
-
-
- 
