@@ -23,16 +23,6 @@ class Payroll(db.Model):
     employee_id =  db.Column(db.Integer, nullable=False)
 
 
-# how to run the database
-
-# python3
-# from models import db
-# db.create_all()
-# from payrollModel import Payroll
-# from datetime import datetime
-# payroll = Payroll(date=datetime(2018, 11, 21, 11, 20, 30), amount = 12563, employee_id = 1)
-# db.session.add(payroll)
-# db.session.commit()
 
 
  

@@ -67,20 +67,20 @@ class Employee(db.Model):
 
 class Organization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256), nullable=False)
+    name = db.Column(db.String(256), nullable=False, unique = True)
     location = db.Column(db.String(256), nullable=False)
 
 
 class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256), nullable=False)
+    name = db.Column(db.String(256), nullable=False, unique = True)
     description = db.Column(db.String(256), nullable=True)
 
 
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256), nullable=False)
-    code = db.Column(db.String(256), nullable=False)
+    name = db.Column(db.String(256), nullable=False, unique = True)
+    code = db.Column(db.String(256), nullable=False, unique = True)
     description = db.Column(db.String(256), nullable=True)
 
 
