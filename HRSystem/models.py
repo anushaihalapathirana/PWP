@@ -62,6 +62,7 @@ class Employee(db.Model):
     department = db.relationship('Department', backref='employee_department')
     role = db.relationship('Role', backref='employee_role')
    
+   
 class Organization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256), nullable=False)
