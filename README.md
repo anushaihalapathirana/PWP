@@ -35,4 +35,6 @@ Follow below instructions to setup the databases
     python payrolldb_data_script.py
 ```
 
+More details about the database can be found here - https://github.com/anushaihalapathirana/PWP/wiki/Database-design-and-implementation
+
 
