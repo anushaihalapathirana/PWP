@@ -46,7 +46,7 @@ class Employee(db.Model):
     last_name = db.Column(db.String(256), nullable=False)
     middle_name = db.Column(db.String(256), nullable=True)
     address = db.Column(db.String(256), nullable=False)
-    gender = db.Column(db.String(64), nullable=False)
+    gender = db.Column(db.String(32), nullable=False)
     date_of_birth = db.Column(db.DateTime, nullable=False)
     appointment_date = db.Column(db.DateTime, nullable=False)
     active_emp = db.Column(db.Boolean, default = True, nullable=False)
