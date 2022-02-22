@@ -26,10 +26,11 @@ Follow below instructions to setup the databases
 ***Note*** : _the sqlite db files are already present in the project (hrcodedb and payrolldb). Please delete them first to run these scripts_
 
 
-1. run hrcore_data_script.py. This file contains the script to create the HRCore database and insert data to the database. You can change/add/delete insert values in there.
+1. __init__.py file contains the script to create the HRCore database and then insert data to the database. You can change/add/delete insert values in there.
 
 ```  
-    python hrcore_data_script.py 
+    flask init-db
+    flask testgen
 ```
 
 2. run payrolldb_data_script.py file using below command. it will generate the payroll database and insert data to the table.
