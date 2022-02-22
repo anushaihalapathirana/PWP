@@ -7,17 +7,8 @@ from sqlalchemy.engine import Engine
 from sqlalchemy import event
 from enum import Enum
 from datetime import datetime
+from HRSystem import db
 
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///hrcore.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db = SQLAlchemy(app)
-
-@event.listens_for(Engine, "connect")
-def set_sqlite_pragma(dbapi_connection, connection_record):
-    cursor = dbapi_connection.cursor()
-    cursor.execute("PRAGMA foreign_keys=ON")
-    cursor.close()
 
 class TitleEnum(Enum):
     MR = 'Mr'
@@ -82,6 +73,27 @@ class Role(db.Model):
     name = db.Column(db.String(256), nullable=False, unique = True)
     code = db.Column(db.String(256), nullable=False, unique = True)
     description = db.Column(db.String(256), nullable=True)
+
+    @staticmethod
+    def get_schema():
+        schema = {
+            "type": "object",
+            "required": ["name", "code"]
+        }
+        props = schema["properties"] = {}
+        props["name"] = {
+            "description": "Role's unique name",
+            "type": "string"
+        }
+        props["code"] = {
+            "description": "unique code of role",
+            "type": "string"
+        }
+        props["description"] = {
+            "description": "description of role",
+            "type": "string"
+        }
+        return schema
 
 
 class LeavePlan(db.Model):
