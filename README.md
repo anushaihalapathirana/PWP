@@ -6,7 +6,10 @@
 * Student 2. Sameera Wickramasekara - spandith21@student.oulu.fi
 
 # Setup database
- - Requirements : Python3, Pip
+
+The database we are using for the project is SQLAlchemy version 1.4
+
+- Requirements : Python3, Pip
 
 - Libraries used : flask, flask_sqlalchemy
 
