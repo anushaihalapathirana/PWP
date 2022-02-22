@@ -61,11 +61,45 @@ class Organization(db.Model):
     name = db.Column(db.String(256), nullable=False, unique = True)
     location = db.Column(db.String(256), nullable=False)
 
+    @staticmethod
+    def get_schema():
+        schema = {
+            "type": "object",
+            "required": ["name", "location"]
+        }
+        props = schema["properties"] = {}
+        props["name"] = {
+            "description": "organization name",
+            "type": "string"
+        }
+        props["location"] = {
+            "description": "organization location",
+            "type": "string"
+        }
+        return schema
+
 
 class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256), nullable=False, unique = True)
     description = db.Column(db.String(256), nullable=True)
+
+    @staticmethod
+    def get_schema():
+        schema = {
+            "type": "object",
+            "required": ["name"]
+        }
+        props = schema["properties"] = {}
+        props["name"] = {
+            "description": "department name",
+            "type": "string"
+        }
+        props["description"] = {
+            "description": "department description",
+            "type": "string"
+        }
+        return schema
 
 
 class Role(db.Model):
