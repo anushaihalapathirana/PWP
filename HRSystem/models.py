@@ -86,7 +86,7 @@ class LeavePlan(db.Model):
     leave_type = db.Column(db.Enum(LeaveTypeEnum), nullable=False)
     reason = db.Column(db.String(256), nullable=True)
     leave_date = db.Column(db.DateTime, nullable=False)
-    employee_id = db.Column(db.Integer, db.ForeignKey("employee.id"))
+    employee_id = db.Column(db.Integer, db.ForeignKey("employee.id",  ondelete="SET NULL"))
     
     employee = db.relationship('Employee', backref='employee_leave_plan')
 
