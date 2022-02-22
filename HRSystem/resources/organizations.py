@@ -5,7 +5,9 @@ from flask_restful import Resource
 from HRSystem import db
 from HRSystem.models import Organization
 
-
+'''
+This class contains the GET and POST method implementations for organization data
+'''
 class OrganizationCollection(Resource):
 
     def get(self):
@@ -48,6 +50,9 @@ class OrganizationCollection(Resource):
         return Response(response = {}, status = 201)
 
 
+'''
+This class contains the GET, PUT and DELETE method implementations for a single organization
+'''
 class OrganizationItem(Resource):
 
     def get(self, org):
