@@ -1,6 +1,4 @@
-import json
-import click
-from flask.cli import with_appcontext
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.engine import Engine
@@ -16,12 +14,14 @@ class TitleEnum(Enum):
     MRS = 'Mrs'
     DR = 'Dr'
 
+
 class MarritialEnum(Enum):
     MARRIED = 'Married'
     DIVORCED = 'Divorced'
     SINGLE = 'Single'
     WIDOWED = 'Widowed'
     UNAVAILABLE = 'Unavailable'
+
 
 class LeaveTypeEnum(Enum):
     MEDICAL = 'Medical'
@@ -31,6 +31,7 @@ class LeaveTypeEnum(Enum):
     SABBATICAL = 'Sabbatical'
     UNPAID = 'Unpaid'
 
+
 class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(256), nullable=False)
@@ -38,27 +39,136 @@ class Employee(db.Model):
     middle_name = db.Column(db.String(256), nullable=True)
     address = db.Column(db.String(256), nullable=False)
     gender = db.Column(db.String(32), nullable=False)
-    date_of_birth = db.Column(db.DateTime, nullable=False)
+    date_of_birth = db.Column(db.DateTime, nullable=True)
     appointment_date = db.Column(db.DateTime, nullable=False)
-    active_emp = db.Column(db.Boolean, default = True, nullable=False)
-    suffix_title = db.Column(db.Enum(TitleEnum), nullable=False)
-    marritial_status = db.Column(db.Enum(MarritialEnum), nullable=False)
+    active_emp = db.Column(db.Boolean, default=True, nullable=False)
+    prefix_title = db.Column(db.Enum(TitleEnum), nullable=True)
+    marritial_status = db.Column(db.Enum(MarritialEnum), nullable=True)
     mobile_no = db.Column(db.String(256), nullable=False)
     basic_salary = db.Column(db.Integer, nullable=False)
     account_number = db.Column(db.String(256), nullable=False)
-    
-    role_id = db.Column(db.Integer, db.ForeignKey("role.id", ondelete="SET NULL"))
-    organization_id = db.Column(db.Integer, db.ForeignKey("organization.id", ondelete="SET NULL"))
-    department_id = db.Column(db.Integer, db.ForeignKey("department.id", ondelete="SET NULL"))
 
-    organization = db.relationship('Organization', backref='employee_organization')
+    role_id = db.Column(db.Integer, db.ForeignKey(
+        "role.id", ondelete="SET NULL"))
+    organization_id = db.Column(db.Integer, db.ForeignKey(
+        "organization.id", ondelete="SET NULL"))
+    department_id = db.Column(db.Integer, db.ForeignKey(
+        "department.id", ondelete="SET NULL"))
+
+    organization = db.relationship(
+        'Organization', backref='employee_organization')
     department = db.relationship('Department', backref='employee_department')
     role = db.relationship('Role', backref='employee_role')
-   
+
+    def serialize(self):
+        employee = {
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "middle_name": self.middle_name and self.middle_name,
+            "address": self.address,
+            "gender": self.gender,
+            "date_of_birth": self.date_of_birth.isoformat(),
+            "appointment_date": self.appointment_date.isoformat(),
+            "active_emp": self.active_emp,
+            "prefix_title": self.prefix_title and self.prefix_title.name,
+            "marritial_status": self.marritial_status and self.marritial_status.name,
+            "mobile_no": self.mobile_no,
+            "basic_salary": self.basic_salary,
+            "account_number": self.account_number
+        }
+        return employee
+
+    def deserialize(self, request):
+        self.first_name = request.json['first_name']
+        self.middle_name = request.json.get('middle_name', None)
+        self.last_name = request.json['last_name']
+        self.address = request.json['address']
+        self.gender = request.json['gender']
+        self.date_of_birth = datetime.fromisoformat(
+            request.json['date_of_birth'])
+        self.appointment_date = datetime.fromisoformat(
+            request.json['appointment_date'])
+        self.active_emp = request.json['active_emp']
+        self.prefix_title = request.json.get(
+            'prefix_title', None) and TitleEnum[request.json['prefix_title']]
+        self.marritial_status = request.json.get(
+            'marritial_status', None) and MarritialEnum[request.json['marritial_status']]
+        self.mobile_no = request.json['mobile_no']
+        self.basic_salary = request.json['basic_salary']
+        self.account_number = request.json['account_number']
+
+    @staticmethod
+    def get_schema():
+        schema = {
+            "type": "object",
+            "required": ["first_name", "last_name", "address", "gender",  "appointment_date", "active_emp", "mobile_no", "basic_salary", "account_number"]
+        }
+        props = schema["properties"] = {}
+        props["first_name"] = {
+            "description": "Employee First name",
+            "type": "string"
+        }
+        props["middle_name"] = {
+            "description": "Employee middle name",
+            "type": "string"
+        }
+        props["last_name"] = {
+            "description": "Employee last name",
+            "type": "string"
+        }
+        props["address"] = {
+            "description": "Employee address",
+            "type": "string"
+        }
+        props["gender"] = {
+            "description": "Employee gender",
+            "type": "string"
+        }
+        props["date_of_birth"] = {
+            "description": "Employee date of birth",
+            "type": "string",
+            "format": "date-time"
+        }
+        props["date_of_birth"] = {
+            "description": "Employee date of birth",
+            "type": "string",
+            "format": "date-time"
+        }
+        props["appointment_date"] = {
+            "description": "Employee date of appoinment",
+            "type": "string",
+            "format": "date-time"
+        }
+        props["prefix_title"] = {
+            "description": "Employee name title",
+            "type": "string",
+            "enum": [e.name for e in TitleEnum]
+        }
+        props["marritial_status"] = {
+            "description": "Employee merritial status",
+            "enum": [e.name for e in MarritialEnum],
+            "type": "string"
+        }
+        props["mobile_no"] = {
+            "description": "Employee mobile number",
+            "type": "string"
+        }
+        props["basic_salary"] = {
+            "description": "Employee basic salary",
+            "type": "number"
+        }
+        props["account_number"] = {
+            "description": "Employee bank account number",
+            "type": "string"
+        }
+
+        return schema
+
 
 class Organization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256), nullable=False, unique = True)
+    name = db.Column(db.String(256), nullable=False, unique=True)
     location = db.Column(db.String(256), nullable=False)
 
     @staticmethod
@@ -81,7 +191,7 @@ class Organization(db.Model):
 
 class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256), nullable=False, unique = True)
+    name = db.Column(db.String(256), nullable=False, unique=True)
     description = db.Column(db.String(256), nullable=True)
 
     @staticmethod
@@ -104,8 +214,8 @@ class Department(db.Model):
 
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256), nullable=False, unique = True)
-    code = db.Column(db.String(256), nullable=False, unique = True)
+    name = db.Column(db.String(256), nullable=False, unique=True)
+    code = db.Column(db.String(256), nullable=False, unique=True)
     description = db.Column(db.String(256), nullable=True)
 
     @staticmethod
@@ -135,72 +245,7 @@ class LeavePlan(db.Model):
     leave_type = db.Column(db.Enum(LeaveTypeEnum), nullable=False)
     reason = db.Column(db.String(256), nullable=True)
     leave_date = db.Column(db.DateTime, nullable=False)
-    employee_id = db.Column(db.Integer, db.ForeignKey("employee.id", ondelete="SET NULL"))
-    
+    employee_id = db.Column(db.Integer, db.ForeignKey(
+        "employee.id", ondelete="SET NULL"))
+
     employee = db.relationship('Employee', backref='employee_leave_plan')
-
-
-@click.command("init-db")
-@with_appcontext
-def init_db_command():
-    print("create database--------------------------------------------")
-    db.create_all()
-
-@click.command("testgen")
-@with_appcontext
-def generate_test_data():
-    role = Role(name="Manager", code='MAN', description='Role manager')
-    role2 = Role(name="Receptionnist", code='RES', description='Role reception')
-    role3 = Role(name="Team Lead", code='TL')
-    role4 = Role(name="Associate team lead", code='ATL')
-    role5 = Role(name="Developer", code='DEV')
-    role6 = Role(name="Quality analysis", code='QA')
-
-
-    org = Organization(name="Org1", location="oulu")
-    org2 = Organization(name="Org2", location="helsinki")
-
-    depat = Department(name="dept1", description="department number one")
-    depat2 = Department(name="dept2", description="department number two")
-    depat3 = Department(name="dept3", description="department number three")
-
-    emp = Employee(first_name="anusha", last_name="pathirana", address="oulu", gender="F", date_of_birth=datetime(1995, 10, 21, 11, 20, 30), appointment_date=datetime(2018, 11, 21, 11, 20, 30),active_emp=1, suffix_title='MISS', marritial_status='SINGLE', mobile_no='21456', basic_salary=10000, account_number="11233565456", role=role, organization=org, department=depat2)
-    emp2 = Employee(first_name="sameera", last_name="panditha", address="raksila", gender="M", date_of_birth=datetime(1998, 8, 25, 11, 20, 30), appointment_date=datetime(2018, 11, 21, 11, 20, 30),
-                    active_emp=1, suffix_title='MR', marritial_status='SINGLE', mobile_no='21456', basic_salary=10000, account_number="11233565456", role=role2, organization=org2, department=depat)
-    emp3 = Employee(first_name="madu", last_name="wicks", address="kajaanentie", gender="F", date_of_birth=datetime(2000, 5, 2, 11, 20, 30), appointment_date=datetime(2018, 11, 21, 11, 20, 30),
-                    active_emp=1, suffix_title='MRS', marritial_status='MARRIED', mobile_no='21456', basic_salary=10000, account_number="11233565456", role=role3, organization=org2, department=depat3)
-    emp4 = Employee(first_name="john", last_name="snow", address="helsinki", gender="M", date_of_birth=datetime(1998, 12, 1, 11, 20, 30), appointment_date=datetime(2018, 11, 21, 11, 20, 30),
-                    active_emp=1, suffix_title='MR', marritial_status='SINGLE', mobile_no='21456', basic_salary=10000, account_number="11233565456", role=role4, organization=org, department=depat)
-
-    leav = LeavePlan(leave_type='MEDICAL', leave_date=datetime(
-        2018, 11, 21, 11, 20, 30), employee=emp)
-    leav2 = LeavePlan(leave_type='CASUAL', leave_date=datetime(
-        2018, 12, 1, 11, 20, 30), employee=emp3)
-    leav3 = LeavePlan(leave_type='MEDICAL', leave_date=datetime(
-        2018, 1, 25, 11, 20, 30), employee=emp)
-
-
-    db.session.add(role)
-    db.session.add(role2)
-    db.session.add(role3)
-    db.session.add(role4)
-    db.session.add(role5)
-    db.session.add(role6)
-    db.session.add(org)
-    db.session.add(org2)
-
-    db.session.add(depat)
-    db.session.add(depat2)
-    db.session.add(depat3)
-
-    db.session.add(emp)
-    db.session.add(emp2)
-    db.session.add(emp3)
-    db.session.add(emp4)
-
-    db.session.add(leav)
-    db.session.add(leav2)
-    db.session.add(leav3)
-
-    db.session.commit()
-

@@ -5,11 +5,13 @@ from HRSystem.constants import *
 
 db = SQLAlchemy()
 
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY="dev",
-        SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(app.instance_path, "hrcore.db"),
+        SQLALCHEMY_DATABASE_URI="sqlite:///" +
+        os.path.join(app.instance_path, "hrcore.db"),
         SQLALCHEMY_TRACK_MODIFICATIONS=False
     )
 
@@ -17,7 +19,6 @@ def create_app(test_config=None):
         app.config.from_pyfile("config.py", silent=True)
     else:
         app.config.from_mapping(test_config)
-
     try:
         os.makedirs(app.instance_path)
     except OSError:
@@ -25,10 +26,16 @@ def create_app(test_config=None):
 
     db.init_app(app)
 
-    from . import models
+    from HRSystem.converters import RoleConverter, DepartmentConverter, OrganizationConverter
+    # Add converters
+    app.url_map.converters["Role"] = RoleConverter
+    app.url_map.converters["Department"] = DepartmentConverter
+    app.url_map.converters["Organization"] = OrganizationConverter
+
+    from HRSystem.dbutils import init_db_command, generate_test_data
     from . import api
-    app.cli.add_command(models.init_db_command)
-    app.cli.add_command(models.generate_test_data)
+    app.cli.add_command(init_db_command)
+    app.cli.add_command(generate_test_data)
     app.register_blueprint(api.api_bp)
 
     @app.route(LINK_RELATIONS_URL)
