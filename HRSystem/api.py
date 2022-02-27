@@ -32,7 +32,7 @@ api.add_resource(EmployeeByRlationCollection,
 api.add_resource(EmployeeCollection,
                  "/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/")
 api.add_resource(EmployeeItem,
-                 "/employees/<employee>")
+                 "/employees/<Employee:employee>/")
 
 # leave plan related resources
 api.add_resource(LeavePlanByEmployeellection,

@@ -68,7 +68,7 @@ class LeavePlanConverter(BaseConverter):
 # Converter for employee entity in URL parameter
 class EmployeeConverter(BaseConverter):
     def to_python(self, employeeId):
-        employee = Employee.query.filter_by(id=employeeId).first()
+        employee = Employee.query.filter_by(employee_id=employeeId).first()
         if employee is None:
             return create_error_message(
                 404, "Not found",
@@ -77,4 +77,4 @@ class EmployeeConverter(BaseConverter):
         return employee
 
     def to_url(self, employee):
-        return str(employee.id)
+        return str(employee.employee_id)

@@ -89,19 +89,11 @@ class EmployeeCollection(Resource):
 class EmployeeItem(Resource):
 
     def get(self, employee):
-        print("uuuuu")
-        employee = Employee.query.filter_by(id=employee).first()
-
-        if employee is None:
-            return create_error_message(
-                404, "Not found",
-                "Employee not found"
-            )
-
+        
         return employee.serialize()
 
     def put(self, employee):
-        db_employee = Employee.query.filter_by(id=employee).first()
+        db_employee = Employee.query.filter_by(employee_id=employee.employee_id).first()
         if db_employee is None:
             return create_error_message(
                 404, "Not found",
@@ -125,6 +117,7 @@ class EmployeeItem(Resource):
         employee = Employee()
         employee.deserialize(employee)
         employee.id = db_employee.id
+        employee.employee_id = db_employee.employee_id
 
         try:
             db.session.commit()
@@ -137,15 +130,8 @@ class EmployeeItem(Resource):
         return Response(status=204)
 
     def delete(self, employee):
-        db_employee = Employee.query.filter_by(id=employee).first()
 
-        if db_employee is None:
-            return create_error_message(
-                404, "Not found",
-                "Employee not found"
-            )
-
-        db.session.delete(db_employee)
+        db.session.delete(employee)
         db.session.commit()
 
         return Response(status=204)
