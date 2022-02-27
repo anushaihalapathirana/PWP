@@ -26,11 +26,14 @@ def create_app(test_config=None):
 
     db.init_app(app)
 
-    from HRSystem.converters import RoleConverter, DepartmentConverter, OrganizationConverter
+    from HRSystem.converters import RoleConverter, DepartmentConverter, OrganizationConverter, LeavePlanConverter, EmployeeConverter
     # Add converters
     app.url_map.converters["Role"] = RoleConverter
     app.url_map.converters["Department"] = DepartmentConverter
     app.url_map.converters["Organization"] = OrganizationConverter
+    app.url_map.converters["LeavePlan"] = LeavePlanConverter
+    app.url_map.converters["Employee"] = EmployeeConverter
+
 
     from HRSystem.dbutils import init_db_command, generate_test_data
     from . import api

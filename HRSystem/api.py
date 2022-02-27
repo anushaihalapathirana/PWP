@@ -5,17 +5,24 @@ from HRSystem.resources.roles import RoleCollection, RoleItem
 from HRSystem.resources.organizations import OrganizationCollection, OrganizationItem
 from HRSystem.resources.departments import DepartmentCollection, DepartmentItem
 from HRSystem.resources.employees import EmployeeByRlationCollection, EmployeeCollection, EmployeeItem
+from HRSystem.resources.leaveplans import LeavePlanByEmployeellection, LeavePlanItem
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 api = Api(api_bp)
 
+# roles related resources
 api.add_resource(RoleCollection, "/roles/")
-api.add_resource(RoleItem, "/roles/<role>/")
+api.add_resource(RoleItem, "/roles/<Role:role>/")
+
+# organization related resources
 api.add_resource(OrganizationCollection, "/organizations/")
-api.add_resource(OrganizationItem, "/organizations/<org>/")
+api.add_resource(OrganizationItem, "/organizations/<Organization:organization>/")
+
+# departments related resources
 api.add_resource(DepartmentCollection, "/departments/")
-api.add_resource(DepartmentItem, "/departments/<dept>/")
-print("api registered")
+api.add_resource(DepartmentItem, "/departments/<Department:department>/")
+
+# employee related resources
 api.add_resource(EmployeeByRlationCollection,
                  "/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/",
                  "/organizations/<Organization:organization>/departments/<Department:department>/employees/",
@@ -26,3 +33,9 @@ api.add_resource(EmployeeCollection,
                  "/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/")
 api.add_resource(EmployeeItem,
                  "/employees/<employee>")
+
+# leave plan related resources
+api.add_resource(LeavePlanByEmployeellection,
+                 "/employees/<Employee:employee>/leaveplans/")
+api.add_resource(LeavePlanItem,
+                 "/leaveplans/<LeavePlan:leaveplan>/")

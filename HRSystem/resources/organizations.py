@@ -1,9 +1,10 @@
 import json
 from jsonschema import validate, ValidationError
-from flask import Response, request, url_for, abort, Response
+from flask import Response, request, url_for, Response
 from flask_restful import Resource
 from HRSystem import db
 from HRSystem.models import Organization
+from HRSystem.utils import create_error_message
 
 '''
 This class contains the GET and POST method implementations for organization data
@@ -15,12 +16,7 @@ class OrganizationCollection(Resource):
         orgs = Organization.query.all()
         
         for org in orgs:
-            obj = {
-                'id': org.id,
-                'name': org.name,
-                'location': org.location,
-            }
-            response_data.append(obj)        
+            response_data.append(org.serialize())         
         return response_data
     
 
@@ -29,24 +25,21 @@ class OrganizationCollection(Resource):
         try:
             validate(request.json, Organization.get_schema())
         except ValidationError as e:
-            abort(400, 'Invalid JSON document')
-
-        name = request.json['name']
-        location = request.json['location']
-
-        try:
-            org = Organization.query.filter_by(name=name).first()
-            
-            if org:
-                abort(409, 'Organization exist')
-            org = Organization(
-                name=name,
-                location=location
+            return create_error_message(
+                400, "Invalid JSON document",
+                "JSON format is not valid"
             )
+        try:
+            org = Organization()
+            org.deserialize()
+
             db.session.add(org)
             db.session.commit()
         except Exception:
-            abort(404, 'Not found')
+            return create_error_message(
+                    500, "Internal server Error",
+                    "Error while adding the organization"
+                )
         return Response(response = {}, status = 201)
 
 
@@ -55,43 +48,39 @@ This class contains the GET, PUT and DELETE method implementations for a single 
 '''
 class OrganizationItem(Resource):
 
-    def get(self, org):
-        org = Organization.query.filter_by(id=org).first()
-        
-        if org is None:
-            abort(404, 'Not found')
-
-        response_data = {
-                'id': org.id,
-                'name': org.name,
-                'location': org.location
-            }
+    def get(self, organization):
+        response_data = organization.serialize()
             
         return response_data
 
-    def delete(self, org):
-        org_db = Organization.query.filter_by(id=org).first()
-        
-        if org_db is None:
-            abort(404, 'Not found')
-        
-        db.session.delete(org_db)
+    def delete(self, organization):
+            
+        db.session.delete(organization)
         db.session.commit()
 
         return Response(status=204)
 
-    def put(self, org):
-        db_org = Organization.query.filter_by(id=org).first()
+    def put(self, organization):
+        db_org = Organization.query.filter_by(id=organization.id).first()
         if db_org is None:
-            abort(404, 'Not found')
+            return create_error_message(
+                404, "Not found",
+                "Organization not found"
+            )
 
         if not request.json:
-            abort(415, 'Unsupported media type')
+            return create_error_message(
+                415, "Unsupported media type",
+                "Payload format is in an unsupported format"
+            )
 
         try:
             validate(request.json, Organization.get_schema())
         except ValidationError as e:
-            abort(400, 'Invalid JSON document')
+            return create_error_message(
+                400, "Invalid JSON document",
+                "JSON format is not valid"
+            )
 
         db_org.name = request.json["name"]
         db_org.location = request.json["location"]
@@ -99,6 +88,9 @@ class OrganizationItem(Resource):
         try:
             db.session.commit()
         except IntegrityError:
-            abort(409, 'Already exists')
+            return create_error_message(
+                409, "Already exists",
+                "Organization is already exist"
+            )
 
         return Response(status=204)

@@ -188,6 +188,18 @@ class Organization(db.Model):
         }
         return schema
 
+    def serialize(self):
+        org = {
+            "id": self.id,
+            "name": self.name,
+            "location": self.location
+        }
+        return org
+
+    def deserialize(self, request):
+        self.name = request.json['name']
+        self.location = request.json['location']
+
 
 class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -210,6 +222,19 @@ class Department(db.Model):
             "type": "string"
         }
         return schema
+
+    def serialize(self):
+        department = {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description and self.description
+        }
+        return department
+
+    def deserialize(self, request):
+        self.name = request.json['name']
+        self.description = request.json.get('description', None)
+
 
 
 class Role(db.Model):
@@ -239,6 +264,20 @@ class Role(db.Model):
         }
         return schema
 
+    def serialize(self):
+        role = {
+            "id": self.id,
+            "name": self.name,
+            "code": self.code,
+            "description": self.description and self.description
+        }
+        return role
+
+    def deserialize(self, request):
+        self.name = request.json['name']
+        self.code = request.json['code']
+        self.description = request.json.get('description', None)
+
 
 class LeavePlan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -249,3 +288,42 @@ class LeavePlan(db.Model):
         "employee.id", ondelete="SET NULL"))
 
     employee = db.relationship('Employee', backref='employee_leave_plan')
+
+    @staticmethod
+    def get_schema():
+        schema = {
+            "type": "object",
+            "required": ["leave_type", "leave_date"]
+        }
+        props = schema["properties"] = {}
+        props["leave_type"] = {
+            "description": "Type of leave",
+            "type": "string",
+            "enum": [e.name for e in LeaveTypeEnum]
+        }
+        props["leave_date"] = {
+            "description": "leave date",
+            "type": "string",
+            "format": "date-time"
+        }
+        props["reason"] = {
+            "description": "reason for leave",
+            "type": "string"
+        }
+        return schema
+
+    def serialize(self):
+        leaveplan = {
+            "id": self.id,
+            "leave_type": self.leave_type and self.leave_type.name,
+            "reason": self.reason and self.reason,
+            "leave_date": self.leave_date.isoformat(),
+        }
+        return leaveplan
+
+    def deserialize(self, request):
+        self.leave_type = request.json['leave_type'] and LeaveTypeEnum[request.json['leave_type']]
+        self.reason = request.json.get('reason', None)
+        self.leave_date = datetime.fromisoformat(
+            request.json['leave_date'])
+       

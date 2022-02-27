@@ -1,11 +1,12 @@
 import json
 from jsonschema import validate, ValidationError
-from flask import Response, request, url_for, abort, Response
+from flask import Response, request, url_for, Response
 from flask_restful import Resource
 from HRSystem import db
 from HRSystem.models import Role
 from sqlalchemy.exc import IntegrityError
-
+from HRSystem.utils import create_error_message
+from werkzeug.exceptions import HTTPException
 '''
 This class contains the GET and POST method implementations for Role data
 '''
@@ -18,13 +19,7 @@ class RoleCollection(Resource):
         roles = Role.query.all()
 
         for role in roles:
-            obj = {
-                'id': role.id,
-                'name': role.name,
-                'code': role.code,
-                'description': role.description,
-            }
-            response_data.append(obj)
+            response_data.append(role.serialize())
         return response_data
 
     def post(self):
@@ -32,26 +27,23 @@ class RoleCollection(Resource):
         try:
             validate(request.json, Role.get_schema())
         except ValidationError as e:
-            abort(400, 'Invalid JSON document')
-
-        name = request.json['name']
-        code = request.json['code']
-        description = request.json['description']
+            return create_error_message(
+                400, "Invalid JSON document",
+                "JSON format is not valid"
+            )
 
         try:
-            role = Role.query.filter_by(code=code).first()
-
-            if role:
-                abort(409, 'Role exist')
-            role = Role(
-                name=name,
-                code=code,
-                description=description
-            )
+            role = Role()
+            role.deserialize()
+            
             db.session.add(role)
             db.session.commit()
-        except Exception:
-            abort(404, 'Not found')
+        except Exception as e:
+            return create_error_message(
+                    500, "Internal server Error",
+                    "Error while adding the role"
+                )
+            
         return Response(response={}, status=201)
 
 
@@ -63,43 +55,39 @@ This class contains the GET, PUT and DELETE method implementations for a single 
 class RoleItem(Resource):
 
     def get(self, role):
-        role = Role.query.filter_by(id=role).first()
-
-        if role is None:
-            abort(404, 'Not found')
-
-        response_data = {
-            'id': role.id,
-            'name': role.name,
-            'code': role.code,
-            'description': role.description
-        }
+    
+        response_data =  role.serialize()
 
         return response_data
 
     def delete(self, role):
-        role_db = Role.query.filter_by(id=role).first()
-
-        if role_db is None:
-            abort(404, 'Not found')
-
-        db.session.delete(role_db)
+      
+        db.session.delete(role)
         db.session.commit()
 
         return Response(status=204)
 
     def put(self, role):
-        db_role = Role.query.filter_by(id=role).first()
+        db_role = Role.query.filter_by(id=role.id).first()
         if db_role is None:
-            abort(404, 'Not found')
+            return create_error_message(
+                404, "Not found",
+                "Role not exist"
+            )
 
         if not request.json:
-            abort(415, 'Unsupported media type')
+            return create_error_message(
+                415, "Unsupported media type",
+                "Payload format is in an unsupported format"
+            )
 
         try:
             validate(request.json, Role.get_schema())
         except ValidationError as e:
-            abort(400, 'Invalid JSON document')
+            return create_error_message(
+                400, "Invalid JSON document",
+                "JSON format is not valid"
+            )
 
         db_role.name = request.json["name"]
         db_role.code = request.json["code"]
@@ -108,6 +96,9 @@ class RoleItem(Resource):
         try:
             db.session.commit()
         except IntegrityError:
-            abort(409, 'Already exists')
+            return create_error_message(
+                409, "Already exists",
+                "Role is already exist"
+            )
 
-        return Response(status=204)
+        return Response(status = 204)
