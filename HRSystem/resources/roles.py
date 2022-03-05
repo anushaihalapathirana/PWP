@@ -68,7 +68,7 @@ class RoleItem(Resource):
         return Response(status=204)
 
     def put(self, role):
-        db_role = Role.query.filter_by(id=role.id).first()
+        db_role = Role.query.filter_by(code=role.code).first()
         if db_role is None:
             return create_error_message(
                 404, "Not found",
