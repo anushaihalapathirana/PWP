@@ -1,30 +1,32 @@
-
-from flask_restful import Resource
-from HRSystem import db
-from HRSystem.models import Employee, MarritialEnum
-from jsonschema import validate, ValidationError
-from flask import Response, request, url_for, Response
-from datetime import datetime
-from sqlalchemy.exc import IntegrityError
-from HRSystem.utils import create_error_message
+"""
+    This resource file contains the employee related REST calls implementation
+"""
 from copy import copy
-
-'''
-This class contains the GET method implementations for employee by organization, department and role data
-                
-support to
-    - GET employee list by providing organization, department and role data
-    - GET employee list by providing organization and department data
-    - GET employee list by providing organization and role
-    - GET employee by providing organization data
-    - GET all the employees
-'''
+from flask_restful import Resource
+from jsonschema import validate, ValidationError
+from flask import Response, request
+from HRSystem import db
+from HRSystem.models import Employee
+from HRSystem.utils import create_error_message
 
 
 class EmployeeByRlationCollection(Resource):
-
+    """
+    This class contains the GET method implementations for employee by organization, department and role data
+                    
+    support to
+        - GET employee list by providing organization, department and role data
+        - GET employee list by providing organization and department data
+        - GET employee list by providing organization and role
+        - GET employee by providing organization data
+        - GET all the employees
+    """
     def get(self, organization=None, department=None, role=None):
-
+        """ GET list of employees
+            Arguments:
+            Returns:
+                List
+        """
         employees_response = []
         employees = []
         if organization is not None and department is not None and role is not None:
@@ -54,20 +56,22 @@ class EmployeeByRlationCollection(Resource):
         return employees_response
 
 
-'''
-This class contains the POST method implementations for employee - Add employees to the system by providing organization, department and role
-                
-- Note - Only method to add employees to the system is by giving organization, department and role 
-'''
-
-
 class EmployeeCollection(Resource):
-
+    """
+    This class contains the POST method implementations for employee - Add employees to the system by providing organization, department and role
+                
+    - Note - Only method to add employees to the system is by giving organization, department and role 
+    """
     def post(self, organization, department, role):
+        """ POST departments
+        Arguments:
+            request
+        Returns:
+            Response
+        """
         try:
             validate(request.json, Employee.get_schema())
-        except ValidationError as e:
-            print(e)
+        except ValidationError:
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
@@ -83,20 +87,34 @@ class EmployeeCollection(Resource):
 
             db.session.add(employee)
             db.session.commit()
-        except Exception as e:
+        except Exception:
             return create_error_message(
                 404, "Not found",
                 "Employee not found"
             )
         return Response(response={}, status=201)
 
-
 class EmployeeItem(Resource):
-
+    """ This class contains the GET, PUT and DELETE method implementations for a single employee
+        Arguments:
+        Returns:
+    """
     def get(self, employee):
+        """ GET employee
+        Arguments:
+            employee
+        Returns:
+            Response
+        """
         return employee.serialize()
 
     def put(self, employee):
+        """ PUT employee
+        Arguments:
+            employee
+        Returns:
+            Response
+        """
         if not request.json:
             return create_error_message(
                 415, "Unsupported media type",
@@ -105,17 +123,16 @@ class EmployeeItem(Resource):
 
         try:
             validate(request.json, Employee.get_schema())
-        except ValidationError as e:
-            print(e)
+        except ValidationError:
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
             )
 
-        oldEmployee = copy(employee)
+        old_employee = copy(employee)
         employee.deserialize(request)
-        employee.id = oldEmployee.id
-        employee.employee_id = oldEmployee.employee_id
+        employee.id = old_employee.id
+        employee.employee_id = old_employee.employee_id
 
         try:
             db.session.commit()
@@ -128,7 +145,12 @@ class EmployeeItem(Resource):
         return Response(status=204)
 
     def delete(self, employee):
-
+        """ DELETE employee
+        Arguments:
+            employee
+        Returns:
+            Response
+        """
         db.session.delete(employee)
         db.session.commit()
 

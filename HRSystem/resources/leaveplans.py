@@ -1,21 +1,23 @@
-
+"""
+    This resource file contains the leaves related REST calls implementation
+"""
 from flask_restful import Resource
-from HRSystem import db
-from HRSystem.models import LeavePlan, Employee
 from jsonschema import validate, ValidationError
-from flask import Response, request, url_for, Response
-from datetime import datetime
-from sqlalchemy.exc import IntegrityError
+from flask import Response, request
+from HRSystem import db
 from HRSystem.utils import create_error_message
+from HRSystem.models import LeavePlan
 
-'''
-This class contains the GET, POST method implementations for leave plan of employees by providing employee id
-                
-'''
 class LeavePlanByEmployeellection(Resource):
-
+    """
+    This class contains the GET, POST method implementations for leave plan of employees by providing employee id
+    """
     def get(self, employee=None):
-
+        """ GET list of leaves
+            Arguments:
+            Returns:
+                List
+        """
         leaveplan_response = []
         leaves = []
 
@@ -34,11 +36,16 @@ class LeavePlanByEmployeellection(Resource):
 
         return leaveplan_response
 
-    
     def post(self, employee):
+        """ POST leave
+        Arguments:
+            request
+        Returns:
+            Response
+        """
         try:
             validate(request.json, LeavePlan.get_schema())
-        except ValidationError as e:
+        except ValidationError:
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
@@ -52,20 +59,25 @@ class LeavePlanByEmployeellection(Resource):
 
             db.session.add(leaveplan)
             db.session.commit()
-        except Exception as e:
-            print(e)
+        except Exception:
             return create_error_message(
                 500, "Internal Server error",
                 "Cannot create a leave plan"
             )
         return Response(response={}, status=201)
 
-
-
-
 class LeavePlanItem(Resource):
-
+    """ This class contains the PUT and DELETE method implementations for a single leave
+        Arguments:
+        Returns:
+    """
     def put(self, leaveplan):
+        """ PUT departments
+        Arguments:
+            department
+        Returns:
+            Response
+        """
         if leaveplan is None:
             return create_error_message(
                 404, "Not found",
@@ -80,21 +92,18 @@ class LeavePlanItem(Resource):
 
         try:
             validate(request.json, LeavePlan.get_schema())
-        except ValidationError as e:
+        except ValidationError:
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
             )
-
         leave = LeavePlan()
         leave.deserialize(request)
         leave.id = leaveplan.id
 
-        print(leave.id, 'llllllllllllllllllllllllllll')
-
         try:
             db.session.commit()
-        except Exception as e:
+        except Exception:
             return create_error_message(
                 500, "Internal server Error",
                 "Error while updating the employee"
@@ -103,7 +112,12 @@ class LeavePlanItem(Resource):
         return Response(status=204)
 
     def delete(self, leaveplan):
-
+        """ DELETE departments
+        Arguments:
+            department
+        Returns:
+            Response
+        """
         db.session.delete(leaveplan)
         db.session.commit()
 

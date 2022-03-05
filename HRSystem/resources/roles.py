@@ -1,20 +1,26 @@
-import json
+"""
+    This resource file contains the role related REST calls implementation
+"""
 from jsonschema import validate, ValidationError
-from flask import Response, request, url_for, Response
+from flask import Response, request
 from flask_restful import Resource
+from sqlalchemy.exc import IntegrityError
+from werkzeug.exceptions import HTTPException
 from HRSystem import db
 from HRSystem.models import Role
-from sqlalchemy.exc import IntegrityError
 from HRSystem.utils import create_error_message
-from werkzeug.exceptions import HTTPException
-'''
-This class contains the GET and POST method implementations for Role data
-'''
-
 
 class RoleCollection(Resource):
-
+    """ This class contains the GET and POST method implementations for role data
+        Arguments:
+        Returns:
+    """
     def get(self):
+        """ GET list of roles
+            Arguments:
+            Returns:
+                List
+        """
         response_data = []
         roles = Role.query.all()
 
@@ -23,10 +29,15 @@ class RoleCollection(Resource):
         return response_data
 
     def post(self):
-
+        """ POST roles
+        Arguments:
+            request
+        Returns:
+            Response
+        """
         try:
             validate(request.json, Role.get_schema())
-        except ValidationError as e:
+        except ValidationError:
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
@@ -41,11 +52,10 @@ class RoleCollection(Resource):
                 )
             role = Role()
             role.deserialize(request)
-            
             db.session.add(role)
             db.session.commit()
-        except Exception as e:
-            if isinstance(e, HTTPException):
+        except Exception as error:
+            if isinstance(error, HTTPException):
                 return create_error_message(
                      409, "Already Exist",
                     "Department id is already exist"
@@ -55,31 +65,43 @@ class RoleCollection(Resource):
                     500, "Internal server Error",
                     "Error while adding the department"
                 )
-            
         return Response(response={}, status=201)
 
-
-'''
-This class contains the GET, PUT and DELETE method implementations for a single role
-'''
-
-
 class RoleItem(Resource):
-
+    """ This class contains the GET, PUT and DELETE method implementations for a single role
+        Arguments:
+        Returns:
+    """
     def get(self, role):
-    
+        """ GET departments
+        Arguments:
+            department
+        Returns:
+            Response
+        """
         response_data =  role.serialize()
 
         return response_data
 
     def delete(self, role):
-      
+        """ DELETE departments
+        Arguments:
+            department
+        Returns:
+            Response
+        """
         db.session.delete(role)
         db.session.commit()
 
         return Response(status=204)
 
     def put(self, role):
+        """ PUT departments
+        Arguments:
+            department
+        Returns:
+            Response
+        """
         db_role = Role.query.filter_by(code=role.code).first()
         if db_role is None:
             return create_error_message(
@@ -95,7 +117,7 @@ class RoleItem(Resource):
 
         try:
             validate(request.json, Role.get_schema())
-        except ValidationError as e:
+        except ValidationError:
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"

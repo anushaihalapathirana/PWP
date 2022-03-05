@@ -1,14 +1,14 @@
-
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.engine import Engine
-from sqlalchemy import event
+"""
+Database model file
+"""
 from enum import Enum
 from datetime import datetime
 from HRSystem import db
 
-
 class TitleEnum(Enum):
+    """
+    Enum class for employee suffix
+    """
     MR = 'Mr'
     MISS = 'Miss'
     MRS = 'Mrs'
@@ -16,6 +16,9 @@ class TitleEnum(Enum):
 
 
 class MarritialEnum(Enum):
+    """
+    Enum class for maritial status
+    """
     MARRIED = 'Married'
     DIVORCED = 'Divorced'
     SINGLE = 'Single'
@@ -24,6 +27,9 @@ class MarritialEnum(Enum):
 
 
 class LeaveTypeEnum(Enum):
+    """
+    Leave type enum class
+    """
     MEDICAL = 'Medical'
     CASUAL = 'Casual'
     PATERNITY = 'Paternity'
@@ -33,7 +39,9 @@ class LeaveTypeEnum(Enum):
 
 
 class Employee(db.Model):
-
+    """
+    Employee model class
+    """
     id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.String(64), unique=True, nullable=False)
     first_name = db.Column(db.String(256), nullable=False)
@@ -63,6 +71,9 @@ class Employee(db.Model):
     role = db.relationship('Role', backref='employee_role')
 
     def serialize(self):
+        """
+        Serialize method
+        """
         employee = {
             "employee_id": self.employee_id,
             "first_name": self.first_name,
@@ -82,6 +93,9 @@ class Employee(db.Model):
         return employee
 
     def deserialize(self, request):
+        """
+        Desrialize method
+        """
         self.employee_id = request.json.get('employee_id', None)
         self.first_name = request.json['first_name']
         self.middle_name = request.json.get('middle_name', None)
@@ -103,9 +117,13 @@ class Employee(db.Model):
 
     @staticmethod
     def get_schema():
+        """
+        method to get schema 
+        """
         schema = {
             "type": "object",
-            "required": ["first_name", "last_name", "address", "gender",  "appointment_date", "active_emp", "mobile_no", "basic_salary", "account_number"]
+            "required": ["first_name", "last_name", "address", "gender",
+            "appointment_date", "active_emp", "mobile_no", "basic_salary", "account_number"]
         }
         props = schema["properties"] = {}
         props["employee_id"] = {
@@ -172,8 +190,10 @@ class Employee(db.Model):
 
         return schema
 
-
 class Organization(db.Model):
+    """
+    organization model class
+    """
     id = db.Column(db.Integer, primary_key=True)
     organization_id = db.Column(db.String(64), unique=True, nullable=False)
     name = db.Column(db.String(256), nullable=False, unique=True)
@@ -181,6 +201,9 @@ class Organization(db.Model):
 
     @staticmethod
     def get_schema():
+        """
+        method to get schema 
+        """
         schema = {
             "type": "object",
             "required": ["organization_id", "name", "location"]
@@ -201,6 +224,9 @@ class Organization(db.Model):
         return schema
 
     def serialize(self):
+        """
+        Serialize method
+        """
         org = {
             "id": self.id,
             "organization_id": self.organization_id,
@@ -210,12 +236,18 @@ class Organization(db.Model):
         return org
 
     def deserialize(self, request):
+        """
+        Desrialize method
+        """
         self.organization_id = request.json['organization_id']
         self.name = request.json['name']
         self.location = request.json['location']
 
 
 class Department(db.Model):
+    """
+    department model class
+    """
     id = db.Column(db.Integer, primary_key=True)
     department_id = db.Column(db.String(64), unique=True, nullable=False)
     name = db.Column(db.String(256), nullable=False, unique=True)
@@ -223,6 +255,9 @@ class Department(db.Model):
 
     @staticmethod
     def get_schema():
+        """
+        method to get schema 
+        """
         schema = {
             "type": "object",
             "required": ["department_id", "name"]
@@ -243,6 +278,9 @@ class Department(db.Model):
         return schema
 
     def serialize(self):
+        """
+        Serialize method
+        """
         department = {
             "department_id": self.department_id,
             "name": self.name,
@@ -251,12 +289,18 @@ class Department(db.Model):
         return department
 
     def deserialize(self, request):
+        """
+        Desrialize method
+        """
         self.department_id = request.json['department_id']
         self.name = request.json['name']
         self.description = request.json.get('description', None)
 
 
 class Role(db.Model):
+    """
+    role model class
+    """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256), nullable=False, unique=True)
     code = db.Column(db.String(256), nullable=False, unique=True)
@@ -264,6 +308,9 @@ class Role(db.Model):
 
     @staticmethod
     def get_schema():
+        """
+        method to get schema 
+        """
         schema = {
             "type": "object",
             "required": ["name", "code"]
@@ -284,6 +331,9 @@ class Role(db.Model):
         return schema
 
     def serialize(self):
+        """
+        Serialize method
+        """
         role = {
             "id": self.id,
             "name": self.name,
@@ -293,12 +343,18 @@ class Role(db.Model):
         return role
 
     def deserialize(self, request):
+        """
+        Deserialize method
+        """
         self.name = request.json['name']
         self.code = request.json['code']
         self.description = request.json.get('description', None)
 
 
 class LeavePlan(db.Model):
+    """
+    leave plan model class
+    """
     id = db.Column(db.Integer, primary_key=True)
     leave_type = db.Column(db.Enum(LeaveTypeEnum), nullable=False)
     reason = db.Column(db.String(256), nullable=True)
@@ -310,6 +366,9 @@ class LeavePlan(db.Model):
 
     @staticmethod
     def get_schema():
+        """
+        method to get schema 
+        """
         schema = {
             "type": "object",
             "required": ["leave_type", "leave_date"]
@@ -332,6 +391,9 @@ class LeavePlan(db.Model):
         return schema
 
     def serialize(self):
+        """
+        Serialize method
+        """
         leaveplan = {
             "id": self.id,
             "leave_type": self.leave_type and self.leave_type.name,
@@ -341,6 +403,9 @@ class LeavePlan(db.Model):
         return leaveplan
 
     def deserialize(self, request):
+        """
+        Desrialize method
+        """
         self.leave_type = request.json['leave_type'] and LeaveTypeEnum[request.json['leave_type']]
         self.reason = request.json.get('reason', None)
         self.leave_date = datetime.fromisoformat(

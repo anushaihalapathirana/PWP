@@ -1,15 +1,18 @@
-
-
+"""
+This class use to generate database and its data
+"""
+from datetime import datetime
 import click
 from flask.cli import with_appcontext
 from HRSystem import db
 from HRSystem.models import Role, Employee, Department, Organization, LeavePlan
-from datetime import datetime
-
 
 @click.command("init-db")
 @with_appcontext
 def init_db_command():
+    """
+    Method to initializa database
+    """
     print("create database--------------------------------------------")
     db.create_all()
 
@@ -17,6 +20,9 @@ def init_db_command():
 @click.command("testgen")
 @with_appcontext
 def generate_test_data():
+    """
+    Method to generate fake data
+    """
     role = Role(name="Manager", code='MAN', description='Role manager')
     role2 = Role(name="Receptionnist", code='RES',
                  description='Role reception')
@@ -32,14 +38,31 @@ def generate_test_data():
     depat2 = Department(department_id ='D02', name="dept44", description="department number two")
     depat3 = Department(department_id ='D03', name="dept55", description="department number three")
 
-    emp = Employee(employee_id = '001', first_name="anusha", last_name="pathirana", address="oulu", gender="F", date_of_birth=datetime(1995, 10, 21, 11, 20, 30), appointment_date=datetime(2018, 11, 21, 11, 20, 30),
-                   active_emp=1, prefix_title='MISS', marritial_status='SINGLE', mobile_no='21456', basic_salary=10000, account_number="11233565456", role=role, organization=org, department=depat2)
-    emp2 = Employee(employee_id = '002', first_name="sameera", last_name="panditha", address="raksila", gender="M", date_of_birth=datetime(1998, 8, 25, 11, 20, 30), appointment_date=datetime(2018, 11, 21, 11, 20, 30),
-                    active_emp=1, prefix_title='MR', marritial_status='SINGLE', mobile_no='21456', basic_salary=10000, account_number="11233565456", role=role2, organization=org2, department=depat)
-    emp3 = Employee(employee_id = '003', first_name="madu", last_name="wicks", address="kajaanentie", gender="F", date_of_birth=datetime(2000, 5, 2, 11, 20, 30), appointment_date=datetime(2018, 11, 21, 11, 20, 30),
-                    active_emp=1, prefix_title='MRS', marritial_status='MARRIED', mobile_no='21456', basic_salary=10000, account_number="11233565456", role=role3, organization=org2, department=depat3)
-    emp4 = Employee(employee_id = '004', first_name="john", last_name="snow", address="helsinki", gender="M", date_of_birth=datetime(1998, 12, 1, 11, 20, 30), appointment_date=datetime(2018, 11, 21, 11, 20, 30),
-                    active_emp=1, prefix_title='MR', marritial_status='SINGLE', mobile_no='21456', basic_salary=10000, account_number="11233565456", role=role4, organization=org, department=depat)
+    emp = Employee(employee_id = '001', first_name="anusha", last_name="pathirana",
+                address="oulu", gender="F", date_of_birth=datetime(1995, 10, 21, 11, 20, 30),
+                appointment_date=datetime(2018, 11, 21, 11, 20, 30),
+                active_emp=1, prefix_title='MISS', marritial_status='SINGLE',
+                mobile_no='21456', basic_salary=10000, account_number="11233565456",
+                role=role, organization=org, department=depat2)
+    emp2 = Employee(employee_id = '002', first_name="sameera", last_name="panditha",
+                    address="raksila", gender="M", date_of_birth=datetime(1998, 8, 25, 11, 20, 30),
+                    appointment_date=datetime(2018, 11, 21, 11, 20, 30),
+                    active_emp=1, prefix_title='MR', marritial_status='SINGLE', mobile_no='21456',
+                    basic_salary=10000, account_number="11233565456", role=role2, organization=org2,
+                    department=depat)
+    emp3 = Employee(employee_id = '003', first_name="madu", last_name="wicks",
+                    address="kajaanentie",
+                    gender="F", date_of_birth=datetime(2000, 5, 2, 11, 20, 30),
+                    appointment_date=datetime(2018, 11, 21, 11, 20, 30),
+                    active_emp=1, prefix_title='MRS', marritial_status='MARRIED',
+                    mobile_no='21456', basic_salary=10000, account_number="11233565456",
+                    role=role3, organization=org2, department=depat3)
+    emp4 = Employee(employee_id = '004', first_name="john", last_name="snow",
+                    address="helsinki", gender="M", date_of_birth=datetime(1998, 12, 1, 11, 20, 30),
+                    appointment_date=datetime(2018, 11, 21, 11, 20, 30),
+                    active_emp=1, prefix_title='MR', marritial_status='SINGLE',
+                    mobile_no='21456', basic_salary=10000, account_number="11233565456",
+                    role=role4, organization=org, department=depat)
 
     leav = LeavePlan(leave_type='MEDICAL', leave_date=datetime(
         2018, 11, 21, 11, 20, 30), employee=emp)

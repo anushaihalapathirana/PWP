@@ -1,3 +1,6 @@
+"""
+Init file
+"""
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -5,8 +8,10 @@ from HRSystem.constants import *
 
 db = SQLAlchemy()
 
-
 def create_app(test_config=None):
+    """
+    method to create application
+    """
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY="dev",
@@ -47,7 +52,7 @@ def create_app(test_config=None):
 
     @app.route("/profiles/<profile>/")
     def send_profile(profile):
-        return "you requests {} profile".format(profile)
+        return f"you requests {format(profile)} profile"
 
     @app.route("/admin/")
     def admin_site():
