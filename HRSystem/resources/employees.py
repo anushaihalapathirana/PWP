@@ -63,6 +63,7 @@ class EmployeeCollection(Resource):
         try:
             validate(request.json, Employee.get_schema())
         except ValidationError as e:
+            print(e)
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"

@@ -1,5 +1,7 @@
 import json
 from jsonschema import validate, ValidationError
+from werkzeug.exceptions import HTTPException
+from sqlalchemy.exc import IntegrityError
 from flask import Response, request, url_for, Response
 from flask_restful import Resource
 from HRSystem import db
@@ -31,14 +33,26 @@ class DepartmentCollection(Resource):
             )
 
         try:
+            db_dept = Department.query.filter_by(department_id=request.json["department_id"]).first()
+            if db_dept is not None:
+                return create_error_message(
+                    409, "Already Exist",
+                    "Department id is already exist"
+                )
             dept = Department()
             dept.deserialize(request)
             
        
             db.session.add(dept)
             db.session.commit()
-        except Exception:
-            return create_error_message(
+        except Exception as e:
+            if isinstance(e, HTTPException):
+                return create_error_message(
+                     409, "Already Exist",
+                    "Department id is already exist"
+                )
+            else:
+                return create_error_message(
                     500, "Internal server Error",
                     "Error while adding the department"
                 )
