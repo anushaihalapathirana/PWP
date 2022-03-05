@@ -1,6 +1,7 @@
 import json
 from jsonschema import validate, ValidationError
 from flask import Response, request, url_for, Response
+from werkzeug.exceptions import HTTPException
 from flask_restful import Resource
 from HRSystem import db
 from HRSystem.models import Organization
@@ -30,15 +31,27 @@ class OrganizationCollection(Resource):
                 "JSON format is not valid"
             )
         try:
+            db_org = Organization.query.filter_by(organization_id=request.json["organization_id"]).first()
+            if db_org is not None:
+                return create_error_message(
+                    409, "Already Exist",
+                    "Department id is already exist"
+                )
             org = Organization()
-            org.deserialize()
+            org.deserialize(request)
 
             db.session.add(org)
             db.session.commit()
-        except Exception:
-            return create_error_message(
+        except Exception as e:
+            if isinstance(e, HTTPException):
+                return create_error_message(
+                     409, "Already Exist",
+                    "Department id is already exist"
+                )
+            else:
+                return create_error_message(
                     500, "Internal server Error",
-                    "Error while adding the organization"
+                    "Error while adding the department"
                 )
         return Response(response = {}, status = 201)
 

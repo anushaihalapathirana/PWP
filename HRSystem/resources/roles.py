@@ -33,15 +33,27 @@ class RoleCollection(Resource):
             )
 
         try:
+            db_role = Role.query.filter_by(code=request.json["code"]).first()
+            if db_role is not None:
+                return create_error_message(
+                    409, "Already Exist",
+                    "Department id is already exist"
+                )
             role = Role()
-            role.deserialize()
+            role.deserialize(request)
             
             db.session.add(role)
             db.session.commit()
         except Exception as e:
-            return create_error_message(
+            if isinstance(e, HTTPException):
+                return create_error_message(
+                     409, "Already Exist",
+                    "Department id is already exist"
+                )
+            else:
+                return create_error_message(
                     500, "Internal server Error",
-                    "Error while adding the role"
+                    "Error while adding the department"
                 )
             
         return Response(response={}, status=201)
