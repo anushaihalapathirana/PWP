@@ -22,14 +22,8 @@ class LeavePlanByEmployeellection(Resource):
         leaveplan_response = []
         leaves = []
 
-        if employee is not None:
-            leaves = LeavePlan.query.join(LeavePlan.employee).filter(
+        leaves = LeavePlan.query.join(LeavePlan.employee).filter(
                 LeavePlan.employee == employee
-            )
-        else:
-            return create_error_message(
-                404, "Not found",
-                "Employee is not found"
             )
 
         for leave in leaves:
@@ -44,12 +38,17 @@ class LeavePlanByEmployeellection(Resource):
         Returns:
             Response
         """
+        if not request.json:
+            return create_error_message(
+                415, "Invalid JSON document",
+                "JSON format is not valid"
+            )
         try:
             validate(request.json, LeavePlan.get_schema())
         except ValidationError:
             return create_error_message(
-                400, "Invalid JSON document",
-                "JSON format is not valid"
+                400, "Unsupported media type",
+                "Payload format is in an unsupported format"
             )
 
         try:
@@ -60,11 +59,10 @@ class LeavePlanByEmployeellection(Resource):
 
             db.session.add(leaveplan)
             db.session.commit()
-        except Exception:
-            return create_error_message(
-                500, "Internal Server error",
-                "Cannot create a leave plan"
-            )
+        except Exception: return create_error_message(
+                500, "Internal server Error",
+                "Error while adding the leave"
+                )
         return Response(response={}, status=201)
 
 
@@ -80,11 +78,7 @@ class LeavePlanItem(Resource):
         Returns:
             Response
         """
-        if leaveplan is None:
-            return create_error_message(
-                404, "Not found",
-                "Leave plan not found"
-            )
+        
 
         if not request.json:
             return create_error_message(
@@ -106,8 +100,7 @@ class LeavePlanItem(Resource):
 
         try:
             db.session.commit()
-        except Exception:
-            return create_error_message(
+        except Exception: return create_error_message(
                 500, "Internal server Error",
                 "Error while updating the employee"
             )

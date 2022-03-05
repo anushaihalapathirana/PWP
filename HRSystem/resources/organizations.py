@@ -36,12 +36,17 @@ class OrganizationCollection(Resource):
         Returns:
             Response
         """
+        if not request.json:
+            return create_error_message(
+                415, "Invalid JSON document",
+                "JSON format is not valid"
+            )
         try:
             validate(request.json, Organization.get_schema())
         except ValidationError:
             return create_error_message(
-                400, "Invalid JSON document",
-                "JSON format is not valid"
+                400, "Unsupported media type",
+                "Payload format is in an unsupported format"
             )
         try:
             db_org = Organization.query.filter_by(
@@ -62,11 +67,6 @@ class OrganizationCollection(Resource):
                 return create_error_message(
                      409, "Already Exist",
                     "Department id is already exist"
-                )
-            else:
-                return create_error_message(
-                    500, "Internal server Error",
-                    "Error while adding the department"
                 )
         return Response(response = {}, status = 201)
 
@@ -105,11 +105,6 @@ class OrganizationItem(Resource):
             Response
         """
         db_org = Organization.query.filter_by(organization_id=organization.organization_id).first()
-        if db_org is None:
-            return create_error_message(
-                404, "Not found",
-                "Organization not found"
-            )
 
         if not request.json:
             return create_error_message(
@@ -130,10 +125,9 @@ class OrganizationItem(Resource):
 
         try:
             db.session.commit()
-        except IntegrityError:
-            return create_error_message(
-                409, "Already exists",
-                "Organization is already exist"
+        except Exception as error: return create_error_message(
+                500, "Internal server Error",
+                "Error while adding the role"
             )
 
         return Response(status=204)

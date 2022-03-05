@@ -5,6 +5,7 @@ from copy import copy
 from flask_restful import Resource
 from jsonschema import validate, ValidationError
 from flask import Response, request
+from werkzeug.exceptions import HTTPException
 from HRSystem import db
 from HRSystem.models import Employee
 from HRSystem.utils import create_error_message
@@ -89,15 +90,26 @@ class EmployeeCollection(Resource):
         Returns:
             Response
         """
+        if not request.json:
+            return create_error_message(
+                415, "Invalid JSON document",
+                "JSON format is not valid"
+            )
         try:
             validate(request.json, Employee.get_schema())
         except ValidationError:
             return create_error_message(
-                400, "Invalid JSON document",
-                "JSON format is not valid"
+                400, "Unsupported media type",
+                "Payload format is in an unsupported format"
             )
 
         try:
+            db_emp = Employee.query.filter_by(employee_id=request.json["employee_id"]).first()
+            if db_emp is not None:
+                return create_error_message(
+                    409, "Already Exist",
+                    "Department id is already exist"
+                )
             employee = Employee()
             employee.deserialize(request)
 
@@ -110,12 +122,12 @@ class EmployeeCollection(Resource):
 
             self._clear_cache(department=department,
                               organnization=organization, role=role)
-        except Exception as e:
-            print("Error while POST operation : ", e)
-            return create_error_message(
-                404, "Not found",
-                "Employee not found"
-            )
+        except Exception as error:
+            if isinstance(error, HTTPException):
+                return create_error_message(
+                     409, "Already Exist",
+                    "employee id is already exist"
+                )
         return Response(response={}, status=201)
 
 
@@ -166,7 +178,6 @@ class EmployeeItem(Resource):
         try:
             validate(request.json, Employee.get_schema())
         except ValidationError as e:
-            print("Error while validating PUT operation : ", e)
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
@@ -181,9 +192,7 @@ class EmployeeItem(Resource):
             db.session.commit()
             self._clear_cache(department=employee.department,
                               organnization=employee.organization, role=employee.role)
-        except Exception as e:
-            print("Error while PUT operation : ", e)
-            return create_error_message(
+        except Exception: return create_error_message(
                 500, "Internal server Error",
                 "Error while updating the employee"
             )
@@ -206,9 +215,7 @@ class EmployeeItem(Resource):
             db.session.commit()
             self._clear_cache(department=dept,
                               organnization=org, role=role)
-        except Exception as e:
-            print("Error while DELETE operation : ", e)
-            return create_error_message(
+        except Exception: return create_error_message(
                 500, "Internal server Error",
                 "Error while deleting the employee"
             )

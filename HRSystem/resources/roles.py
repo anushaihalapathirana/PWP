@@ -35,6 +35,12 @@ class RoleCollection(Resource):
         Returns:
             Response
         """
+        if not request.json:
+            return create_error_message(
+                415, "Unsupported media type",
+                "Payload format is in an unsupported format"
+            )
+
         try:
             validate(request.json, Role.get_schema())
         except ValidationError:
@@ -58,13 +64,8 @@ class RoleCollection(Resource):
             if isinstance(error, HTTPException):
                 return create_error_message(
                      409, "Already Exist",
-                    "Department id is already exist"
-                )
-            else:
-                return create_error_message(
-                    500, "Internal server Error",
-                    "Error while adding the department"
-                )
+                    "role id is already exist"
+            )
         return Response(response={}, status=201)
 
 class RoleItem(Resource):
@@ -103,11 +104,6 @@ class RoleItem(Resource):
             Response
         """
         db_role = Role.query.filter_by(code=role.code).first()
-        if db_role is None:
-            return create_error_message(
-                404, "Not found",
-                "Role not exist"
-            )
 
         if not request.json:
             return create_error_message(
@@ -129,10 +125,9 @@ class RoleItem(Resource):
 
         try:
             db.session.commit()
-        except IntegrityError:
-            return create_error_message(
-                409, "Already exists",
-                "Role is already exist"
+        except Exception: return create_error_message(
+                500, "Internal server Error",
+                "Error while updating the role"
             )
 
         return Response(status = 204)

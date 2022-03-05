@@ -95,7 +95,6 @@ disable=raw-checker-failed,
         line-too-long,
         import-outside-toplevel,
         cyclic-import,
-        duplicate-code,
         invalid-name
 
 # Enable the message, report, category or checker with the given id(s). You can

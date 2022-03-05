@@ -129,7 +129,7 @@ class Employee(db.Model):
         props = schema["properties"] = {}
         props["employee_id"] = {
             "description": "Employee unique id",
-            "type": "number"
+            "type": "string"
         }
         props["first_name"] = {
             "description": "Employee First name",
