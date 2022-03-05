@@ -42,3 +42,27 @@ Follow below instructions to setup the databases
 More details about the database can be found here - https://github.com/anushaihalapathirana/PWP/wiki/Database-design-and-implementation
 
 
+# Code quality
+
+This project use Pylint for code quality.
+
+Run below command to run pylint
+
+``` 
+    pylint HRSystem
+```
+
+# How to run tests
+
+Run database tests using below command
+
+```
+    python3 -m pytest tests/db_test.py 
+```
+
+
+Test coverage using 
+
+```
+    python3 -m pytest --cov=PWP
+```

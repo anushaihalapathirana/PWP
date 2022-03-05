@@ -1,6 +1,7 @@
 """
 Database model file
 """
+import hashlib
 from enum import Enum
 from datetime import datetime
 from HRSystem import db
@@ -410,3 +411,17 @@ class LeavePlan(db.Model):
         self.reason = request.json.get('reason', None)
         self.leave_date = datetime.fromisoformat(
             request.json['leave_date'])
+
+class ApiKey(db.Model):
+    """
+    API key model class
+    """
+    key = db.Column(db.String(32), nullable=False, unique=True, primary_key = True)
+    employee_id = db.Column(db.Integer, db.ForeignKey("employee.id"), nullable=True)
+    admin =  db.Column(db.Boolean, default=False)
+    employee = db.relationship('Employee', backref='api_key')
+    # employee = db.relationship("Employee", back_populates="api_key", uselist=False)
+    
+    @staticmethod
+    def key_hash(key):
+        return hashlib.sha256(key.encode()).digest()

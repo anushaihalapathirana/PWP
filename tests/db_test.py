@@ -8,7 +8,6 @@ from datetime import datetime
 from sqlalchemy.engine import Engine
 from sqlalchemy import event
 from sqlalchemy.exc import IntegrityError, StatementError
-
 from HRSystem import create_app, db
 from HRSystem.models import *
 
@@ -47,15 +46,23 @@ def _get_role(rolecode="MN"):
 
 def _get_org(name="Org1"):
     return Organization(
-        name="Org1", location="oulu"
+        organization_id = "O001",
+        name="Org1", 
+        location="oulu"
     )
     
 def _get_department():
-    return Department(name="dept1", description="department number one")
+    return Department(
+        department_id="D01",
+        name="dept1", 
+        description="department number one")
     
 def _get_employee():
-    return Employee(first_name="anusha", last_name="pathirana", address="oulu", gender="F", date_of_birth=datetime(1995, 10, 21, 11, 20, 30), appointment_date=datetime(2018, 11, 21, 11, 20, 30),
-               active_emp=1, prefix_title='MISS', marritial_status='SINGLE', mobile_no='21456', basic_salary=10000, account_number="11233565456")
+    return Employee(employee_id = "001", first_name="anusha", last_name="pathirana",
+                address="oulu", gender="F", date_of_birth=datetime(1995, 10, 21, 11, 20, 30),
+                appointment_date=datetime(2018, 11, 21, 11, 20, 30),
+                active_emp=1, prefix_title='MISS', marritial_status='SINGLE',
+                mobile_no='21456', basic_salary=10000, account_number="11233565456")
 
     
 def test_create_instances(app):

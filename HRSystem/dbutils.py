@@ -1,11 +1,12 @@
 """
 This class use to generate database and its data
 """
+import secrets
 from datetime import datetime
 import click
 from flask.cli import with_appcontext
 from HRSystem import db
-from HRSystem.models import Role, Employee, Department, Organization, LeavePlan
+from HRSystem.models import Role, Employee, Department, Organization, LeavePlan, ApiKey
 
 @click.command("init-db")
 @with_appcontext
@@ -71,6 +72,13 @@ def generate_test_data():
     leav3 = LeavePlan(leave_type='MEDICAL', leave_date=datetime(
         2018, 1, 25, 11, 20, 30), employee=emp)
 
+
+
+    token = secrets.token_urlsafe()
+    db_key = ApiKey(key=ApiKey.key_hash(token),admin=True)
+
+    db.session.add(db_key)
+
     db.session.add(role)
     db.session.add(role2)
     db.session.add(role3)
@@ -94,3 +102,5 @@ def generate_test_data():
     db.session.add(leav3)
 
     db.session.commit()
+
+    print(token)
