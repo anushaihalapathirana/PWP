@@ -1,2 +1,3 @@
-LINK_RELATIONS_URL = "/hrsystem/link-relations/"
-
+"""
+This file contains the constants
+"""

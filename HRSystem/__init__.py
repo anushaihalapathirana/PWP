@@ -1,3 +1,6 @@
+"""
+Init file
+"""
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -7,8 +10,12 @@ from flask_caching import Cache
 db = SQLAlchemy()
 cache = Cache()
 
-
 def create_app(test_config=None):
+    """
+    method to create application
+
+    - Note reference to this method - course materials https://github.com/enkwolf/pwp-course-sensorhub-api-example/blob/master
+    """
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY="dev",
@@ -46,17 +53,5 @@ def create_app(test_config=None):
     app.cli.add_command(init_db_command)
     app.cli.add_command(generate_test_data)
     app.register_blueprint(api.api_bp)
-
-    @app.route(LINK_RELATIONS_URL)
-    def send_link_relations():
-        return "link relations"
-
-    @app.route("/profiles/<profile>/")
-    def send_profile(profile):
-        return "you requests {} profile".format(profile)
-
-    @app.route("/admin/")
-    def admin_site():
-        return app.send_static_file("html/admin.html")
 
     return app

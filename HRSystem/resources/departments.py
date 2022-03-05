@@ -1,22 +1,27 @@
-import json
+"""
+    This resource file contains the department related REST calls implementation
+"""
+from copy import copy
 from jsonschema import validate, ValidationError
-from werkzeug.exceptions import HTTPException
-from sqlalchemy.exc import IntegrityError
-from flask import Response, request, url_for, Response
+from flask import Response, request
 from flask_restful import Resource
 from HRSystem import db
 from HRSystem.models import Department
 from HRSystem.utils import create_error_message
-from copy import copy
-
-'''
-This class contains the GET and POST method implementations for department data
-'''
 
 
 class DepartmentCollection(Resource):
 
+    """ This class contains the GET and POST method implementations for department data
+        Arguments:
+        Returns:
+    """
     def get(self):
+        """ GET list of departments
+            Arguments:
+            Returns:
+                List
+        """
         response_data = []
         depts = Department.query.all()
 
@@ -25,10 +30,15 @@ class DepartmentCollection(Resource):
         return response_data
 
     def post(self):
-
+        """ POST departments
+        Arguments:
+            request
+        Returns:
+            Response
+        """
         try:
             validate(request.json, Department.get_schema())
-        except ValidationError as e:
+        except ValidationError:
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
@@ -56,27 +66,44 @@ class DepartmentCollection(Resource):
         return Response(response={}, status=201)
 
 
-'''
-This class contains the GET, PUT and DELETE method implementations for a single department
-'''
-
-
 class DepartmentItem(Resource):
 
-    def get(self, department):
+    """ This class contains the GET, PUT and DELETE method implementations for a single department
+        Arguments:
+        Returns:
+    """
 
+    def get(self, department):
+        """ GET departments
+        Arguments:
+            department
+        Returns:
+            Response
+        """
         response_data = department.serialize()
 
         return response_data
 
     def delete(self, department):
-
+        """ DELETE departments
+        Arguments:
+            department
+        Returns:
+            Response
+        """
         db.session.delete(department)
         db.session.commit()
 
         return Response(status=204)
 
+
     def put(self, department):
+        """ PUT departments
+        Arguments:
+            department
+        Returns:
+            Response
+        """
         if not request.json:
             return create_error_message(
                 415, "Unsupported media type",
@@ -85,16 +112,16 @@ class DepartmentItem(Resource):
 
         try:
             validate(request.json, Department.get_schema())
-        except ValidationError as e:
+        except ValidationError:
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
             )
 
-        oldDept = copy(department)
+        old_dept = copy(department)
         department.deserialize(request)
-        department.id = oldDept.id
-        department.department_id = oldDept.department_id
+        department.id = old_dept.id
+        department.department_id = old_dept.department_id
 
         try:
             db.session.commit()

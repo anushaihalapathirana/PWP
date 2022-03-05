@@ -1,37 +1,52 @@
-import json
+"""
+    This resource file contains the organization related REST calls implementation
+"""
 from jsonschema import validate, ValidationError
-from flask import Response, request, url_for, Response
+from flask import Response, request
 from werkzeug.exceptions import HTTPException
 from flask_restful import Resource
+from sqlalchemy.exc import IntegrityError
 from HRSystem import db
 from HRSystem.models import Organization
 from HRSystem.utils import create_error_message
 
-'''
-This class contains the GET and POST method implementations for organization data
-'''
-class OrganizationCollection(Resource):
 
+class OrganizationCollection(Resource):
+    """ This class contains the GET and POST method implementations for organization data
+        Arguments:
+        Returns:
+    """
     def get(self):
+        """ GET list of orgs
+            Arguments:
+            Returns:
+                List
+        """
         response_data = []
         orgs = Organization.query.all()
-        
+
         for org in orgs:
             response_data.append(org.serialize())         
         return response_data
-    
 
     def post(self):
-
+        """ POST orgs
+        Arguments:
+            request
+        Returns:
+            Response
+        """
         try:
             validate(request.json, Organization.get_schema())
-        except ValidationError as e:
+        except ValidationError:
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
             )
         try:
-            db_org = Organization.query.filter_by(organization_id=request.json["organization_id"]).first()
+            db_org = Organization.query.filter_by(
+                organization_id=request.json["organization_id"]
+                ).first()
             if db_org is not None:
                 return create_error_message(
                     409, "Already Exist",
@@ -42,8 +57,8 @@ class OrganizationCollection(Resource):
 
             db.session.add(org)
             db.session.commit()
-        except Exception as e:
-            if isinstance(e, HTTPException):
+        except Exception as error:
+            if isinstance(error, HTTPException):
                 return create_error_message(
                      409, "Already Exist",
                     "Department id is already exist"
@@ -56,24 +71,39 @@ class OrganizationCollection(Resource):
         return Response(response = {}, status = 201)
 
 
-'''
-This class contains the GET, PUT and DELETE method implementations for a single organization
-'''
 class OrganizationItem(Resource):
-
+    """ This class contains the GET, PUT and DELETE method implementations for a single org
+        Arguments:
+        Returns:
+    """
     def get(self, organization):
-        response_data = organization.serialize()
-            
+        """ GET org
+        Arguments:
+            org
+        Returns:
+            Response
+        """
+        response_data = organization.serialize() 
         return response_data
 
     def delete(self, organization):
-            
+        """ DELETE org
+        Arguments:
+            org
+        Returns:
+            Response
+        """
         db.session.delete(organization)
         db.session.commit()
-
         return Response(status=204)
 
     def put(self, organization):
+        """ PUT org
+        Arguments:
+            org
+        Returns:
+            Response
+        """
         db_org = Organization.query.filter_by(organization_id=organization.organization_id).first()
         if db_org is None:
             return create_error_message(
@@ -89,7 +119,7 @@ class OrganizationItem(Resource):
 
         try:
             validate(request.json, Organization.get_schema())
-        except ValidationError as e:
+        except ValidationError:
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"

@@ -1,14 +1,17 @@
 
-
+"""
+This file contains the Converter methods
+"""
 from werkzeug.routing import BaseConverter
 from HRSystem.models import Role, Department, Organization, LeavePlan, Employee
-from werkzeug.exceptions import NotFound
 from HRSystem.utils import create_error_message
 
-# Converter for Role entity in URL parameter
 class RoleConverter(BaseConverter):
-    def to_python(self, roleCode):
-        role = Role.query.filter_by(code=roleCode).first()
+    """
+    Converter for Role entity in URL parameter
+    """
+    def to_python(self, value):
+        role = Role.query.filter_by(code=value).first()
         if role is None:
             return create_error_message(
                 404, "Not found",
@@ -16,14 +19,15 @@ class RoleConverter(BaseConverter):
             )
         return role
 
-    def to_url(self, role):
-        return str(role.code)
+    def to_url(self, value):
+        return str(value.code)
 
-
-# Converter for Department entity in URL parameter
 class DepartmentConverter(BaseConverter):
-    def to_python(self, departmentId):
-        department = Department.query.filter_by(department_id=departmentId).first()
+    """
+    Converter for Department entity in URL parameter
+    """
+    def to_python(self, value):
+        department = Department.query.filter_by(department_id=value).first()
         if department is None:
             return create_error_message(
                 404, "Not found",
@@ -31,14 +35,15 @@ class DepartmentConverter(BaseConverter):
             )
         return department
 
-    def to_url(self, department):
-        return str(department.department_id)
+    def to_url(self, value):
+        return str(value.department_id)
 
-
-# Converter for Organization entity in URL parameter
 class OrganizationConverter(BaseConverter):
-    def to_python(self, organizationId):
-        organization = Organization.query.filter_by(organization_id=organizationId).first()
+    """
+    Converter for Organization entity in URL parameter
+    """
+    def to_python(self, value):
+        organization = Organization.query.filter_by(organization_id=value).first()
         if organization is None:
             return create_error_message(
                 404, "Not found",
@@ -46,13 +51,15 @@ class OrganizationConverter(BaseConverter):
             )
         return organization
 
-    def to_url(self, organization):
-        return str(organization.organization_id)
+    def to_url(self, value):
+        return str(value.organization_id)
 
-# Converter for leave plan entity in URL parameter
 class LeavePlanConverter(BaseConverter):
-    def to_python(self, leaveplanId):
-        leaveplan = LeavePlan.query.filter_by(id=leaveplanId).first()
+    """
+    Converter for leave plan entity in URL parameter
+    """
+    def to_python(self, value):
+        leaveplan = LeavePlan.query.filter_by(id=value).first()
      
         if leaveplan is None:
             return create_error_message(
@@ -61,14 +68,15 @@ class LeavePlanConverter(BaseConverter):
             )
         return leaveplan
 
-    def to_url(self, leaveplan):
-        return str(leaveplan.id)
+    def to_url(self, value):
+        return str(value.id)
 
-
-# Converter for employee entity in URL parameter
 class EmployeeConverter(BaseConverter):
-    def to_python(self, employeeId):
-        employee = Employee.query.filter_by(employee_id=employeeId).first()
+    """
+    Converter for employee entity in URL parameter
+    """
+    def to_python(self, value):
+        employee = Employee.query.filter_by(employee_id=value).first()
         if employee is None:
             return create_error_message(
                 404, "Not found",
@@ -76,5 +84,5 @@ class EmployeeConverter(BaseConverter):
             )
         return employee
 
-    def to_url(self, employee):
-        return str(employee.employee_id)
+    def to_url(self, value):
+        return str(value.employee_id)
