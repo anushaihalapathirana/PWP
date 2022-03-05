@@ -244,7 +244,6 @@ class Department(db.Model):
 
     def serialize(self):
         department = {
-            "id": self.id,
             "department_id": self.department_id,
             "name": self.name,
             "description": self.description and self.description
