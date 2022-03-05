@@ -1,6 +1,7 @@
 """
     This resource file contains the leaves related REST calls implementation
 """
+from copy import copy
 from flask_restful import Resource
 from jsonschema import validate, ValidationError
 from flask import Response, request
@@ -66,6 +67,7 @@ class LeavePlanByEmployeellection(Resource):
             )
         return Response(response={}, status=201)
 
+
 class LeavePlanItem(Resource):
     """ This class contains the PUT and DELETE method implementations for a single leave
         Arguments:
@@ -97,9 +99,10 @@ class LeavePlanItem(Resource):
                 400, "Invalid JSON document",
                 "JSON format is not valid"
             )
-        leave = LeavePlan()
-        leave.deserialize(request)
-        leave.id = leaveplan.id
+
+        oldLeavePlan = copy(leaveplan)
+        leaveplan.deserialize(request)
+        leaveplan.id = oldLeavePlan.id
 
         try:
             db.session.commit()
