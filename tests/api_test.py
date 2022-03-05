@@ -4,6 +4,7 @@ import secrets
 import pytest
 import tempfile
 import time
+import base64
 from datetime import datetime
 from jsonschema import validate
 from sqlalchemy.engine import Engine
@@ -399,31 +400,31 @@ class TestEmployeeByRlationCollection(object):
     RESOURCE_URL_4 = "/api/organizations/O01/departments/D01/roles/Code-1/employees/"
 
     def test_get(self, client):
-        resp = client.get(self.RESOURCE_URL)
+        resp = client.get(self.RESOURCE_URL, headers={"HRSystem-Api-Key": "aCO8xWKY2qGN3wQVPPqUao44Y9w4w8bfc4HlHu8j-3M"})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 3
     
     def test_get_by_role(self, client):
-        resp = client.get(self.RESOURCE_URL_1)
+        resp = client.get(self.RESOURCE_URL_1, headers={"HRSystem-Api-Key": "aCO8xWKY2qGN3wQVPPqUao44Y9w4w8bfc4HlHu8j-3M"})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 1
     
     def test_get_by_org(self, client):
-        resp = client.get(self.RESOURCE_URL_2)
+        resp = client.get(self.RESOURCE_URL_2, headers={"HRSystem-Api-Key": "aCO8xWKY2qGN3wQVPPqUao44Y9w4w8bfc4HlHu8j-3M"})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 1
     
     def test_get_by_dept(self, client):
-        resp = client.get(self.RESOURCE_URL_3)
+        resp = client.get(self.RESOURCE_URL_3, headers={"HRSystem-Api-Key": "aCO8xWKY2qGN3wQVPPqUao44Y9w4w8bfc4HlHu8j-3M"})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 1
     
     def test_get_by_all(self, client):
-        resp = client.get(self.RESOURCE_URL_4)
+        resp = client.get(self.RESOURCE_URL_4, headers={"HRSystem-Api-Key": "aCO8xWKY2qGN3wQVPPqUao44Y9w4w8bfc4HlHu8j-3M"})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 1
