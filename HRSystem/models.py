@@ -33,7 +33,7 @@ class LeaveTypeEnum(Enum):
 
 
 class Employee(db.Model):
-    
+
     id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.Integer, unique=True, nullable=False)
     first_name = db.Column(db.String(256), nullable=False)
@@ -82,7 +82,7 @@ class Employee(db.Model):
         return employee
 
     def deserialize(self, request):
-        self.employee_id = request.json['employee_id']
+        self.employee_id = request.json.get('employee_id', None)
         self.first_name = request.json['first_name']
         self.middle_name = request.json.get('middle_name', None)
         self.last_name = request.json['last_name']
@@ -105,7 +105,7 @@ class Employee(db.Model):
     def get_schema():
         schema = {
             "type": "object",
-            "required": ["employee_id", "first_name", "last_name", "address", "gender",  "appointment_date", "active_emp", "mobile_no", "basic_salary", "account_number"]
+            "required": ["first_name", "last_name", "address", "gender",  "appointment_date", "active_emp", "mobile_no", "basic_salary", "account_number"]
         }
         props = schema["properties"] = {}
         props["employee_id"] = {
@@ -243,7 +243,6 @@ class Department(db.Model):
         self.description = request.json.get('description', None)
 
 
-
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256), nullable=False, unique=True)
@@ -333,4 +332,3 @@ class LeavePlan(db.Model):
         self.reason = request.json.get('reason', None)
         self.leave_date = datetime.fromisoformat(
             request.json['leave_date'])
-       

@@ -7,6 +7,7 @@ from flask import Response, request, url_for, Response
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 from HRSystem.utils import create_error_message
+from copy import copy
 
 '''
 This class contains the GET method implementations for employee by organization, department and role data
@@ -18,6 +19,8 @@ support to
     - GET employee by providing organization data
     - GET all the employees
 '''
+
+
 class EmployeeByRlationCollection(Resource):
 
     def get(self, organization=None, department=None, role=None):
@@ -51,18 +54,20 @@ class EmployeeByRlationCollection(Resource):
         return employees_response
 
 
-
 '''
 This class contains the POST method implementations for employee - Add employees to the system by providing organization, department and role
                 
 - Note - Only method to add employees to the system is by giving organization, department and role 
 '''
+
+
 class EmployeeCollection(Resource):
 
     def post(self, organization, department, role):
         try:
             validate(request.json, Employee.get_schema())
         except ValidationError as e:
+            print(e)
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
@@ -89,17 +94,9 @@ class EmployeeCollection(Resource):
 class EmployeeItem(Resource):
 
     def get(self, employee):
-        
         return employee.serialize()
 
     def put(self, employee):
-        db_employee = Employee.query.filter_by(employee_id=employee.employee_id).first()
-        if db_employee is None:
-            return create_error_message(
-                404, "Not found",
-                "Employee not found"
-            )
-
         if not request.json:
             return create_error_message(
                 415, "Unsupported media type",
@@ -109,15 +106,16 @@ class EmployeeItem(Resource):
         try:
             validate(request.json, Employee.get_schema())
         except ValidationError as e:
+            print(e)
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
             )
 
-        employee = Employee()
-        employee.deserialize(employee)
-        employee.id = db_employee.id
-        employee.employee_id = db_employee.employee_id
+        oldEmployee = copy(employee)
+        employee.deserialize(request)
+        employee.id = oldEmployee.id
+        employee.employee_id = oldEmployee.employee_id
 
         try:
             db.session.commit()
