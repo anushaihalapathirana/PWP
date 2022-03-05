@@ -10,6 +10,7 @@ from HRSystem.models import Employee
 from HRSystem.utils import create_error_message
 from HRSystem import cache
 from HRSystem import api
+from HRSystem.utils import require_admin
 
 
 class EmployeeByRlationCollection(Resource):
@@ -24,6 +25,7 @@ class EmployeeByRlationCollection(Resource):
         - GET all the employees
     """
 
+    @require_admin
     def get(self, organization=None, department=None, role=None):
         """ GET list of employees
             Arguments:
