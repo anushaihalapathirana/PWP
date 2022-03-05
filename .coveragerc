@@ -1,0 +1,2 @@
+[run]
+omit = tests/*, instance/*, htmlcov/*, HRSystem/dbutils.py, HRSystem/utils.py 

@@ -65,4 +65,8 @@ Test coverage using
 
 ```
     python3 -m pytest --cov=PWP
+
+    python3 -m pytest --cov=.
+
+    python3 -m pytest --cov-report html --cov=.
 ```
