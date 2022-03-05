@@ -65,7 +65,7 @@ class DepartmentItem(Resource):
         return Response(status=204)
 
     def put(self, department):
-        db_dept = Department.query.filter_by(id=department.id).first()
+        db_dept = Department.query.filter_by(department_id=department.department_id).first()
         if db_dept is None:
             return create_error_message(
                 404, "Not found",

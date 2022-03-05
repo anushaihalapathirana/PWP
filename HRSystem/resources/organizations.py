@@ -61,7 +61,7 @@ class OrganizationItem(Resource):
         return Response(status=204)
 
     def put(self, organization):
-        db_org = Organization.query.filter_by(id=organization.id).first()
+        db_org = Organization.query.filter_by(organization_id=organization.organization_id).first()
         if db_org is None:
             return create_error_message(
                 404, "Not found",

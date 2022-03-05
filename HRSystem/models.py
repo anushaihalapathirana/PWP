@@ -35,7 +35,7 @@ class LeaveTypeEnum(Enum):
 class Employee(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    employee_id = db.Column(db.Integer, unique=True, nullable=False)
+    employee_id = db.Column(db.String(64), unique=True, nullable=False)
     first_name = db.Column(db.String(256), nullable=False)
     last_name = db.Column(db.String(256), nullable=False)
     middle_name = db.Column(db.String(256), nullable=True)
@@ -175,6 +175,7 @@ class Employee(db.Model):
 
 class Organization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    organization_id = db.Column(db.String(64), unique=True, nullable=False)
     name = db.Column(db.String(256), nullable=False, unique=True)
     location = db.Column(db.String(256), nullable=False)
 
@@ -182,9 +183,13 @@ class Organization(db.Model):
     def get_schema():
         schema = {
             "type": "object",
-            "required": ["name", "location"]
+            "required": ["organization_id", "name", "location"]
         }
         props = schema["properties"] = {}
+        props["organization_id"] = {
+            "description": "organization id",
+            "type": "string"
+        }
         props["name"] = {
             "description": "organization name",
             "type": "string"
@@ -198,18 +203,21 @@ class Organization(db.Model):
     def serialize(self):
         org = {
             "id": self.id,
+            "organization_id": self.organization_id,
             "name": self.name,
             "location": self.location
         }
         return org
 
     def deserialize(self, request):
+        self.organization_id = request.json['organization_id']
         self.name = request.json['name']
         self.location = request.json['location']
 
 
 class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    department_id = db.Column(db.String(64), unique=True, nullable=False)
     name = db.Column(db.String(256), nullable=False, unique=True)
     description = db.Column(db.String(256), nullable=True)
 
@@ -217,9 +225,13 @@ class Department(db.Model):
     def get_schema():
         schema = {
             "type": "object",
-            "required": ["name"]
+            "required": ["department_id", "name"]
         }
         props = schema["properties"] = {}
+        props["department_id"] = {
+            "description": "department id",
+            "type": "string"
+        }
         props["name"] = {
             "description": "department name",
             "type": "string"
@@ -233,12 +245,14 @@ class Department(db.Model):
     def serialize(self):
         department = {
             "id": self.id,
+            "department_id": self.department_id,
             "name": self.name,
             "description": self.description and self.description
         }
         return department
 
     def deserialize(self, request):
+        self.department_id = request.json['department_id']
         self.name = request.json['name']
         self.description = request.json.get('description', None)
 
