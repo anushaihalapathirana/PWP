@@ -2,8 +2,10 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from HRSystem.constants import *
+from flask_caching import Cache
 
 db = SQLAlchemy()
+cache = Cache()
 
 
 def create_app(test_config=None):
@@ -15,6 +17,9 @@ def create_app(test_config=None):
         SQLALCHEMY_TRACK_MODIFICATIONS=False
     )
 
+    app.config["CACHE_TYPE"] = "FileSystemCache"
+    app.config["CACHE_DIR"] = "cache"
+
     if test_config is None:
         app.config.from_pyfile("config.py", silent=True)
     else:
@@ -25,6 +30,7 @@ def create_app(test_config=None):
         pass
 
     db.init_app(app)
+    cache.init_app(app)
 
     from HRSystem.converters import RoleConverter, DepartmentConverter, OrganizationConverter, LeavePlanConverter, EmployeeConverter
     # Add converters
@@ -34,9 +40,9 @@ def create_app(test_config=None):
     app.url_map.converters["LeavePlan"] = LeavePlanConverter
     app.url_map.converters["Employee"] = EmployeeConverter
 
-
     from HRSystem.dbutils import init_db_command, generate_test_data
     from . import api
+
     app.cli.add_command(init_db_command)
     app.cli.add_command(generate_test_data)
     app.register_blueprint(api.api_bp)

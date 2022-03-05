@@ -8,6 +8,8 @@ from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 from HRSystem.utils import create_error_message
 from copy import copy
+from HRSystem import cache
+from HRSystem import api
 
 '''
 This class contains the GET method implementations for employee by organization, department and role data
@@ -23,8 +25,13 @@ support to
 
 class EmployeeByRlationCollection(Resource):
 
-    def get(self, organization=None, department=None, role=None):
+    def page_key(*args, **kwargs):
+        print("Added cache with key :", request.path)
+        return str(request.path)
 
+    @cache.cached(make_cache_key=page_key)
+    def get(self, organization=None, department=None, role=None):
+        print("Employee view function called...")
         employees_response = []
         employees = []
         if organization is not None and department is not None and role is not None:
@@ -63,6 +70,22 @@ This class contains the POST method implementations for employee - Add employees
 
 class EmployeeCollection(Resource):
 
+    def _clear_cache(self, department, organnization, role):
+        cache.delete_many(
+            *[api.api.url_for(
+                EmployeeByRlationCollection, organization=organnization, department=department, role=role
+            ),
+                api.api.url_for(
+                EmployeeByRlationCollection, organization=organnization, department=department, role=None
+            ),
+                api.api.url_for(
+                EmployeeByRlationCollection, organization=organnization, department=None, role=role
+            ),
+                api.api.url_for(
+                EmployeeByRlationCollection, organization=None, department=None, role=None
+            )]
+        )
+
     def post(self, organization, department, role):
         try:
             validate(request.json, Employee.get_schema())
@@ -83,7 +106,11 @@ class EmployeeCollection(Resource):
 
             db.session.add(employee)
             db.session.commit()
+
+            self._clear_cache(department=department,
+                              organnization=organization, role=role)
         except Exception as e:
+            print("Error while POST operation : ", e)
             return create_error_message(
                 404, "Not found",
                 "Employee not found"
@@ -92,6 +119,22 @@ class EmployeeCollection(Resource):
 
 
 class EmployeeItem(Resource):
+
+    def _clear_cache(self, department, organnization, role):
+        cache.delete_many(
+            *[api.api.url_for(
+                EmployeeByRlationCollection, organization=organnization, department=department, role=role
+            ),
+                api.api.url_for(
+                EmployeeByRlationCollection, organization=organnization, department=department, role=None
+            ),
+                api.api.url_for(
+                EmployeeByRlationCollection, organization=organnization, department=None, role=role
+            ),
+                api.api.url_for(
+                EmployeeByRlationCollection, organization=None, department=None, role=None
+            )]
+        )
 
     def get(self, employee):
         return employee.serialize()
@@ -106,7 +149,7 @@ class EmployeeItem(Resource):
         try:
             validate(request.json, Employee.get_schema())
         except ValidationError as e:
-            print(e)
+            print("Error while validating PUT operation : ", e)
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
@@ -119,7 +162,10 @@ class EmployeeItem(Resource):
 
         try:
             db.session.commit()
-        except Exception:
+            self._clear_cache(department=employee.department,
+                              organnization=employee.organization, role=employee.role)
+        except Exception as e:
+            print("Error while PUT operation : ", e)
             return create_error_message(
                 500, "Internal server Error",
                 "Error while updating the employee"
@@ -129,7 +175,20 @@ class EmployeeItem(Resource):
 
     def delete(self, employee):
 
+        dept = copy(employee.department)
+        org = copy(employee.organization)
+        role = copy(employee.role)
+
         db.session.delete(employee)
-        db.session.commit()
+        try:
+            db.session.commit()
+            self._clear_cache(department=dept,
+                              organnization=org, role=role)
+        except Exception as e:
+            print("Error while DELETE operation : ", e)
+            return create_error_message(
+                500, "Internal server Error",
+                "Error while deleting the employee"
+            )
 
         return Response(status=204)
