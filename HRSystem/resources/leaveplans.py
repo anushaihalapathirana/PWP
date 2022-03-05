@@ -7,11 +7,14 @@ from flask import Response, request, url_for, Response
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 from HRSystem.utils import create_error_message
+from copy import copy
 
 '''
 This class contains the GET, POST method implementations for leave plan of employees by providing employee id
                 
 '''
+
+
 class LeavePlanByEmployeellection(Resource):
 
     def get(self, employee=None):
@@ -34,7 +37,6 @@ class LeavePlanByEmployeellection(Resource):
 
         return leaveplan_response
 
-    
     def post(self, employee):
         try:
             validate(request.json, LeavePlan.get_schema())
@@ -61,16 +63,9 @@ class LeavePlanByEmployeellection(Resource):
         return Response(response={}, status=201)
 
 
-
-
 class LeavePlanItem(Resource):
 
     def put(self, leaveplan):
-        if leaveplan is None:
-            return create_error_message(
-                404, "Not found",
-                "Leave plan not found"
-            )
 
         if not request.json:
             return create_error_message(
@@ -86,11 +81,9 @@ class LeavePlanItem(Resource):
                 "JSON format is not valid"
             )
 
-        leave = LeavePlan()
-        leave.deserialize(request)
-        leave.id = leaveplan.id
-
-        print(leave.id, 'llllllllllllllllllllllllllll')
+        oldLeavePlan = copy(leaveplan)
+        leaveplan.deserialize(request)
+        leaveplan.id = oldLeavePlan.id
 
         try:
             db.session.commit()
