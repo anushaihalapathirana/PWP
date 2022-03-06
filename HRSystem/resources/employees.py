@@ -18,20 +18,33 @@ class EmployeeByRlationCollection(Resource):
     """
     This class contains the GET method implementations for employee by organization, department and role data
 
-    support to
+    Method support to
         - GET employee list by providing organization, department and role data
         - GET employee list by providing organization and department data
         - GET employee list by providing organization and role
         - GET employee by providing organization data
         - GET all the employees
+
     """
 
     @require_admin
     def get(self, organization=None, department=None, role=None):
         """ GET list of employees
-            Arguments:
+            Endpoint: 
+            "/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/",
+            "/organizations/<Organization:organization>/departments/<Department:department>/employees/",
+            "/organizations/<Organization:organization>/employees/",
+            "/organizations/<Organization:organization>/roles/<Role:role>/employees/",
+            "/employees/"
+            Arguments: 
+                organization
+                department
+                role
             Returns:
-                List
+                List of employees
+            responses:
+                '200':
+                description: The organizations retrieve successfully
         """
         employees_response = []
         employees = []
@@ -67,6 +80,8 @@ class EmployeeCollection(Resource):
     This class contains the POST method implementations for employee - Add employees to the system by providing organization, department and role
 
     - Note - Only method to add employees to the system is by giving organization, department and role
+
+    Endpoint - api/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/
     """
 
     def _clear_cache(self, department, organnization, role):
@@ -86,11 +101,36 @@ class EmployeeCollection(Resource):
         )
 
     def post(self, organization, department, role):
-        """ POST departments
+        """ Create a new employee
         Arguments:
-            request
+            organization
+            department
+            role
+            request:
+                employee_id: 001
+                first_name: test 1
+                middle_name: middle 1
+                last_name: last name 1
+                address: oulu
+                gender: M
+                date_of_birth: 1998-08-25T11:20:30
+                appointment_date: 2005-08-25T11:20:30
+                active_emp: 1
+                prefix_title: MR
+                marritial_status: SINGLE
+                mobile_no: N756982365
+                basic_salary: 56665
+                account_number: FI545455
         Returns:
-            Response
+            responses:
+                '201':
+                description: The employee was created successfully
+                '400':
+                description: The request body was not valid
+                '409':
+                description: A employee with the same id already exists
+                '415':
+                description: Wrong media type was used
         """
         if not request.json:
             return create_error_message(
@@ -137,6 +177,7 @@ class EmployeeItem(Resource):
     """ This class contains the GET, PUT and DELETE method implementations for a single employee
         Arguments:
         Returns:
+        Endpoints: /api/employees/<Employee:employee>/
     """
 
     def _clear_cache(self, department, organnization, role):
@@ -157,20 +198,34 @@ class EmployeeItem(Resource):
 
     @require_employee_key
     def get(self, employee):
-        """ GET employee
-        Arguments:
-            employee
-        Returns:
-            Response
+        """ get details of one employee
+            Arguments:
+                employee
+            Returns:
+                Response
+                    '200':
+                    description: Data of list of employees
+                    '404':
+                    description: The employee was not found
         """
         return employee.serialize()
 
     def put(self, employee):
-        """ PUT employee
+        """ Replace employee's basic data with new values
         Arguments:
             employee
         Returns:
-            Response
+            responses:
+                '204':
+                description: The employee's attributes were updated successfully
+                '400':
+                description: The request body was not valid
+                '404':
+                description: The employee was not found
+                '409':
+                description: A employee with the same name already exists
+                '415':
+                description: Wrong media type was used
         """
         if not request.json:
             return create_error_message(
@@ -203,13 +258,16 @@ class EmployeeItem(Resource):
         return Response(status=204)
 
     def delete(self, employee):
-        """ DELETE employee
+        """ Delete the selected employee
         Arguments:
             employee
         Returns:
-            Response
+            responses:
+                '204':
+                    description: The employee was successfully deleted
+                '404':
+                    description: The employee was not found
         """
-
         dept = copy(employee.department)
         org = copy(employee.organization)
         role = copy(employee.role)

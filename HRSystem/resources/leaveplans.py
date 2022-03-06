@@ -12,12 +12,18 @@ from HRSystem.models import LeavePlan
 class LeavePlanByEmployeellection(Resource):
     """
     This class contains the GET, POST method implementations for leave plan of employees by providing employee id
+
+    Endpoint: /api/employees/<Employee:employee>/leaveplans/
+
     """
     def get(self, employee=None):
-        """ GET list of leaves
-            Arguments:
+        """ GET list of leaves of given employee
+            Arguments: Employee id
             Returns:
-                List
+                List of leaves
+            responses:
+                '200':
+                description: The leaves retrieve successfully
         """
         leaveplan_response = []
         leaves = []
@@ -32,11 +38,23 @@ class LeavePlanByEmployeellection(Resource):
         return leaveplan_response
 
     def post(self, employee):
-        """ POST leave
+        """ Create a new leave
         Arguments:
-            request
+            employee
+            request:
+                leave_type: CASUAL
+                reason: fever
+                leave_date: 1998-08-25T11:20:30
         Returns:
-            Response
+            responses:
+                '201':
+                description: The leave was created successfully
+                '400':
+                description: The request body was not valid
+                '409':
+                description: A leave with the same id already exists
+                '415':
+                description: Wrong media type was used
         """
         if not request.json:
             return create_error_message(
@@ -70,16 +88,25 @@ class LeavePlanItem(Resource):
     """ This class contains the PUT and DELETE method implementations for a single leave
         Arguments:
         Returns:
+        Endpoint: /api/leaveplans/<LeavePlan:leaveplan>/
     """
     def put(self, leaveplan):
-        """ PUT departments
+        """ Replace leaveplan's basic data with new values
         Arguments:
-            department
+            leaveplan
         Returns:
-            Response
+            responses:
+                '204':
+                description: The leaveplan's attributes were updated successfully
+                '400':
+                description: The request body was not valid
+                '404':
+                description: The leaveplan was not found
+                '409':
+                description: A leaveplan with the same name already exists
+                '415':
+                description: Wrong media type was used
         """
-        
-
         if not request.json:
             return create_error_message(
                 415, "Unsupported media type",
@@ -108,11 +135,15 @@ class LeavePlanItem(Resource):
         return Response(status=204)
 
     def delete(self, leaveplan):
-        """ DELETE departments
+        """ Delete the selected leaveplan
         Arguments:
-            department
+            leaveplan
         Returns:
-            Response
+            responses:
+                '204':
+                    description: The leaveplan was successfully deleted
+                '404':
+                    description: The leaveplan was not found
         """
         db.session.delete(leaveplan)
         db.session.commit()

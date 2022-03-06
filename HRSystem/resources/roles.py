@@ -14,30 +14,16 @@ class RoleCollection(Resource):
     """ This class contains the GET and POST method implementations for role data
         Arguments:
         Returns:
+        Endpoint: /api/roles/
     """
     def get(self):
         """ GET list of roles
             Arguments:
             Returns:
-                List
-        """
-
-        """
-        This is normal docstring stuff, OpenAPI description starts after dashes.
-        ---
-        description: Get the list of roles sensors
-        responses:
-          '200':
-            description: List of roles with description
-            content:
-              application/json:
-                example:
-                - name: Manager
-                  code: MAN
-                  description: manager role
-                - name: Engineer
-                  code: ENG
-                  description: null
+                List of roles
+            responses:
+                '200':
+                description: The Roles retrieve successfully
         """
         response_data = []
         roles = Role.query.all()
@@ -47,11 +33,22 @@ class RoleCollection(Resource):
         return response_data
 
     def post(self):
-        """ POST roles
+        """ Create a new Role
         Arguments:
-            request
+            request:
+                name: Manager
+                code: MAN
+                description: Manager role
         Returns:
-            Response
+            responses:
+                '201':
+                description: The Role was created successfully
+                '400':
+                description: The request body was not valid
+                '409':
+                description: A role with the same code already exists
+                '415':
+                description: Wrong media type was used
         """
         if not request.json:
             return create_error_message(
@@ -90,24 +87,33 @@ class RoleItem(Resource):
     """ This class contains the GET, PUT and DELETE method implementations for a single role
         Arguments:
         Returns:
+        Endpoint - /api/roles/<role>
     """
     def get(self, role):
-        """ GET departments
+        """ get details of one role
         Arguments:
-            department
+            role
         Returns:
             Response
+                '200':
+                description: Data of list of role
+                '404':
+                description: The role was not found
         """
         response_data =  role.serialize()
 
         return response_data
 
     def delete(self, role):
-        """ DELETE departments
+        """ Delete the selected role
         Arguments:
-            department
+            role
         Returns:
-            Response
+            responses:
+                '204':
+                    description: The role was successfully deleted
+                '404':
+                    description: The role was not found
         """
         db.session.delete(role)
         db.session.commit()
@@ -115,11 +121,21 @@ class RoleItem(Resource):
         return Response(status=204)
 
     def put(self, role):
-        """ PUT departments
+        """ Replace role's basic data with new values
         Arguments:
-            department
+            role
         Returns:
-            Response
+            responses:
+                '204':
+                description: The role's attributes were updated successfully
+                '400':
+                description: The request body was not valid
+                '404':
+                description: The role was not found
+                '409':
+                description: A role with the same name already exists
+                '415':
+                description: Wrong media type was used
         """
         db_role = Role.query.filter_by(code=role.code).first()
 

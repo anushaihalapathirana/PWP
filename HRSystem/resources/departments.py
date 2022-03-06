@@ -16,12 +16,16 @@ class DepartmentCollection(Resource):
     """ This class contains the GET and POST method implementations for department data
         Arguments:
         Returns:
+        Endpoint: /api/departments/
     """
     def get(self):
         """ GET list of departments
             Arguments:
             Returns:
-                List
+                List of departments
+            responses:
+                '200':
+                description: The departments retrieve successfully
         """
         response_data = []
         depts = Department.query.all()
@@ -31,11 +35,22 @@ class DepartmentCollection(Resource):
         return response_data
 
     def post(self):
-        """ POST departments
+        """ Create a new department
         Arguments:
-            request
+            request:
+                name: abc
+                description: deptartment of tech
+                department_id: D01
         Returns:
-            Response
+            responses:
+                '201':
+                description: The department was created successfully
+                '400':
+                description: The request body was not valid
+                '409':
+                description: A department with the same id already exists
+                '415':
+                description: Wrong media type was used
         """
         if not request.json:
             return create_error_message(
@@ -79,25 +94,34 @@ class DepartmentItem(Resource):
     """ This class contains the GET, PUT and DELETE method implementations for a single department
         Arguments:
         Returns:
+        Endpoint: /api/departments/<Department:department>/
     """
 
     def get(self, department):
-        """ GET departments
+        """ get details of one department
         Arguments:
             department
         Returns:
             Response
+                '200':
+                description: Data of list of department
+                '404':
+                description: The department was not found
         """
         response_data = department.serialize()
 
         return response_data
 
     def delete(self, department):
-        """ DELETE departments
+        """ Delete the selected department
         Arguments:
             department
         Returns:
-            Response
+            responses:
+                '204':
+                    description: The department was successfully deleted
+                '404':
+                    description: The department was not found
         """
         db.session.delete(department)
         db.session.commit()
@@ -106,11 +130,21 @@ class DepartmentItem(Resource):
 
 
     def put(self, department):
-        """ PUT departments
+        """ Replace department's basic data with new values
         Arguments:
             department
         Returns:
-            Response
+            responses:
+                '204':
+                description: The department's attributes were updated successfully
+                '400':
+                description: The request body was not valid
+                '404':
+                description: The department was not found
+                '409':
+                description: A department with the same name already exists
+                '415':
+                description: Wrong media type was used
         """
         if not request.json:
             return create_error_message(

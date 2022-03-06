@@ -15,12 +15,17 @@ class OrganizationCollection(Resource):
     """ This class contains the GET and POST method implementations for organization data
         Arguments:
         Returns:
+        Endpoint: /api/organizations/
+
     """
     def get(self):
-        """ GET list of orgs
+        """ GET list of organizations
             Arguments:
             Returns:
-                List
+                List of organizations
+            responses:
+                '200':
+                description: The organizations retrieve successfully
         """
         response_data = []
         orgs = Organization.query.all()
@@ -30,11 +35,22 @@ class OrganizationCollection(Resource):
         return response_data
 
     def post(self):
-        """ POST orgs
+        """ Create a new organization
         Arguments:
-            request
+            request:
+                name: abc
+                location: oulu
+                organization_id: D01
         Returns:
-            Response
+            responses:
+                '201':
+                description: The organization was created successfully
+                '400':
+                description: The request body was not valid
+                '409':
+                description: A organization with the same id already exists
+                '415':
+                description: Wrong media type was used
         """
         if not request.json:
             return create_error_message(
@@ -75,34 +91,53 @@ class OrganizationItem(Resource):
     """ This class contains the GET, PUT and DELETE method implementations for a single org
         Arguments:
         Returns:
+        Endpoint: /api/organization/<organization>/
     """
     def get(self, organization):
-        """ GET org
+        """ get details of one organization
         Arguments:
-            org
+            organization
         Returns:
             Response
+                '200':
+                description: Data of list of organization
+                '404':
+                description: The organization was not found
         """
         response_data = organization.serialize() 
         return response_data
 
     def delete(self, organization):
-        """ DELETE org
+        """ Delete the selected organization
         Arguments:
-            org
+            organization
         Returns:
-            Response
+            responses:
+                '204':
+                    description: The organization was successfully deleted
+                '404':
+                    description: The organization was not found
         """
         db.session.delete(organization)
         db.session.commit()
         return Response(status=204)
 
     def put(self, organization):
-        """ PUT org
+        """ Replace organization's basic data with new values
         Arguments:
-            org
+            organization
         Returns:
-            Response
+            responses:
+                '204':
+                description: The organization's attributes were updated successfully
+                '400':
+                description: The request body was not valid
+                '404':
+                description: The organization was not found
+                '409':
+                description: A organization with the same name already exists
+                '415':
+                description: Wrong media type was used
         """
         db_org = Organization.query.filter_by(organization_id=organization.organization_id).first()
 
