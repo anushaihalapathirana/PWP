@@ -74,11 +74,17 @@ def _populate_db():
                         2018, 11, 21, 11, 20, 30), employee=employee)
         db.session.add(leave)
 
-    token = secrets.token_urlsafe()
+        token = "testtokenemployee{}".format(i)
+        db_key = ApiKey(key=ApiKey.key_hash(token), admin=False, employee=employee)
+        db.session.add(db_key)
+
+
+    db.session.add(db_key)
+
+    token = "testtoken"
     db_key = ApiKey(key=ApiKey.key_hash(token),admin=True)
     db.session.add(db_key)
 
-        
     db.session.commit()
 
 def _get_role_json(number=10):
@@ -398,36 +404,60 @@ class TestEmployeeByRlationCollection(object):
     RESOURCE_URL_2 = "/api/organizations/O01/employees/"
     RESOURCE_URL_3 = "/api/organizations/O01/departments/D01/employees/"
     RESOURCE_URL_4 = "/api/organizations/O01/departments/D01/roles/Code-1/employees/"
-
+    token = "testtoken"
     def test_get(self, client):
-        resp = client.get(self.RESOURCE_URL, headers={"HRSystem-Api-Key": "aCO8xWKY2qGN3wQVPPqUao44Y9w4w8bfc4HlHu8j-3M"})
+        resp = client.get(self.RESOURCE_URL, headers={"HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 3
     
     def test_get_by_role(self, client):
-        resp = client.get(self.RESOURCE_URL_1, headers={"HRSystem-Api-Key": "aCO8xWKY2qGN3wQVPPqUao44Y9w4w8bfc4HlHu8j-3M"})
+        resp = client.get(self.RESOURCE_URL_1, headers={"HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 1
     
     def test_get_by_org(self, client):
-        resp = client.get(self.RESOURCE_URL_2, headers={"HRSystem-Api-Key": "aCO8xWKY2qGN3wQVPPqUao44Y9w4w8bfc4HlHu8j-3M"})
+        resp = client.get(self.RESOURCE_URL_2, headers={"HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 1
     
     def test_get_by_dept(self, client):
-        resp = client.get(self.RESOURCE_URL_3, headers={"HRSystem-Api-Key": "aCO8xWKY2qGN3wQVPPqUao44Y9w4w8bfc4HlHu8j-3M"})
+        resp = client.get(self.RESOURCE_URL_3, headers={"HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 1
     
     def test_get_by_all(self, client):
-        resp = client.get(self.RESOURCE_URL_4, headers={"HRSystem-Api-Key": "aCO8xWKY2qGN3wQVPPqUao44Y9w4w8bfc4HlHu8j-3M"})
+        resp = client.get(self.RESOURCE_URL_4, headers={"HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 1
+
+    def test_get_err(self, client):
+        resp = client.get(self.RESOURCE_URL)
+        assert resp.status_code == 403
+    
+    def test_get_by_role_err(self, client):
+        resp = client.get(self.RESOURCE_URL_1)
+        assert resp.status_code == 403
+    
+    def test_get_by_org_err(self, client):
+        resp = client.get(self.RESOURCE_URL_2)
+        assert resp.status_code == 403
+    
+    def test_get_by_dept_err(self, client):
+        resp = client.get(self.RESOURCE_URL_3)
+        assert resp.status_code == 403
+    
+    def test_get_by_all_err(self, client):
+        resp = client.get(self.RESOURCE_URL_4)
+        assert resp.status_code == 403
+    
+    def test_get_by_all_auth_err(self, client):
+        resp = client.get(self.RESOURCE_URL_4, headers={"HRSystem-Api-Key": "llll"})
+        assert resp.status_code == 403
 
 class TestEmployeeCollection(object):
     
@@ -459,11 +489,19 @@ class TestEmployeeItem(object):
     INVALID_URL = "/api/employees/new/"
     
     def test_get(self, client):
-        resp = client.get(self.RESOURCE_URL)
+        resp = client.get(self.RESOURCE_URL, headers={"HRSystem-Api-Key": "testtokenemployee1"})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         resp = client.get(self.INVALID_URL)
         assert resp.status_code == 404
+
+    def test_get_err(self, client):
+        resp = client.get(self.RESOURCE_URL, headers={"HRSystem-Api-Key": "testtokenemployee"})
+        assert resp.status_code == 403
+
+    def test_get_auth_err(self, client):
+        resp = client.get(self.RESOURCE_URL, headers={"HRSystem-Key": "testtokenemployee"})
+        assert resp.status_code == 403
 
     def test_put(self, client):
         valid = _get_employee_json_put()

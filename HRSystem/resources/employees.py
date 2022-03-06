@@ -11,7 +11,7 @@ from HRSystem.models import Employee
 from HRSystem.utils import create_error_message
 from HRSystem import cache
 from HRSystem import api
-from HRSystem.utils import require_admin
+from HRSystem.utils import require_admin, require_employee_key
 
 
 class EmployeeByRlationCollection(Resource):
@@ -155,6 +155,7 @@ class EmployeeItem(Resource):
             )]
         )
 
+    @require_employee_key
     def get(self, employee):
         """ GET employee
         Arguments:

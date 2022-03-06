@@ -72,12 +72,19 @@ def generate_test_data():
     leav3 = LeavePlan(leave_type='MEDICAL', leave_date=datetime(
         2018, 1, 25, 11, 20, 30), employee=emp)
 
+    # employee auth data
+    token1 = secrets.token_urlsafe()
+    token2 = secrets.token_urlsafe()
+    db_key1 = ApiKey(key=ApiKey.key_hash(token1),admin=False, employee=emp2)
+    db_key2 = ApiKey(key=ApiKey.key_hash(token2),admin=False, employee=emp)
 
-
+    #admin auth data
     token = secrets.token_urlsafe()
     db_key = ApiKey(key=ApiKey.key_hash(token),admin=True)
 
     db.session.add(db_key)
+    db.session.add(db_key1)
+    db.session.add(db_key2)
 
     db.session.add(role)
     db.session.add(role2)
@@ -103,4 +110,10 @@ def generate_test_data():
 
     db.session.commit()
 
-    print(token)
+    print("ADMIN TOKEN", token)
+    print("EMP2 TOKEN", token1)
+    print("EMP1 TOKEN", token2)
+
+# ADMIN TOKEN kbgRd8GdPdCu67IMv25uSp25p6PcTA_OFo6n5njUvAs
+# EMP2 TOKEN jibi3bfcVjBgeuqcjQTvtDLWvU2M8WB6fFw5t_HvAn0
+# EMP1 TOKEN aDGtwq7RP0WSbPsPq_buHzihMKWHzXW6IPEq6BGOy9s
