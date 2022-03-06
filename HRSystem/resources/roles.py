@@ -21,6 +21,24 @@ class RoleCollection(Resource):
             Returns:
                 List
         """
+
+        """
+        This is normal docstring stuff, OpenAPI description starts after dashes.
+        ---
+        description: Get the list of roles sensors
+        responses:
+          '200':
+            description: List of roles with description
+            content:
+              application/json:
+                example:
+                - name: Manager
+                  code: MAN
+                  description: manager role
+                - name: Engineer
+                  code: ENG
+                  description: null
+        """
         response_data = []
         roles = Role.query.all()
 
@@ -64,7 +82,7 @@ class RoleCollection(Resource):
             if isinstance(error, HTTPException):
                 return create_error_message(
                      409, "Already Exist",
-                    "role id is already exist"
+                    "role code is already exist"
             )
         return Response(response={}, status=201)
 

@@ -1,0 +1,839 @@
+---
+openapi: 3.0.3
+servers:
+- url: /api
+components:
+  parameters:
+    role:
+      description: role code
+      in: path
+      name: role
+      required: true
+      schema:
+        type: string
+    organization:
+      description: organization id
+      in: path
+      name: organization
+      required: true
+      schema:
+        type: string
+    department:
+      description: department id
+      in: path
+      name: department
+      required: true
+      schema:
+        type: string
+    employee:
+      description: employee id
+      in: path
+      name: employee
+      required: true
+      schema:
+        type: string
+    leaveplan:
+      description: leave plan id
+      in: path
+      name: leave plan
+      required: true
+      schema:
+        type: string
+  schemas:
+    Role:
+      properties:
+        name:
+          description: Name of the role
+          type: string
+        code:
+          description: Role's unique code
+          type: string
+        description:
+          description: Role description
+          type: string
+      required:
+      - name
+      - code
+      type: object
+    Organization:
+      properties:
+        name:
+          description: Name of the organization
+          type: string
+        location:
+          description: Location of organization
+          type: string
+        organization_id:
+          description: organization unique id
+          type: string
+      required:
+      - name
+      - organization_id
+      - location
+      type: object
+    Department:
+      properties:
+        name:
+          description: Name of the department
+          type: string
+        description:
+          description: description of department
+          type: string
+        department_id:
+          description: department unique id
+          type: string
+      required:
+      - name
+      - department_id
+      type: object
+    Employee:
+      properties:
+        employee_id:
+          description: Employee id
+          type: string
+        first_name:
+          description: first name of the employee
+          type: string
+        middle_name:
+          description: middle name of the employee
+          type: string
+        last_name:
+          description: last name of the employee
+          type: string
+        address:
+          description: address of the employee
+          type: string
+        gender:
+          description: gender of the employee
+          type: string
+        date_of_birth:
+          description: birth day of the employee
+          type: DateTime
+        appointment_date:
+          description: appointment date of the employee
+          type: DateTime
+        active_emp:
+          description: employee is working currently or not
+          type: boolean
+        prefix_title:
+          description: employee title
+          type: enum
+        marritial_status:
+          description: marritial status
+          type: enum
+        mobile_no:
+          description: mobile number
+          type: string
+        basic_salary:
+          description: employee basic salary
+          type: number
+        account_number:
+          description: bank account number
+          type: string
+      required:
+      - employee_id
+      - first_name
+      - last_name
+      - address
+      - gender
+      - appointment_date
+      - active_emp
+      - mobile_no
+      - basic_salary
+      - account_number
+      type: object
+    LeavePlan:
+      properties:
+        leave_type:
+          description: type of the leave
+          type: enum
+        reason:
+          description: reason for leave
+          type: string
+        leave_date:
+          description: date of the leave
+          type: DateTime
+      required:
+      - id
+      - leave_type
+      - leave_date
+      type: object
+  securitySchemes:
+    HRSystemKey:
+      type: apiKey
+      name: HRSystem-Api-Key
+      in: header
+info:
+  title: HR System Example
+  version: 0.0.1
+  description: |
+    This is an API example used in the Programmable Web Project course.
+    It stores human resource management related data.
+  termsOfService: http://totally.not.placehold.er/
+  contact:
+    url: http://totally.not.placehold.er/
+    email: pwp-course@lists.oulu.fi
+    name: PWP Staff List
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /roles/:
+    get:
+      description: Get the list of managed roles
+      responses:
+        '200':
+          description: List of roles
+          content:
+            application/json:
+              example:
+              - name: Manager
+                code: MAN
+                description: manager role
+              - name: Engineer
+                code: ENG
+                description: null
+    post:
+      description: Create a new Role
+      requestBody:
+        description: JSON document that contains basic data for a new role
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+            example:
+              name: Manager
+              code: MAN
+              description: Manager role
+      responses:
+        '201':
+          description: The Role was created successfully
+        '400':
+          description: The request body was not valid
+        '409':
+          description: A role with the same code already exists
+        '415':
+          description: Wrong media type was used
+  /roles/{role}/:
+    parameters:
+    - $ref: '#/components/parameters/role'
+    get:
+      description: Get details of one role
+      responses:
+        '200':
+          description: Data of single role
+          content:
+            application/json:
+              examples:
+                roles:
+                  description: A role of en employee
+                  value:
+                    name: Manager
+                    code: MAN
+                    description: Manager role
+        '404':
+          description: The role was not found
+    put:
+      description: Replace role's basic data with new values
+      requestBody:
+        description: JSON document that contains new basic data for the role
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+            example:
+              name: Team lead
+              code: TL
+              description: Team lead role
+      responses:
+        '204':
+          description: The role's attributes were updated successfully
+        '400':
+          description: The request body was not valid
+        '404':
+          description: The role was not found
+        '409':
+          description: A role with the same name already exists
+        '415':
+          description: Wrong media type was used
+    delete:
+     description: Delete the selected role
+     responses:
+       '204':
+         description: The role was successfully deleted
+       '404':
+         description: The role was not found
+
+
+  /organizations/:
+    get:
+      description: Get the list of managed organizations
+      responses:
+        '200':
+          description: List of organizations
+          content:
+            application/json:
+              example:
+              - organization_id: O01
+                name: org 1
+                location: oulu
+              - organization_id: O02
+                name: org 2
+                location: Helsnki
+    post:
+      description: Create a new organization
+      requestBody:
+        description: JSON document that contains basic data for a new organization
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+            example:
+              name: organization1
+              location: location1
+              organization_id: O05
+      responses:
+        '201':
+          description: The organization was created successfully
+        '400':
+          description: The request body was not valid
+        '409':
+          description: A organization with the same code already exists
+        '415':
+          description: Wrong media type was used
+  /organizations/{organization}/:
+    parameters:
+    - $ref: '#/components/parameters/organization'
+    get:
+      description: Get details of one organization
+      responses:
+        '200':
+          description: Data of single organization
+          content:
+            application/json:
+              examples:
+                organizations:
+                  description: A organization of en employee
+                  value:
+                    name: organization 1
+                    location: location1
+                    organization_id: O01
+        '404':
+          description: The organization was not found
+    put:
+      description: Replace organization's basic data with new values
+      requestBody:
+        description: JSON document that contains new basic data for the organization
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+            example:
+              name: organization 1
+              location: location 2
+              organization_id: O01
+      responses:
+        '204':
+          description: The organization's attributes were updated successfully
+        '400':
+          description: The request body was not valid
+        '404':
+          description: The organization was not found
+        '409':
+          description: A organization with the same name already exists
+        '415':
+          description: Wrong media type was used
+    delete:
+     description: Delete the selected organization
+     responses:
+       '204':
+         description: The organization was successfully deleted
+       '404':
+         description: The organization was not found
+
+
+  /departments/:
+    get:
+      description: Get the list of managed department
+      responses:
+        '200':
+          description: List of department
+          content:
+            application/json:
+              example:
+              - department_id: D01
+                name: dept 1
+                description: department number 1
+              - organization_id: D02
+                name: dept 2
+                description: department 2
+    post:
+      description: Create a new department
+      requestBody:
+        description: JSON document that contains basic data for a new department
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Department'
+            example:
+              name: department1
+              description: department 1
+              department_id: D05
+      responses:
+        '201':
+          description: The department was created successfully
+        '400':
+          description: The request body was not valid
+        '409':
+          description: A department with the same code already exists
+        '415':
+          description: Wrong media type was used
+  /departments/{department}/:
+    parameters:
+    - $ref: '#/components/parameters/department'
+    get:
+      description: Get details of one department
+      responses:
+        '200':
+          description: Data of single department
+          content:
+            application/json:
+              examples:
+                departments:
+                  description: A department of en employee
+                  value:
+                    name: department 1
+                    location: department
+                    department_id: D01
+        '404':
+          description: The department was not found
+    put:
+      description: Replace department's basic data with new values
+      requestBody:
+        description: JSON document that contains new basic data for the department
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Department'
+            example:
+              name: department 1
+              description: department 2
+              department_id: D01
+      responses:
+        '204':
+          description: The department's attributes were updated successfully
+        '400':
+          description: The request body was not valid
+        '404':
+          description: The department was not found
+        '409':
+          description: A department with the same name already exists
+        '415':
+          description: Wrong media type was used
+    delete:
+     description: Delete the selected department
+     responses:
+       '204':
+         description: The department was successfully deleted
+       '404':
+         description: The department was not found
+
+
+  /employees/:
+    get:
+      description: Get the list of managed employees
+      security:
+        - HRSystemKey: [admin]
+      responses:
+        '200':
+          description: List of employees
+          content:
+            application/json:
+              example:
+              - employee_id: 001
+                first_name: test 1
+                middle_name: middle 1
+                last_name: last name 1
+                address: oulu
+                gender: M
+                date_of_birth: 1998-08-25T11:20:30
+                appointment_date: 2005-08-25T11:20:30
+                active_emp: 1
+                prefix_title: MR
+                marritial_status: SINGLE
+                mobile_no: N756982365
+                basic_salary: 56665
+                account_number: FI545455
+              - employee_id: 002
+                first_name: test 2
+                middle_name: middle 2
+                last_name: last name 2
+                address: oulu
+                gender: F
+                date_of_birth: 1998-08-25T11:20:30
+                appointment_date: 2005-08-25T11:20:30
+                active_emp: 1
+                prefix_title: MISS
+                marritial_status: SINGLE
+                mobile_no: N756982365
+                basic_salary: 56665
+                account_number: FI54545k
+  
+  /organizations/{organization}/roles/{role}/employees/:
+    get:
+      description: Get the list of managed employees based on their organization and role
+      security:
+        - HRSystemKey: [admin]
+      parameters:
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/role'
+      responses:
+        '200':
+          description: List of employees
+          content:
+            application/json:
+              example:
+              - employee_id: 001
+                first_name: test 1
+                middle_name: middle 1
+                last_name: last name 1
+                address: oulu
+                gender: M
+                date_of_birth: 1998-08-25T11:20:30
+                appointment_date: 2005-08-25T11:20:30
+                active_emp: 1
+                prefix_title: MR
+                marritial_status: SINGLE
+                mobile_no: N756982365
+                basic_salary: 56665
+                account_number: FI545455
+              - employee_id: 002
+                first_name: test 2
+                middle_name: middle 2
+                last_name: last name 2
+                address: oulu
+                gender: F
+                date_of_birth: 1998-08-25T11:20:30
+                appointment_date: 2005-08-25T11:20:30
+                active_emp: 1
+                prefix_title: MISS
+                marritial_status: SINGLE
+                mobile_no: N756982365
+                basic_salary: 56665
+                account_number: FI54545k
+  
+  /organizations/{organization}/employees/:
+    get:
+      description: Get the list of employees in same organization
+      security:
+        - HRSystemKey: [admin]
+      parameters:
+        - $ref: '#/components/parameters/organization'
+      responses:
+        '200':
+          description: List of employees
+          content:
+            application/json:
+              example:
+              - employee_id: 001
+                first_name: test 1
+                middle_name: middle 1
+                last_name: last name 1
+                address: oulu
+                gender: M
+                date_of_birth: 1998-08-25T11:20:30
+                appointment_date: 2005-08-25T11:20:30
+                active_emp: 1
+                prefix_title: MR
+                marritial_status: SINGLE
+                mobile_no: N756982365
+                basic_salary: 56665
+                account_number: FI545455
+              - employee_id: 002
+                first_name: test 2
+                middle_name: middle 2
+                last_name: last name 2
+                address: oulu
+                gender: F
+                date_of_birth: 1998-08-25T11:20:30
+                appointment_date: 2005-08-25T11:20:30
+                active_emp: 1
+                prefix_title: MISS
+                marritial_status: SINGLE
+                mobile_no: N756982365
+                basic_salary: 56665
+                account_number: FI54545k
+  
+  /organizations/{organization}/departments/{department}/employees/:
+    get:
+      description: Get the list of employees in same organization and same department
+      security:
+        - HRSystemKey: [admin]
+      parameters:
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/department'
+      responses:
+        '200':
+          description: List of employees
+          content:
+            application/json:
+              example:
+              - employee_id: 001
+                first_name: test 1
+                middle_name: middle 1
+                last_name: last name 1
+                address: oulu
+                gender: M
+                date_of_birth: 1998-08-25T11:20:30
+                appointment_date: 2005-08-25T11:20:30
+                active_emp: 1
+                prefix_title: MR
+                marritial_status: SINGLE
+                mobile_no: N756982365
+                basic_salary: 56665
+                account_number: FI545455
+              - employee_id: 002
+                first_name: test 2
+                middle_name: middle 2
+                last_name: last name 2
+                address: oulu
+                gender: F
+                date_of_birth: 1998-08-25T11:20:30
+                appointment_date: 2005-08-25T11:20:30
+                active_emp: 1
+                prefix_title: MISS
+                marritial_status: SINGLE
+                mobile_no: N756982365
+                basic_salary: 56665
+                account_number: FI54545k
+  
+  /organizations/{organization}/departments/{department}/roles/{role}/employees/:
+    get:
+      description: Get the list of employees in same organization and same department and same role category
+      security:
+        - HRSystemKey: [admin]
+      parameters:
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/department'
+        - $ref: '#/components/parameters/role'
+      responses:
+        '200':
+          description: List of employees
+          content:
+            application/json:
+              example:
+              - employee_id: 001
+                first_name: test 1
+                middle_name: middle 1
+                last_name: last name 1
+                address: oulu
+                gender: M
+                date_of_birth: 1998-08-25T11:20:30
+                appointment_date: 2005-08-25T11:20:30
+                active_emp: 1
+                prefix_title: MR
+                marritial_status: SINGLE
+                mobile_no: N756982365
+                basic_salary: 56665
+                account_number: FI545455
+              - employee_id: 002
+                first_name: test 2
+                middle_name: middle 2
+                last_name: last name 2
+                address: oulu
+                gender: F
+                date_of_birth: 1998-08-25T11:20:30
+                appointment_date: 2005-08-25T11:20:30
+                active_emp: 1
+                prefix_title: MISS
+                marritial_status: SINGLE
+                mobile_no: N756982365
+                basic_salary: 56665
+                account_number: FI54545k
+
+  /organizations/{organization}/departments/{department}/roles/{role}/employees/:
+    post:
+      description: Create a new employee
+      parameters:
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/department'
+        - $ref: '#/components/parameters/role'
+      requestBody:
+        description: JSON document that contains basic data for a new employee
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+            example:
+              employee_id: 005
+              first_name: test emp
+              middle_name: middle name
+              last_name: last name 1
+              address: oulu
+              gender: M
+              date_of_birth: 1998-08-25T11:20:30
+              appointment_date: 2005-08-25T11:20:30
+              active_emp: 1
+              prefix_title: MR
+              marritial_status: SINGLE
+              mobile_no: N756982365
+              basic_salary: 56665
+              account_number: FI545455
+      responses:
+        '201':
+          description: The employee was created successfully
+        '400':
+          description: The request body was not valid
+        '409':
+          description: A employee with the same code already exists
+        '415':
+          description: Wrong media type was used
+
+  /employees/{employee}/:
+    parameters:
+    - $ref: '#/components/parameters/employee'
+    get:
+      description: Get details of one employee
+      security:
+        - HRSystemKey: []
+      responses:
+        '200':
+          description: Data of single employee
+          content:
+            application/json:
+              examples:
+                departments:
+                  description: employee data
+                  value:
+                    employee_id: 001
+                    first_name: test 1
+                    middle_name: middle 1
+                    last_name: last name 1
+                    address: oulu
+                    gender: M
+                    date_of_birth: 1998-08-25T11:20:30
+                    appointment_date: 2005-08-25T11:20:30
+                    active_emp: 1
+                    prefix_title: MR
+                    marritial_status: SINGLE
+                    mobile_no: N756982365
+                    basic_salary: 56665
+                    account_number: FI545455
+        '404':
+          description: The employee was not found
+    put:
+      description: Replace employee's basic data with new values
+      requestBody:
+        description: JSON document that contains new basic data for the employee
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+            example:
+              employee_id: 001
+              first_name: test 1
+              middle_name: middle 1
+              last_name: last name 1
+              address: oulu
+              gender: M
+              date_of_birth: 1998-08-25T11:20:30
+              appointment_date: 2005-08-25T11:20:30
+              active_emp: 1
+              prefix_title: MR
+              marritial_status: SINGLE
+              mobile_no: N756982365
+              basic_salary: 56665
+              account_number: FI545455
+      responses:
+        '204':
+          description: The employee's attributes were updated successfully
+        '400':
+          description: The request body was not valid
+        '404':
+          description: The employee was not found
+        '409':
+          description: A employee with the same name already exists
+        '415':
+          description: Wrong media type was used
+    delete:
+     description: Delete the selected employee
+     responses:
+       '204':
+         description: The employee was successfully deleted
+       '404':
+         description: The employee was not found
+
+  /employees/{employee}/leaveplans/:
+    parameters:
+    - $ref: '#/components/parameters/employee'
+    get:
+      description: Get the leaveplans
+      responses:
+        '200':
+          description: List of leaves
+          content:
+            application/json:
+              example:
+              - id: 1
+                leave_type: MEDICAL
+                reason: fever
+                leave_date: "2012-02-25"
+              - id: 2
+                leave_type: CASUAL
+                reason: fever
+                leave_date: 1998-08-25T11:20:30
+    post:
+      description: Create a new leave
+      requestBody:
+        description: JSON document that contains basic data for a new leave
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeavePlan'
+            example:
+              leave_type: CASUAL
+              reason: fever
+              leave_date: 1998-08-25T11:20:30
+      responses:
+        '201':
+          description: The leave was created successfully
+        '400':
+          description: The request body was not valid
+        '409':
+          description: A leave with the same id already exists
+        '415':
+          description: Wrong media type was used
+
+  /leaveplans/{leaveplan}/:
+    parameters:
+    - $ref: '#/components/parameters/leaveplan'
+    put:
+      description: Replace leaveplan's basic data with new values
+      requestBody:
+        description: JSON document that contains new basic data for the leaveplan
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeavePlan'
+            example:
+              leave_type: MEDICAL
+              reason: fever
+              leave_date: 1998-08-25T11:20:30
+      responses:
+        '204':
+          description: The leaveplan's attributes were updated successfully
+        '400':
+          description: The request body was not valid
+        '404':
+          description: The leaveplan was not found
+        '409':
+          description: A leaveplan with the same name already exists
+        '415':
+          description: Wrong media type was used
+    delete:
+     description: Delete the selected leaveplan
+     responses:
+       '204':
+         description: The leaveplan was successfully deleted
+       '404':
+         description: The leaveplan was not found

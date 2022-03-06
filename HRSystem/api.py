@@ -3,7 +3,6 @@ This file contains the mapping of api resources
 """
 from flask import Blueprint
 from flask_restful import Api
-
 from HRSystem.resources.roles import RoleCollection, RoleItem
 from HRSystem.resources.organizations import OrganizationCollection, OrganizationItem
 from HRSystem.resources.departments import DepartmentCollection, DepartmentItem

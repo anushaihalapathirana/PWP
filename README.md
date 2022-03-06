@@ -108,3 +108,14 @@ Test coverage html report - You can view test coverage report by using below com
 ```
 python3 -m pytest --cov-report html --cov=.
 ```
+
+# Run swagger
+
+Install flasgger and pyyaml
+
+```
+pip install flasgger
+pip install pyyaml
+```
+
+Run the application using ``` flask run ``` command and you can access swagger in http://127.0.0.1:5000/apidocs/

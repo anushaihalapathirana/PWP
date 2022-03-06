@@ -3,6 +3,7 @@ Init file
 """
 import os
 from flask import Flask
+from flasgger import Swagger, swag_from
 from flask_sqlalchemy import SQLAlchemy
 from HRSystem.constants import *
 from flask_caching import Cache
@@ -23,6 +24,13 @@ def create_app(test_config=None):
         os.path.join(app.instance_path, "hrcore.db"),
         SQLALCHEMY_TRACK_MODIFICATIONS=False
     )
+    
+    app.config["SWAGGER"] = {
+        "title": "HR System API",
+        "openapi": "3.0.3",
+        "uiversion": 3,
+    }
+    swagger = Swagger(app, template_file="doc/hrsystem.yml")
 
     app.config["CACHE_TYPE"] = "FileSystemCache"
     app.config["CACHE_DIR"] = "cache"
