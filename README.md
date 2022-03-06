@@ -44,29 +44,49 @@ More details about the database can be found here - https://github.com/anushaiha
 
 # Code quality
 
+Note - Please note these commands are exicuted of linux environment
+
 This project use Pylint for code quality.
 
-Run below command to run pylint
+Install pylit using below command
+
+```
+pip install pylint
+```
+
+Run below command to run pylint in project
 
 ``` 
-    pylint HRSystem
+pylint HRSystem
 ```
 
 # How to run tests
 
-Run database tests using below command
+Note - Please note these commands are exicuted of linux environment
+
+How to install required libries for testing - pytest, pytest-cov
 
 ```
-    python3 -m pytest tests/db_test.py 
+pip install pytest
+pip install pytest-cov
+```
+
+Run database tests and api tests using below command
+
+```
+python3 -m pytest tests/db_test.py 
+python3 -m pytest tests/api_test.py 
 ```
 
 
 Test coverage using 
 
 ```
-    python3 -m pytest --cov=PWP
+python3 -m pytest --cov=.
+```
 
-    python3 -m pytest --cov=.
+Test coverage html report - You can view test coverage report by using below command.
 
-    python3 -m pytest --cov-report html --cov=.
+```
+python3 -m pytest --cov-report html --cov=.
 ```
