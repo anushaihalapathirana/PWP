@@ -24,6 +24,8 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
 # we don't need a client for database testing, just the db handle
 @pytest.fixture
 def client():
+    """ This method create the client , database and configurations
+    """
     db_fd, db_fname = tempfile.mkstemp()
     config = {
         "SQLALCHEMY_DATABASE_URI": "sqlite:///" + db_fname,
@@ -43,6 +45,9 @@ def client():
 
 
 def _populate_db():
+    """
+    Generate data and add to database
+    """
     for i in range(1, 4):
         role = Role(name="Role-{}".format(i),
             code="Code-{}".format(i), 
@@ -101,31 +106,31 @@ def _get_role_json_put(number=10):
 
 def _get_org_json():
     """
-    Creates a valid role JSON object to be used for POST tests.
+    Creates a valid organization JSON object to be used for POST tests.
     """
     return {"organization_id": "O05", "name": "org-5", "location":"location-5"}
 
 def _get_org_json_put():
     """
-    Creates a valid role JSON object to be used for PUT tests.
+    Creates a valid org JSON object to be used for PUT tests.
     """
     return {"organization_id": "O01", "name": "org-new", "location":"location-1"}
 
 def _get_dept_json():
     """
-    Creates a valid role JSON object to be used for POST tests.
+    Creates a valid department JSON object to be used for POST tests.
     """
     return {"department_id": "D05", "name": "dept-5", "description":"department-5"}
 
 def _get_dept_json_put():
     """
-    Creates a valid role JSON object to be used for PUT tests.
+    Creates a valid depat JSON object to be used for PUT tests.
     """
     return {"department_id": "D01", "name": "dept-new", "description":"department 1"}
 
 def _get_employee_json():
     """
-    Creates a valid role JSON object to be used for POST tests.
+    Creates a valid employee JSON object to be used for POST tests.
     """
     return {
     "employee_id":"005",
@@ -143,7 +148,7 @@ def _get_employee_json():
 
 def _get_employee_json_put():
     """
-    Creates a valid role JSON object to be used for PUT tests.
+    Creates a valid employee JSON object to be used for PUT tests.
     """
     return {
     "employee_id":"001",
@@ -161,27 +166,36 @@ def _get_employee_json_put():
 
 def _get_leave_json():
     """
-    Creates a valid role JSON object to be used for POST tests.
+    Creates a valid leave JSON object to be used for POST tests.
     """
     return {"leave_type": "MEDICAL", "reason":"sick", "leave_date": "2018-11-13T20:20:39+00:00"}
 
 def _get_leave_json_put():
     """
-    Creates a valid role JSON object to be used for PUT tests.
+    Creates a valid leave JSON object to be used for PUT tests.
     """
     return {"id":1,"leave_type": "CASUAL", "reason":"sick", "leave_date": "2018-11-13T20:20:39+00:00"}
 
 class TestRoleCollection(object):
-    
+
+    """
+    Test class for role collection resource
+    """
     RESOURCE_URL = "/api/roles/"
 
     def test_get(self, client):
+        """
+        Test get all roles method
+        """
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 3
 
     def test_post(self, client):
+        """
+        Test create role functionality
+        """
         valid = _get_role_json()  
         # test with wrong content type
         resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
@@ -202,11 +216,16 @@ class TestRoleCollection(object):
 
 
 class TestRoleItem(object):
-    
+    """
+    Test class for role Item resource
+    """
     RESOURCE_URL = "/api/roles/Code-2/"
     INVALID_URL = "/api/roles/role-ne/"
     
     def test_get(self, client):
+        """
+        Test to get one role item
+        """
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
@@ -214,6 +233,9 @@ class TestRoleItem(object):
         assert resp.status_code == 404
 
     def test_put(self, client):
+        """
+        Test to edit role
+        """
         valid = _get_role_json_put()
         
         # test with wrong content type
@@ -238,6 +260,9 @@ class TestRoleItem(object):
         assert resp.status_code == 405
         
     def test_delete(self, client):
+        """
+        Test delete one role
+        """
         resp = client.delete(self.RESOURCE_URL)
         assert resp.status_code == 204
         resp = client.delete(self.RESOURCE_URL)
@@ -247,16 +272,24 @@ class TestRoleItem(object):
         
         
 class TestOrganizationCollection(object):
-    
+    """
+    This class test organization collection resource
+    """
     RESOURCE_URL = "/api/organizations/"
 
     def test_get(self, client):
+        """
+        Test to get all organizations
+        """
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 3
 
     def test_post(self, client):
+        """
+        Test to add organizations
+        """
         valid = _get_org_json()  
         # test with wrong content type
         resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
@@ -277,11 +310,16 @@ class TestOrganizationCollection(object):
          
 
 class TestOranizationItem(object):
-    
+    """
+    Class to test organization item resource
+    """
     RESOURCE_URL = "/api/organizations/O01/"
     INVALID_URL = "/api/organizations/org-new/"
     
     def test_get(self, client):
+        """
+        Test to get one organizations
+        """
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
@@ -289,6 +327,9 @@ class TestOranizationItem(object):
         assert resp.status_code == 404
 
     def test_put(self, client):
+        """
+        Test to edit organizations
+        """
         valid = _get_org_json_put()
         
         # test with wrong content type
@@ -314,6 +355,9 @@ class TestOranizationItem(object):
         assert resp.status_code == 405
         
     def test_delete(self, client):
+        """
+        Test to delete all organizations
+        """
         resp = client.delete(self.RESOURCE_URL)
         assert resp.status_code == 204
         resp = client.delete(self.RESOURCE_URL)
@@ -322,16 +366,24 @@ class TestOranizationItem(object):
         assert resp.status_code == 404
 
 class TestDepartmentCollection(object):
-    
+    """
+    Test class for department collection resource
+    """
     RESOURCE_URL = "/api/departments/"
 
     def test_get(self, client):
+        """
+        Test to get all deparments
+        """
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 3
 
     def test_post(self, client):
+        """
+        Test to add deparments
+        """
         valid = _get_dept_json()  
         # test with wrong content type
         resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
@@ -352,11 +404,16 @@ class TestDepartmentCollection(object):
          
 
 class TestDepartmentItem(object):
-    
+    """
+    Test class for department item resource
+    """
     RESOURCE_URL = "/api/departments/D01/"
     INVALID_URL = "/api/departments/dept-new/"
     
     def test_get(self, client):
+        """
+        Test to get one deparment
+        """
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
@@ -364,6 +421,9 @@ class TestDepartmentItem(object):
         assert resp.status_code == 404
 
     def test_put(self, client):
+        """
+        Test to edit deparments
+        """
         valid = _get_dept_json_put()
         
         # test with wrong content type
@@ -389,6 +449,9 @@ class TestDepartmentItem(object):
         assert resp.status_code == 405
         
     def test_delete(self, client):
+        """
+        Test to delete deparments
+        """
         resp = client.delete(self.RESOURCE_URL)
         assert resp.status_code == 204
         resp = client.delete(self.RESOURCE_URL)
@@ -398,7 +461,10 @@ class TestDepartmentItem(object):
 
 
 class TestEmployeeByRlationCollection(object):
-    
+    """
+    Test class for employee by relation collection resource
+    """
+
     RESOURCE_URL = "/api/employees/"
     RESOURCE_URL_1 = "/api/organizations/O01/roles/Code-1/employees/"
     RESOURCE_URL_2 = "/api/organizations/O01/employees/"
@@ -406,64 +472,102 @@ class TestEmployeeByRlationCollection(object):
     RESOURCE_URL_4 = "/api/organizations/O01/departments/D01/roles/Code-1/employees/"
     token = "testtoken"
     def test_get(self, client):
+        """
+        Test to get all employees
+        """
         resp = client.get(self.RESOURCE_URL, headers={"HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 3
     
     def test_get_by_role(self, client):
+        """
+        Test to get employees by role
+        """
         resp = client.get(self.RESOURCE_URL_1, headers={"HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 1
     
     def test_get_by_org(self, client):
+        """
+        Test to get employees by org
+        """
         resp = client.get(self.RESOURCE_URL_2, headers={"HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 1
     
     def test_get_by_dept(self, client):
+        """
+        Test to get employees by department
+        """
         resp = client.get(self.RESOURCE_URL_3, headers={"HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 1
     
     def test_get_by_all(self, client):
+        """
+        Test to get employees by org, dept and role
+        """
         resp = client.get(self.RESOURCE_URL_4, headers={"HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 1
 
     def test_get_err(self, client):
+        """
+        Test to get all employees without auth header
+        """
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 403
     
     def test_get_by_role_err(self, client):
+        """
+        Test to get all employees by role without auth header
+        """
         resp = client.get(self.RESOURCE_URL_1)
         assert resp.status_code == 403
     
     def test_get_by_org_err(self, client):
+        """
+        Test to get all employees by org without auth header
+        """
         resp = client.get(self.RESOURCE_URL_2)
         assert resp.status_code == 403
     
     def test_get_by_dept_err(self, client):
+        """
+        Test to get all employees by dept without auth header
+        """
         resp = client.get(self.RESOURCE_URL_3)
         assert resp.status_code == 403
     
     def test_get_by_all_err(self, client):
+        """
+        Test to get all employees by org, dept and role, without auth header
+        """
         resp = client.get(self.RESOURCE_URL_4)
         assert resp.status_code == 403
     
     def test_get_by_all_auth_err(self, client):
+        """
+        Test to get all employees with wrong auth key
+        """
         resp = client.get(self.RESOURCE_URL_4, headers={"HRSystem-Api-Key": "llll"})
         assert resp.status_code == 403
 
 class TestEmployeeCollection(object):
-    
+    """
+    Test calss for employee collection resource
+    """
     RESOURCE_URL = "/api/organizations/O01/departments/D01/roles/Code-1/employees/"
 
     def test_post(self, client):
+        """
+        Test to add employees 
+        """
         valid = _get_employee_json()  
         # test with wrong content type
         resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
@@ -484,11 +588,17 @@ class TestEmployeeCollection(object):
 
          
 class TestEmployeeItem(object):
+    """
+    Test class for employee item resource
+    """
     
     RESOURCE_URL = "/api/employees/001/"
     INVALID_URL = "/api/employees/new/"
     
     def test_get(self, client):
+        """
+        Test to get one employees
+        """
         resp = client.get(self.RESOURCE_URL, headers={"HRSystem-Api-Key": "testtokenemployee1"})
         assert resp.status_code == 200
         body = json.loads(resp.data)
@@ -496,14 +606,23 @@ class TestEmployeeItem(object):
         assert resp.status_code == 404
 
     def test_get_err(self, client):
+        """
+        Test to get one employee with wrong auth
+        """
         resp = client.get(self.RESOURCE_URL, headers={"HRSystem-Api-Key": "testtokenemployee"})
         assert resp.status_code == 403
 
     def test_get_auth_err(self, client):
+        """
+        Test to get one employee with wrong auth key name
+        """
         resp = client.get(self.RESOURCE_URL, headers={"HRSystem-Key": "testtokenemployee"})
         assert resp.status_code == 403
 
     def test_put(self, client):
+        """
+        Test to edit employee
+        """
         valid = _get_employee_json_put()
         
         # test with wrong content type
@@ -528,6 +647,9 @@ class TestEmployeeItem(object):
         assert resp.status_code == 405
         
     def test_delete(self, client):
+        """
+        Test to get delete an employee
+        """
         resp = client.delete(self.RESOURCE_URL)
         assert resp.status_code == 204
         resp = client.delete(self.RESOURCE_URL)
@@ -536,11 +658,16 @@ class TestEmployeeItem(object):
         assert resp.status_code == 404
 
 class TestLeavePlanByEmployeellection(object):
-    
+    """
+    Test class for Leave plan by employee colelction
+    """
     RESOURCE_URL = "/api/employees/001/leaveplans/"
     ERROR_URL = "/api/employees/071/leaveplans/"
 
     def test_get(self, client):
+        """
+        Test to get leave plans of an employee
+        """
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
@@ -551,6 +678,9 @@ class TestLeavePlanByEmployeellection(object):
 
 
     def test_post(self, client):
+        """
+        Test to add leave plans to an employee
+        """
         valid = _get_leave_json()  
         # test with wrong content type
         resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
@@ -567,11 +697,16 @@ class TestLeavePlanByEmployeellection(object):
 
 
 class TestLeavePlanItem(object):
-    
+    """
+    Test class for Leave plan item resource
+    """
     RESOURCE_URL = "/api/leaveplans/1/"
     INVALID_URL = "/api/leaveplans/new/"
     
     def test_put(self, client):
+        """
+        Test to edit leave plan
+        """
         valid = _get_leave_json_put()
         
         # test with wrong content type
@@ -596,6 +731,9 @@ class TestLeavePlanItem(object):
         assert resp.status_code == 405
 
     def test_delete(self, client):
+        """
+        Test to get delete leave plan of an employee
+        """
         resp = client.delete(self.RESOURCE_URL)
         assert resp.status_code == 204
         resp = client.delete(self.RESOURCE_URL)
