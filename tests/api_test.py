@@ -208,6 +208,10 @@ class TestRoleCollection(object):
         # send same data again for 409
         resp = client.post(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 409
+
+        # remove model field for 500
+        resp = client.post(self.RESOURCE_URL, json={"name": "role-10", "code": "Code-7", "description":"new role"})
+        assert resp.status_code == 500
         
         # remove model field for 400
         valid.pop("name")
@@ -303,6 +307,10 @@ class TestOrganizationCollection(object):
         resp = client.post(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 409
         
+        # remove model field for 500
+        resp = client.post(self.RESOURCE_URL, json={"organization_id": "O10", "name": "org-5", "location":"location-5"})
+        assert resp.status_code == 500
+
         # remove model field for 400
         valid.pop("name")
         resp = client.post(self.RESOURCE_URL, json=valid)
@@ -396,6 +404,10 @@ class TestDepartmentCollection(object):
         # send same data again for 409
         resp = client.post(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 409
+
+        # remove model field for 500
+        resp = client.post(self.RESOURCE_URL, json={"department_id": "D10", "name": "dept-5", "description":"department-5"})
+        assert resp.status_code == 500
         
         # remove model field for 400
         valid.pop("name")

@@ -2,6 +2,9 @@
 openapi: 3.0.3
 servers:
 - url: /api
+tags:
+  - name: "departments"
+    description: "ajsdkasjldkasjl"
 components:
   parameters:
     role:
@@ -354,6 +357,8 @@ paths:
 
   /departments/:
     get:
+      tags: 
+        - departments
       description: Get the list of managed department
       responses:
         '200':
@@ -450,28 +455,28 @@ paths:
           content:
             application/json:
               example:
-              - employee_id: 001
+              - employee_id: E01
                 first_name: test 1
                 middle_name: middle 1
                 last_name: last name 1
                 address: oulu
                 gender: M
-                date_of_birth: 1998-08-25T11:20:30
-                appointment_date: 2005-08-25T11:20:30
+                date_of_birth: "1998-08-25T11:20:30"
+                appointment_date: "2005-08-25T11:20:30"
                 active_emp: 1
                 prefix_title: MR
                 marritial_status: SINGLE
                 mobile_no: N756982365
                 basic_salary: 56665
                 account_number: FI545455
-              - employee_id: 002
+              - employee_id: E02
                 first_name: test 2
                 middle_name: middle 2
                 last_name: last name 2
                 address: oulu
                 gender: F
-                date_of_birth: 1998-08-25T11:20:30
-                appointment_date: 2005-08-25T11:20:30
+                date_of_birth: "1998-08-25T11:20:30"
+                appointment_date: "2005-08-25T11:20:30"
                 active_emp: 1
                 prefix_title: MISS
                 marritial_status: SINGLE
@@ -493,28 +498,28 @@ paths:
           content:
             application/json:
               example:
-              - employee_id: 001
+              - employee_id: E01
                 first_name: test 1
                 middle_name: middle 1
                 last_name: last name 1
                 address: oulu
                 gender: M
-                date_of_birth: 1998-08-25T11:20:30
-                appointment_date: 2005-08-25T11:20:30
+                date_of_birth: "1998-08-25T11:20:30"
+                appointment_date: "2005-08-25T11:20:30"
                 active_emp: 1
                 prefix_title: MR
                 marritial_status: SINGLE
                 mobile_no: N756982365
                 basic_salary: 56665
                 account_number: FI545455
-              - employee_id: 002
+              - employee_id: E02
                 first_name: test 2
                 middle_name: middle 2
                 last_name: last name 2
                 address: oulu
                 gender: F
-                date_of_birth: 1998-08-25T11:20:30
-                appointment_date: 2005-08-25T11:20:30
+                date_of_birth: "1998-08-25T11:20:30"
+                appointment_date: "2005-08-25T11:20:30"
                 active_emp: 1
                 prefix_title: MISS
                 marritial_status: SINGLE
@@ -535,28 +540,28 @@ paths:
           content:
             application/json:
               example:
-              - employee_id: 001
+              - employee_id: E01
                 first_name: test 1
                 middle_name: middle 1
                 last_name: last name 1
                 address: oulu
                 gender: M
-                date_of_birth: 1998-08-25T11:20:30
-                appointment_date: 2005-08-25T11:20:30
+                date_of_birth: "1998-08-25T11:20:30"
+                appointment_date: "2005-08-25T11:20:30"
                 active_emp: 1
                 prefix_title: MR
                 marritial_status: SINGLE
                 mobile_no: N756982365
                 basic_salary: 56665
                 account_number: FI545455
-              - employee_id: 002
+              - employee_id: E02
                 first_name: test 2
                 middle_name: middle 2
                 last_name: last name 2
                 address: oulu
                 gender: F
-                date_of_birth: 1998-08-25T11:20:30
-                appointment_date: 2005-08-25T11:20:30
+                date_of_birth: "1998-08-25T11:20:30"
+                appointment_date: "2005-08-25T11:20:30"
                 active_emp: 1
                 prefix_title: MISS
                 marritial_status: SINGLE
@@ -578,28 +583,28 @@ paths:
           content:
             application/json:
               example:
-              - employee_id: 001
+              - employee_id: E01
                 first_name: test 1
                 middle_name: middle 1
                 last_name: last name 1
                 address: oulu
                 gender: M
-                date_of_birth: 1998-08-25T11:20:30
-                appointment_date: 2005-08-25T11:20:30
+                date_of_birth: "1998-08-25T11:20:30"
+                appointment_date: "2005-08-25T11:20:30"
                 active_emp: 1
                 prefix_title: MR
                 marritial_status: SINGLE
                 mobile_no: N756982365
                 basic_salary: 56665
                 account_number: FI545455
-              - employee_id: 002
+              - employee_id: E02
                 first_name: test 2
                 middle_name: middle 2
                 last_name: last name 2
                 address: oulu
                 gender: F
-                date_of_birth: 1998-08-25T11:20:30
-                appointment_date: 2005-08-25T11:20:30
+                date_of_birth: "1998-08-25T11:20:30"
+                appointment_date: "2005-08-25T11:20:30"
                 active_emp: 1
                 prefix_title: MISS
                 marritial_status: SINGLE
@@ -622,28 +627,28 @@ paths:
           content:
             application/json:
               example:
-              - employee_id: 001
+              - employee_id: E01
                 first_name: test 1
                 middle_name: middle 1
                 last_name: last name 1
                 address: oulu
                 gender: M
-                date_of_birth: 1998-08-25T11:20:30
-                appointment_date: 2005-08-25T11:20:30
+                date_of_birth: "1998-08-25T11:20:30"
+                appointment_date: "2005-08-25T11:20:30"
                 active_emp: 1
                 prefix_title: MR
                 marritial_status: SINGLE
                 mobile_no: N756982365
                 basic_salary: 56665
                 account_number: FI545455
-              - employee_id: 002
+              - employee_id: E02
                 first_name: test 2
                 middle_name: middle 2
                 last_name: last name 2
                 address: oulu
                 gender: F
-                date_of_birth: 1998-08-25T11:20:30
-                appointment_date: 2005-08-25T11:20:30
+                date_of_birth: "1998-08-25T11:20:30"
+                appointment_date: "2005-08-25T11:20:30"
                 active_emp: 1
                 prefix_title: MISS
                 marritial_status: SINGLE
@@ -665,14 +670,14 @@ paths:
             schema:
               $ref: '#/components/schemas/Employee'
             example:
-              employee_id: 005
+              employee_id: E01
               first_name: test emp
               middle_name: middle name
               last_name: last name 1
               address: oulu
               gender: M
-              date_of_birth: 1998-08-25T11:20:30
-              appointment_date: 2005-08-25T11:20:30
+              date_of_birth: "1998-08-25T11:20:30"
+              appointment_date: "2005-08-25T11:20:30"
               active_emp: 1
               prefix_title: MR
               marritial_status: SINGLE
@@ -705,14 +710,14 @@ paths:
                 departments:
                   description: employee data
                   value:
-                    employee_id: 001
+                    employee_id: E01
                     first_name: test 1
                     middle_name: middle 1
                     last_name: last name 1
                     address: oulu
                     gender: M
-                    date_of_birth: 1998-08-25T11:20:30
-                    appointment_date: 2005-08-25T11:20:30
+                    date_of_birth: "1998-08-25T11:20:30"
+                    appointment_date: "2005-08-25T11:20:30"
                     active_emp: 1
                     prefix_title: MR
                     marritial_status: SINGLE
@@ -730,14 +735,14 @@ paths:
             schema:
               $ref: '#/components/schemas/Employee'
             example:
-              employee_id: 001
+              employee_id: E01
               first_name: test 1
               middle_name: middle 1
               last_name: last name 1
               address: oulu
               gender: M
-              date_of_birth: 1998-08-25T11:20:30
-              appointment_date: 2005-08-25T11:20:30
+              date_of_birth: "1998-08-25T11:20:30"
+              appointment_date: "2005-08-25T11:20:30"
               active_emp: 1
               prefix_title: MR
               marritial_status: SINGLE
@@ -777,11 +782,11 @@ paths:
               - id: 1
                 leave_type: MEDICAL
                 reason: fever
-                leave_date: "2012-02-25"
+                leave_date: "1998-08-25T11:20:30"
               - id: 2
                 leave_type: CASUAL
                 reason: fever
-                leave_date: 1998-08-25T11:20:30
+                leave_date: "1998-08-25T11:20:30"
     post:
       description: Create a new leave
       requestBody:
@@ -793,7 +798,7 @@ paths:
             example:
               leave_type: CASUAL
               reason: fever
-              leave_date: 1998-08-25T11:20:30
+              leave_date: "1998-08-25T11:20:30"
       responses:
         '201':
           description: The leave was created successfully
@@ -818,7 +823,7 @@ paths:
             example:
               leave_type: MEDICAL
               reason: fever
-              leave_date: 1998-08-25T11:20:30
+              leave_date: "1998-08-25T11:20:30"
       responses:
         '204':
           description: The leaveplan's attributes were updated successfully

@@ -39,26 +39,26 @@ def generate_test_data():
     depat2 = Department(department_id ='D02', name="dept44", description="department number two")
     depat3 = Department(department_id ='D03', name="dept55", description="department number three")
 
-    emp = Employee(employee_id = '001', first_name="anusha", last_name="pathirana",
+    emp = Employee(employee_id = 'E01', first_name="anusha", last_name="pathirana",
                 address="oulu", gender="F", date_of_birth=datetime(1995, 10, 21, 11, 20, 30),
                 appointment_date=datetime(2018, 11, 21, 11, 20, 30),
                 active_emp=1, prefix_title='MISS', marritial_status='SINGLE',
                 mobile_no='21456', basic_salary=10000, account_number="11233565456",
                 role=role, organization=org, department=depat2)
-    emp2 = Employee(employee_id = '002', first_name="sameera", last_name="panditha",
+    emp2 = Employee(employee_id = 'E02', first_name="sameera", last_name="panditha",
                     address="raksila", gender="M", date_of_birth=datetime(1998, 8, 25, 11, 20, 30),
                     appointment_date=datetime(2018, 11, 21, 11, 20, 30),
                     active_emp=1, prefix_title='MR', marritial_status='SINGLE', mobile_no='21456',
                     basic_salary=10000, account_number="11233565456", role=role2, organization=org2,
                     department=depat)
-    emp3 = Employee(employee_id = '003', first_name="madu", last_name="wicks",
+    emp3 = Employee(employee_id = 'E03', first_name="madu", last_name="wicks",
                     address="kajaanentie",
                     gender="F", date_of_birth=datetime(2000, 5, 2, 11, 20, 30),
                     appointment_date=datetime(2018, 11, 21, 11, 20, 30),
                     active_emp=1, prefix_title='MRS', marritial_status='MARRIED',
                     mobile_no='21456', basic_salary=10000, account_number="11233565456",
                     role=role3, organization=org2, department=depat3)
-    emp4 = Employee(employee_id = '004', first_name="john", last_name="snow",
+    emp4 = Employee(employee_id = 'E04', first_name="john", last_name="snow",
                     address="helsinki", gender="M", date_of_birth=datetime(1998, 12, 1, 11, 20, 30),
                     appointment_date=datetime(2018, 11, 21, 11, 20, 30),
                     active_emp=1, prefix_title='MR', marritial_status='SINGLE',
