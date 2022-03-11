@@ -9,6 +9,7 @@ from HRSystem import db
 from HRSystem.utils import create_error_message
 from HRSystem.models import LeavePlan
 
+
 class LeavePlanByEmployeellection(Resource):
     """
     This class contains the GET, POST method implementations for leave plan of employees by providing employee id
@@ -16,6 +17,7 @@ class LeavePlanByEmployeellection(Resource):
     Endpoint: /api/employees/<Employee:employee>/leaveplans/
 
     """
+
     def get(self, employee=None):
         """ GET list of leaves of given employee
             Arguments: Employee id
@@ -29,8 +31,8 @@ class LeavePlanByEmployeellection(Resource):
         leaves = []
 
         leaves = LeavePlan.query.join(LeavePlan.employee).filter(
-                LeavePlan.employee == employee
-            )
+            LeavePlan.employee == employee
+        )
 
         for leave in leaves:
             leaveplan_response.append(leave.serialize())
@@ -77,10 +79,11 @@ class LeavePlanByEmployeellection(Resource):
 
             db.session.add(leaveplan)
             db.session.commit()
-        except Exception: return create_error_message(
+        except Exception:
+            return create_error_message(
                 500, "Internal server Error",
                 "Error while adding the leave"
-                )
+            )
         return Response(response={}, status=201)
 
 
@@ -90,6 +93,7 @@ class LeavePlanItem(Resource):
         Returns:
         Endpoint: /api/leaveplans/<LeavePlan:leaveplan>/
     """
+
     def put(self, leaveplan):
         """ Replace leaveplan's basic data with new values
         Arguments:
@@ -127,7 +131,8 @@ class LeavePlanItem(Resource):
 
         try:
             db.session.commit()
-        except Exception: return create_error_message(
+        except Exception:
+            return create_error_message(
                 500, "Internal server Error",
                 "Error while updating the employee"
             )

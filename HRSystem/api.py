@@ -6,8 +6,8 @@ from flask_restful import Api
 from HRSystem.resources.roles import RoleCollection, RoleItem
 from HRSystem.resources.organizations import OrganizationCollection, OrganizationItem
 from HRSystem.resources.departments import DepartmentCollection, DepartmentItem
-from HRSystem.resources.employees import ( 
-    EmployeeByRlationCollection,EmployeeCollection, EmployeeItem
+from HRSystem.resources.employees import (
+    EmployeeByRlationCollection, EmployeeCollection, EmployeeItem
 )
 from HRSystem.resources.leaveplans import LeavePlanByEmployeellection, LeavePlanItem
 
@@ -20,23 +20,27 @@ api.add_resource(RoleItem, "/roles/<Role:role>/")
 
 # organization related resources
 api.add_resource(OrganizationCollection, "/organizations/")
-api.add_resource(OrganizationItem, "/organizations/<Organization:organization>/")
+api.add_resource(
+    OrganizationItem,
+    "/organizations/<Organization:organization>/")
 
 # departments related resources
 api.add_resource(DepartmentCollection, "/departments/")
 api.add_resource(DepartmentItem, "/departments/<Department:department>/")
 
 # employee related resources
-api.add_resource(EmployeeByRlationCollection,
-"/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/",
-"/organizations/<Organization:organization>/departments/<Department:department>/employees/",
-"/organizations/<Organization:organization>/employees/",
-"/organizations/<Organization:organization>/roles/<Role:role>/employees/",
-"/employees/")
-api.add_resource(EmployeeCollection,
-"/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/")
+api.add_resource(
+    EmployeeByRlationCollection,
+    "/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/",
+    "/organizations/<Organization:organization>/departments/<Department:department>/employees/",
+    "/organizations/<Organization:organization>/employees/",
+    "/organizations/<Organization:organization>/roles/<Role:role>/employees/",
+    "/employees/")
+api.add_resource(
+    EmployeeCollection,
+    "/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/")
 api.add_resource(EmployeeItem,
-"/employees/<Employee:employee>/")
+                 "/employees/<Employee:employee>/")
 
 # leave plan related resources
 api.add_resource(LeavePlanByEmployeellection,

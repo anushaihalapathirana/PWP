@@ -11,6 +11,7 @@ from flask_caching import Cache
 db = SQLAlchemy()
 cache = Cache()
 
+
 def create_app(test_config=None):
     """
     method to create application
@@ -24,7 +25,7 @@ def create_app(test_config=None):
         os.path.join(app.instance_path, "hrcore.db"),
         SQLALCHEMY_TRACK_MODIFICATIONS=False
     )
-    
+
     app.config["SWAGGER"] = {
         "title": "HR System API",
         "openapi": "3.0.3",

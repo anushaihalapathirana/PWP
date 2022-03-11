@@ -90,8 +90,7 @@ class Employee(db.Model):
             "marritial_status": self.marritial_status and self.marritial_status.name,
             "mobile_no": self.mobile_no,
             "basic_salary": self.basic_salary,
-            "account_number": self.account_number
-        }
+            "account_number": self.account_number}
         return employee
 
     def deserialize(self, request):
@@ -120,13 +119,20 @@ class Employee(db.Model):
     @staticmethod
     def get_schema():
         """
-        method to get schema 
+        method to get schema
         """
         schema = {
             "type": "object",
-            "required": ["first_name", "last_name", "address", "gender",
-                         "appointment_date", "active_emp", "mobile_no", "basic_salary", "account_number"]
-        }
+            "required": [
+                "first_name",
+                "last_name",
+                "address",
+                "gender",
+                "appointment_date",
+                "active_emp",
+                "mobile_no",
+                "basic_salary",
+                "account_number"]}
         props = schema["properties"] = {}
         props["employee_id"] = {
             "description": "Employee unique id",
@@ -200,7 +206,7 @@ class Organization(db.Model):
     @staticmethod
     def get_schema():
         """
-        method to get schema 
+        method to get schema
         """
         schema = {
             "type": "object",
@@ -254,7 +260,7 @@ class Department(db.Model):
     @staticmethod
     def get_schema():
         """
-        method to get schema 
+        method to get schema
         """
         schema = {
             "type": "object",
@@ -307,7 +313,7 @@ class Role(db.Model):
     @staticmethod
     def get_schema():
         """
-        method to get schema 
+        method to get schema
         """
         schema = {
             "type": "object",
@@ -365,7 +371,7 @@ class LeavePlan(db.Model):
     @staticmethod
     def get_schema():
         """
-        method to get schema 
+        method to get schema
         """
         schema = {
             "type": "object",

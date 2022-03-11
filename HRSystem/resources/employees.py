@@ -16,7 +16,8 @@ from HRSystem.utils import require_admin, require_employee_key
 
 class EmployeeByRlationCollection(Resource):
     """
-    This class contains the GET method implementations for employee by organization, department and role data
+    This class contains the GET method implementations for employee by organization,
+    department and role data
 
     Method support to
         - GET employee list by providing organization, department and role data
@@ -30,13 +31,13 @@ class EmployeeByRlationCollection(Resource):
     @require_admin
     def get(self, organization=None, department=None, role=None):
         """ GET list of employees
-            Endpoint: 
+            Endpoint:
             "/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/",
             "/organizations/<Organization:organization>/departments/<Department:department>/employees/",
             "/organizations/<Organization:organization>/employees/",
             "/organizations/<Organization:organization>/roles/<Role:role>/employees/",
             "/employees/"
-            Arguments: 
+            Arguments:
                 organization
                 department
                 role
@@ -49,19 +50,26 @@ class EmployeeByRlationCollection(Resource):
         employees_response = []
         employees = []
         if organization is not None and department is not None and role is not None:
-            employees = Employee.query.join(Employee.organization).join(Employee.role).join(Employee.department).filter(
-                Employee.organization == organization, Employee.role == role, Employee.department == department
-            )
+            employees = Employee.query.join(
+                Employee.organization).join(
+                Employee.role).join(
+                Employee.department).filter(
+                Employee.organization == organization,
+                Employee.role == role,
+                Employee.department == department)
 
         elif organization is not None and department is not None:
-            employees = Employee.query.join(Employee.organization).join(Employee.department).filter(
-                Employee.organization == organization, Employee.department == department
-            )
+            employees = Employee.query.join(
+                Employee.organization).join(
+                Employee.department).filter(
+                Employee.organization == organization,
+                Employee.department == department)
 
         elif organization is not None and role is not None:
-            employees = Employee.query.join(Employee.organization).join(Employee.role).filter(
-                Employee.organization == organization, Employee.role == role
-            )
+            employees = Employee.query.join(
+                Employee.organization).join(
+                Employee.role).filter(
+                Employee.organization == organization, Employee.role == role)
         elif organization is not None:
             employees = Employee.query.join(Employee.organization).filter(
                 Employee.organization == organization
@@ -86,19 +94,28 @@ class EmployeeCollection(Resource):
 
     def _clear_cache(self, department, organnization, role):
         cache.delete_many(
-            *[api.api.url_for(
-                EmployeeByRlationCollection, organization=organnization, department=department, role=role
-            ),
+            *
+            [
                 api.api.url_for(
-                EmployeeByRlationCollection, organization=organnization, department=department, role=None
-            ),
+                    EmployeeByRlationCollection,
+                    organization=organnization,
+                    department=department,
+                    role=role),
                 api.api.url_for(
-                EmployeeByRlationCollection, organization=organnization, department=None, role=role
-            ),
+                    EmployeeByRlationCollection,
+                    organization=organnization,
+                    department=department,
+                    role=None),
                 api.api.url_for(
-                EmployeeByRlationCollection, organization=None, department=None, role=None
-            )]
-        )
+                    EmployeeByRlationCollection,
+                    organization=organnization,
+                    department=None,
+                    role=role),
+                api.api.url_for(
+                    EmployeeByRlationCollection,
+                    organization=None,
+                    department=None,
+                    role=None)])
 
     @require_admin
     def post(self, organization, department, role):
@@ -140,7 +157,7 @@ class EmployeeCollection(Resource):
             )
         try:
             validate(request.json, Employee.get_schema())
-        except ValidationError as e:
+        except ValidationError:
             return create_error_message(
                 400, "Unsupported media type",
                 "Payload format is in an unsupported format"
@@ -188,19 +205,28 @@ class EmployeeItem(Resource):
 
     def _clear_cache(self, department, organnization, role):
         cache.delete_many(
-            *[api.api.url_for(
-                EmployeeByRlationCollection, organization=organnization, department=department, role=role
-            ),
+            *
+            [
                 api.api.url_for(
-                EmployeeByRlationCollection, organization=organnization, department=department, role=None
-            ),
+                    EmployeeByRlationCollection,
+                    organization=organnization,
+                    department=department,
+                    role=role),
                 api.api.url_for(
-                EmployeeByRlationCollection, organization=organnization, department=None, role=role
-            ),
+                    EmployeeByRlationCollection,
+                    organization=organnization,
+                    department=department,
+                    role=None),
                 api.api.url_for(
-                EmployeeByRlationCollection, organization=None, department=None, role=None
-            )]
-        )
+                    EmployeeByRlationCollection,
+                    organization=organnization,
+                    department=None,
+                    role=role),
+                api.api.url_for(
+                    EmployeeByRlationCollection,
+                    organization=None,
+                    department=None,
+                    role=None)])
 
     @require_employee_key
     def get(self, employee):
@@ -242,7 +268,7 @@ class EmployeeItem(Resource):
 
         try:
             validate(request.json, Employee.get_schema())
-        except ValidationError as e:
+        except ValidationError:
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
@@ -255,8 +281,10 @@ class EmployeeItem(Resource):
 
         try:
             db.session.commit()
-            self._clear_cache(department=employee.department,
-                              organnization=employee.organization, role=employee.role)
+            self._clear_cache(
+                department=employee.department,
+                organnization=employee.organization,
+                role=employee.role)
         except Exception:
             return create_error_message(
                 500, "Internal server Error",
