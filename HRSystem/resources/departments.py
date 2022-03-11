@@ -18,6 +18,7 @@ class DepartmentCollection(Resource):
         Returns:
         Endpoint: /api/departments/
     """
+
     def get(self):
         """ GET list of departments
             Arguments:
@@ -80,11 +81,16 @@ class DepartmentCollection(Resource):
             db.session.add(dept)
             db.session.commit()
         except Exception as error:
-            if isinstance (error, HTTPException):
+            print("error", error)
+            if isinstance(error, HTTPException):
                 return create_error_message(
                     409, "Already Exist",
                     "Department id is already exist"
                 )
+            return create_error_message(
+                500, "Internal Server Error",
+                "Internal Server Error occurred!"
+            )
 
         return Response(response={}, status=201)
 
@@ -128,7 +134,6 @@ class DepartmentItem(Resource):
 
         return Response(status=204)
 
-
     def put(self, department):
         """ Replace department's basic data with new values
         Arguments:
@@ -167,7 +172,8 @@ class DepartmentItem(Resource):
 
         try:
             db.session.commit()
-        except Exception: return create_error_message(
+        except Exception:
+            return create_error_message(
                 500, "Internal server Error",
                 "Error while updating the department"
             )

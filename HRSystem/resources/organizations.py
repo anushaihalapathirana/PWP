@@ -18,6 +18,7 @@ class OrganizationCollection(Resource):
         Endpoint: /api/organizations/
 
     """
+
     def get(self):
         """ GET list of organizations
             Arguments:
@@ -31,7 +32,7 @@ class OrganizationCollection(Resource):
         orgs = Organization.query.all()
 
         for org in orgs:
-            response_data.append(org.serialize())         
+            response_data.append(org.serialize())
         return response_data
 
     def post(self):
@@ -67,7 +68,7 @@ class OrganizationCollection(Resource):
         try:
             db_org = Organization.query.filter_by(
                 organization_id=request.json["organization_id"]
-                ).first()
+            ).first()
             if db_org is not None:
                 return create_error_message(
                     409, "Already Exist",
@@ -81,10 +82,14 @@ class OrganizationCollection(Resource):
         except Exception as error:
             if isinstance(error, HTTPException):
                 return create_error_message(
-                     409, "Already Exist",
+                    409, "Already Exist",
                     "Department id is already exist"
                 )
-        return Response(response = {}, status = 201)
+            return create_error_message(
+                500, "Internal Server Error",
+                "Internal Server Error occurred!"
+            )
+        return Response(response={}, status=201)
 
 
 class OrganizationItem(Resource):
@@ -93,6 +98,7 @@ class OrganizationItem(Resource):
         Returns:
         Endpoint: /api/organization/<organization>/
     """
+
     def get(self, organization):
         """ get details of one organization
         Arguments:
@@ -104,7 +110,7 @@ class OrganizationItem(Resource):
                 '404':
                 description: The organization was not found
         """
-        response_data = organization.serialize() 
+        response_data = organization.serialize()
         return response_data
 
     def delete(self, organization):
@@ -139,7 +145,8 @@ class OrganizationItem(Resource):
                 '415':
                 description: Wrong media type was used
         """
-        db_org = Organization.query.filter_by(organization_id=organization.organization_id).first()
+        db_org = Organization.query.filter_by(
+            organization_id=organization.organization_id).first()
 
         if not request.json:
             return create_error_message(
@@ -160,7 +167,8 @@ class OrganizationItem(Resource):
 
         try:
             db.session.commit()
-        except Exception as error: return create_error_message(
+        except Exception as error:
+            return create_error_message(
                 500, "Internal server Error",
                 "Error while adding the role"
             )

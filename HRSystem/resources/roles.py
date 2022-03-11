@@ -10,12 +10,14 @@ from HRSystem import db
 from HRSystem.models import Role
 from HRSystem.utils import create_error_message
 
+
 class RoleCollection(Resource):
     """ This class contains the GET and POST method implementations for role data
         Arguments:
         Returns:
         Endpoint: /api/roles/
     """
+
     def get(self):
         """ GET list of roles
             Arguments:
@@ -78,10 +80,15 @@ class RoleCollection(Resource):
         except Exception as error:
             if isinstance(error, HTTPException):
                 return create_error_message(
-                     409, "Already Exist",
+                    409, "Already Exist",
                     "role code is already exist"
+                )
+            return create_error_message(
+                500, "Internal Server Error",
+                "Internal Server Error occurred!"
             )
         return Response(response={}, status=201)
+
 
 class RoleItem(Resource):
     """ This class contains the GET, PUT and DELETE method implementations for a single role
@@ -89,6 +96,7 @@ class RoleItem(Resource):
         Returns:
         Endpoint - /api/roles/<role>
     """
+
     def get(self, role):
         """ get details of one role
         Arguments:
@@ -100,7 +108,7 @@ class RoleItem(Resource):
                 '404':
                 description: The role was not found
         """
-        response_data =  role.serialize()
+        response_data = role.serialize()
 
         return response_data
 
@@ -159,9 +167,10 @@ class RoleItem(Resource):
 
         try:
             db.session.commit()
-        except Exception: return create_error_message(
+        except Exception:
+            return create_error_message(
                 500, "Internal server Error",
                 "Error while updating the role"
             )
 
-        return Response(status = 204)
+        return Response(status=204)

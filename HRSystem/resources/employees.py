@@ -146,7 +146,8 @@ class EmployeeCollection(Resource):
             )
 
         try:
-            db_emp = Employee.query.filter_by(employee_id=request.json["employee_id"]).first()
+            db_emp = Employee.query.filter_by(
+                employee_id=request.json["employee_id"]).first()
             if db_emp is not None:
                 return create_error_message(
                     409, "Already Exist",
@@ -167,9 +168,13 @@ class EmployeeCollection(Resource):
         except Exception as error:
             if isinstance(error, HTTPException):
                 return create_error_message(
-                     409, "Already Exist",
+                    409, "Already Exist",
                     "employee id is already exist"
                 )
+            return create_error_message(
+                500, "Internal Server Error",
+                "Internal Server Error occurred!"
+            )
         return Response(response={}, status=201)
 
 
@@ -250,7 +255,8 @@ class EmployeeItem(Resource):
             db.session.commit()
             self._clear_cache(department=employee.department,
                               organnization=employee.organization, role=employee.role)
-        except Exception: return create_error_message(
+        except Exception:
+            return create_error_message(
                 500, "Internal server Error",
                 "Error while updating the employee"
             )
@@ -276,7 +282,8 @@ class EmployeeItem(Resource):
             db.session.commit()
             self._clear_cache(department=dept,
                               organnization=org, role=role)
-        except Exception: return create_error_message(
+        except Exception:
+            return create_error_message(
                 500, "Internal server Error",
                 "Error while deleting the employee"
             )
