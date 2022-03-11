@@ -4,9 +4,9 @@ Init file
 import os
 from flask import Flask
 from flasgger import Swagger, swag_from
+from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
 from HRSystem.constants import *
-from flask_caching import Cache
 
 db = SQLAlchemy()
 cache = Cache()
@@ -16,7 +16,8 @@ def create_app(test_config=None):
     """
     method to create application
 
-    - Note reference to this method - course materials https://github.com/enkwolf/pwp-course-sensorhub-api-example/blob/master
+    - Note reference to this method - course materials
+        https://github.com/enkwolf/pwp-course-sensorhub-api-example/blob/master
     """
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
@@ -48,7 +49,12 @@ def create_app(test_config=None):
     db.init_app(app)
     cache.init_app(app)
 
-    from HRSystem.converters import RoleConverter, DepartmentConverter, OrganizationConverter, LeavePlanConverter, EmployeeConverter
+    from HRSystem.converters import (RoleConverter,
+                                    DepartmentConverter,
+                                    OrganizationConverter,
+                                    LeavePlanConverter,
+                                    EmployeeConverter)
+
     # Add converters
     app.url_map.converters["Role"] = RoleConverter
     app.url_map.converters["Department"] = DepartmentConverter

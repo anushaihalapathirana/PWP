@@ -28,15 +28,18 @@ class EmployeeByRlationCollection(Resource):
 
     """
 
+    @classmethod
     @require_admin
-    def get(self, organization=None, department=None, role=None):
+    def get(cls, organization=None, department=None, role=None):
         """ GET list of employees
             Endpoint:
-            "/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/",
-            "/organizations/<Organization:organization>/departments/<Department:department>/employees/",
-            "/organizations/<Organization:organization>/employees/",
-            "/organizations/<Organization:organization>/roles/<Role:role>/employees/",
-            "/employees/"
+        "/organizations/<Organization:organization>/departments/
+            <Department:department>/roles/<Role:role>/employees/",
+        "/organizations/<Organization:organization>/departments/
+            <Department:department>/employees/",
+        "/organizations/<Organization:organization>/employees/",
+        "/organizations/<Organization:organization>/roles/<Role:role>/employees/",
+        "/employees/"
             Arguments:
                 organization
                 department
@@ -85,11 +88,16 @@ class EmployeeByRlationCollection(Resource):
 
 class EmployeeCollection(Resource):
     """
-    This class contains the POST method implementations for employee - Add employees to the system by providing organization, department and role
+    This class contains the POST method implementations for employee
+        - Add employees to the system by providing organization, 
+          department and role
 
-    - Note - Only method to add employees to the system is by giving organization, department and role
+    - Note - Only method to add employees to the system is by giving organization,
+        department and role
 
-    Endpoint - api/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/
+    Endpoint:
+        api/organizations/<Organization:organization>/departments/
+            <Department:department>/roles/<Role:role>/employees/
     """
 
     def _clear_cache(self, department, organnization, role):
@@ -228,8 +236,9 @@ class EmployeeItem(Resource):
                     department=None,
                     role=None)])
 
+    @classmethod
     @require_employee_key
-    def get(self, employee):
+    def get(cls, employee):
         """ get details of one employee
             Arguments:
                 employee

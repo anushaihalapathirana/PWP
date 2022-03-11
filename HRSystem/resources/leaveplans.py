@@ -12,13 +12,15 @@ from HRSystem.models import LeavePlan
 
 class LeavePlanByEmployeellection(Resource):
     """
-    This class contains the GET, POST method implementations for leave plan of employees by providing employee id
+    This class contains the GET, POST method implementations for
+        leave plan of employees by providing employee id
 
     Endpoint: /api/employees/<Employee:employee>/leaveplans/
 
     """
 
-    def get(self, employee=None):
+    @classmethod
+    def get(cls, employee=None):
         """ GET list of leaves of given employee
             Arguments: Employee id
             Returns:
@@ -39,7 +41,8 @@ class LeavePlanByEmployeellection(Resource):
 
         return leaveplan_response
 
-    def post(self, employee):
+    @classmethod
+    def post(cls, employee):
         """ Create a new leave
         Arguments:
             employee
@@ -94,7 +97,8 @@ class LeavePlanItem(Resource):
         Endpoint: /api/leaveplans/<LeavePlan:leaveplan>/
     """
 
-    def put(self, leaveplan):
+    @classmethod
+    def put(cls, leaveplan):
         """ Replace leaveplan's basic data with new values
         Arguments:
             leaveplan
@@ -125,9 +129,9 @@ class LeavePlanItem(Resource):
                 "JSON format is not valid"
             )
 
-        oldLeavePlan = copy(leaveplan)
+        old_Leave_Plan = copy(leaveplan)
         leaveplan.deserialize(request)
-        leaveplan.id = oldLeavePlan.id
+        leaveplan.id = old_Leave_Plan.id
 
         try:
             db.session.commit()
@@ -139,7 +143,8 @@ class LeavePlanItem(Resource):
 
         return Response(status=204)
 
-    def delete(self, leaveplan):
+    @classmethod
+    def delete(cls, leaveplan):
         """ Delete the selected leaveplan
         Arguments:
             leaveplan

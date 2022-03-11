@@ -5,7 +5,6 @@ from jsonschema import validate, ValidationError
 from flask import Response, request
 from werkzeug.exceptions import HTTPException
 from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError
 from HRSystem import db
 from HRSystem.models import Organization
 from HRSystem.utils import create_error_message
@@ -18,8 +17,8 @@ class OrganizationCollection(Resource):
         Endpoint: /api/organizations/
 
     """
-
-    def get(self):
+    @classmethod
+    def get(cls):
         """ GET list of organizations
             Arguments:
             Returns:
@@ -35,7 +34,8 @@ class OrganizationCollection(Resource):
             response_data.append(org.serialize())
         return response_data
 
-    def post(self):
+    @classmethod
+    def post(cls):
         """ Create a new organization
         Arguments:
             request:
@@ -99,7 +99,8 @@ class OrganizationItem(Resource):
         Endpoint: /api/organization/<organization>/
     """
 
-    def get(self, organization):
+    @classmethod
+    def get(cls, organization):
         """ get details of one organization
         Arguments:
             organization
@@ -113,7 +114,8 @@ class OrganizationItem(Resource):
         response_data = organization.serialize()
         return response_data
 
-    def delete(self, organization):
+    @classmethod
+    def delete(cls, organization):
         """ Delete the selected organization
         Arguments:
             organization
@@ -128,7 +130,8 @@ class OrganizationItem(Resource):
         db.session.commit()
         return Response(status=204)
 
-    def put(self, organization):
+    @classmethod
+    def put(cls, organization):
         """ Replace organization's basic data with new values
         Arguments:
             organization
@@ -167,7 +170,7 @@ class OrganizationItem(Resource):
 
         try:
             db.session.commit()
-        except Exception as error:
+        except Exception:
             return create_error_message(
                 500, "Internal server Error",
                 "Error while adding the role"

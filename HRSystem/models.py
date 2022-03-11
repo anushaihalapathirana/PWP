@@ -430,4 +430,7 @@ class ApiKey(db.Model):
 
     @staticmethod
     def key_hash(key):
+        """
+        static method to get hash key
+        """
         return hashlib.sha256(key.encode()).digest()

@@ -18,8 +18,8 @@ class DepartmentCollection(Resource):
         Returns:
         Endpoint: /api/departments/
     """
-
-    def get(self):
+    @classmethod
+    def get(cls):
         """ GET list of departments
             Arguments:
             Returns:
@@ -35,7 +35,8 @@ class DepartmentCollection(Resource):
             response_data.append(dept.serialize())
         return response_data
 
-    def post(self):
+    @classmethod
+    def post(cls):
         """ Create a new department
         Arguments:
             request:
@@ -102,8 +103,8 @@ class DepartmentItem(Resource):
         Returns:
         Endpoint: /api/departments/<Department:department>/
     """
-
-    def get(self, department):
+    @classmethod
+    def get(cls, department):
         """ get details of one department
         Arguments:
             department
@@ -118,7 +119,8 @@ class DepartmentItem(Resource):
 
         return response_data
 
-    def delete(self, department):
+    @classmethod
+    def delete(cls, department):
         """ Delete the selected department
         Arguments:
             department
@@ -134,7 +136,8 @@ class DepartmentItem(Resource):
 
         return Response(status=204)
 
-    def put(self, department):
+    @classmethod
+    def put(cls, department):
         """ Replace department's basic data with new values
         Arguments:
             department
