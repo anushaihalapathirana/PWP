@@ -4,7 +4,15 @@ servers:
 - url: /api
 tags:
   - name: "departments"
-    description: "ajsdkasjldkasjl"
+    description: "department API"
+  - name: "organizations"
+    description: "organization API"
+  - name: "roles"
+    description: "role API"
+  - name: "employees"
+    description: "employee API"
+  - name: "leaveplans"
+    description: "leave plan API"
 components:
   parameters:
     role:
@@ -38,7 +46,7 @@ components:
     leaveplan:
       description: leave plan id
       in: path
-      name: leave plan
+      name: leaveplan
       required: true
       schema:
         type: string
@@ -183,6 +191,8 @@ info:
 paths:
   /roles/:
     get:
+      tags: 
+        - roles 
       description: Get the list of managed roles
       responses:
         '200':
@@ -197,6 +207,8 @@ paths:
                 code: ENG
                 description: null
     post:
+      tags: 
+        - roles
       description: Create a new Role
       requestBody:
         description: JSON document that contains basic data for a new role
@@ -221,6 +233,8 @@ paths:
     parameters:
     - $ref: '#/components/parameters/role'
     get:
+      tags: 
+        - roles
       description: Get details of one role
       responses:
         '200':
@@ -237,6 +251,8 @@ paths:
         '404':
           description: The role was not found
     put:
+      tags: 
+        - roles
       description: Replace role's basic data with new values
       requestBody:
         description: JSON document that contains new basic data for the role
@@ -260,6 +276,8 @@ paths:
         '415':
           description: Wrong media type was used
     delete:
+     tags: 
+        - roles
      description: Delete the selected role
      responses:
        '204':
@@ -270,6 +288,8 @@ paths:
 
   /organizations/:
     get:
+      tags: 
+        - organizations
       description: Get the list of managed organizations
       responses:
         '200':
@@ -284,6 +304,8 @@ paths:
                 name: org 2
                 location: Helsnki
     post:
+      tags: 
+        - organizations
       description: Create a new organization
       requestBody:
         description: JSON document that contains basic data for a new organization
@@ -308,6 +330,8 @@ paths:
     parameters:
     - $ref: '#/components/parameters/organization'
     get:
+      tags: 
+        - organizations
       description: Get details of one organization
       responses:
         '200':
@@ -324,6 +348,8 @@ paths:
         '404':
           description: The organization was not found
     put:
+      tags: 
+        - organizations
       description: Replace organization's basic data with new values
       requestBody:
         description: JSON document that contains new basic data for the organization
@@ -347,12 +373,14 @@ paths:
         '415':
           description: Wrong media type was used
     delete:
-     description: Delete the selected organization
-     responses:
-       '204':
-         description: The organization was successfully deleted
-       '404':
-         description: The organization was not found
+      tags: 
+        - organizations
+      description: Delete the selected organization
+      responses:
+        '204':
+          description: The organization was successfully deleted
+        '404':
+          description: The organization was not found
 
 
   /departments/:
@@ -373,6 +401,8 @@ paths:
                 name: dept 2
                 description: department 2
     post:
+      tags: 
+        - departments
       description: Create a new department
       requestBody:
         description: JSON document that contains basic data for a new department
@@ -397,6 +427,8 @@ paths:
     parameters:
     - $ref: '#/components/parameters/department'
     get:
+      tags: 
+        - departments
       description: Get details of one department
       responses:
         '200':
@@ -413,6 +445,8 @@ paths:
         '404':
           description: The department was not found
     put:
+      tags: 
+        - departments
       description: Replace department's basic data with new values
       requestBody:
         description: JSON document that contains new basic data for the department
@@ -436,16 +470,20 @@ paths:
         '415':
           description: Wrong media type was used
     delete:
-     description: Delete the selected department
-     responses:
-       '204':
-         description: The department was successfully deleted
-       '404':
-         description: The department was not found
+      tags: 
+        - departments
+      description: Delete the selected department
+      responses:
+        '204':
+          description: The department was successfully deleted
+        '404':
+          description: The department was not found
 
 
   /employees/:
     get:
+      tags: 
+        - employees
       description: Get the list of managed employees
       security:
         - HRSystemKey: [admin]
@@ -486,6 +524,8 @@ paths:
   
   /organizations/{organization}/roles/{role}/employees/:
     get:
+      tags: 
+        - employees
       description: Get the list of managed employees based on their organization and role
       security:
         - HRSystemKey: [admin]
@@ -529,6 +569,8 @@ paths:
   
   /organizations/{organization}/employees/:
     get:
+      tags: 
+        - employees
       description: Get the list of employees in same organization
       security:
         - HRSystemKey: [admin]
@@ -571,6 +613,8 @@ paths:
   
   /organizations/{organization}/departments/{department}/employees/:
     get:
+      tags: 
+        - employees
       description: Get the list of employees in same organization and same department
       security:
         - HRSystemKey: [admin]
@@ -614,6 +658,8 @@ paths:
   
   /organizations/{organization}/departments/{department}/roles/{role}/employees/:
     get:
+      tags: 
+        - employees
       description: Get the list of employees in same organization and same department and same role category
       security:
         - HRSystemKey: [admin]
@@ -658,6 +704,8 @@ paths:
 
   /organizations/{organization}/departments/{department}/roles/{role}/employees/:
     post:
+      tags: 
+        - employees
       description: Create a new employee
       parameters:
         - $ref: '#/components/parameters/organization'
@@ -698,6 +746,8 @@ paths:
     parameters:
     - $ref: '#/components/parameters/employee'
     get:
+      tags: 
+        - employees
       description: Get details of one employee
       security:
         - HRSystemKey: []
@@ -727,6 +777,8 @@ paths:
         '404':
           description: The employee was not found
     put:
+      tags: 
+        - employees
       description: Replace employee's basic data with new values
       requestBody:
         description: JSON document that contains new basic data for the employee
@@ -761,17 +813,21 @@ paths:
         '415':
           description: Wrong media type was used
     delete:
-     description: Delete the selected employee
-     responses:
-       '204':
-         description: The employee was successfully deleted
-       '404':
-         description: The employee was not found
+      tags: 
+        - employees
+      description: Delete the selected employee
+      responses:
+        '204':
+          description: The employee was successfully deleted
+        '404':
+          description: The employee was not found
 
   /employees/{employee}/leaveplans/:
     parameters:
     - $ref: '#/components/parameters/employee'
     get:
+      tags: 
+        - leaveplans
       description: Get the leaveplans
       responses:
         '200':
@@ -788,6 +844,8 @@ paths:
                 reason: fever
                 leave_date: "1998-08-25T11:20:30"
     post:
+      tags: 
+        - leaveplans
       description: Create a new leave
       requestBody:
         description: JSON document that contains basic data for a new leave
@@ -813,6 +871,8 @@ paths:
     parameters:
     - $ref: '#/components/parameters/leaveplan'
     put:
+      tags: 
+        - leaveplans
       description: Replace leaveplan's basic data with new values
       requestBody:
         description: JSON document that contains new basic data for the leaveplan
@@ -836,9 +896,11 @@ paths:
         '415':
           description: Wrong media type was used
     delete:
-     description: Delete the selected leaveplan
-     responses:
-       '204':
-         description: The leaveplan was successfully deleted
-       '404':
-         description: The leaveplan was not found
+      tags: 
+        - leaveplans
+      description: Delete the selected leaveplan
+      responses:
+        '204':
+          description: The leaveplan was successfully deleted
+        '404':
+          description: The leaveplan was not found
