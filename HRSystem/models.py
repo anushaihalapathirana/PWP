@@ -6,6 +6,7 @@ from enum import Enum
 from datetime import datetime
 from HRSystem import db
 
+
 class TitleEnum(Enum):
     """
     Enum class for employee suffix
@@ -124,7 +125,7 @@ class Employee(db.Model):
         schema = {
             "type": "object",
             "required": ["first_name", "last_name", "address", "gender",
-            "appointment_date", "active_emp", "mobile_no", "basic_salary", "account_number"]
+                         "appointment_date", "active_emp", "mobile_no", "basic_salary", "account_number"]
         }
         props = schema["properties"] = {}
         props["employee_id"] = {
@@ -137,7 +138,7 @@ class Employee(db.Model):
         }
         props["middle_name"] = {
             "description": "Employee middle name",
-            "type": "string"
+            "type": ["string", "null"]
         }
         props["last_name"] = {
             "description": "Employee last name",
@@ -185,6 +186,7 @@ class Employee(db.Model):
         }
 
         return schema
+
 
 class Organization(db.Model):
     """
@@ -407,16 +409,19 @@ class LeavePlan(db.Model):
         self.leave_date = datetime.fromisoformat(
             request.json['leave_date'])
 
+
 class ApiKey(db.Model):
     """
     API key model class
     """
-    key = db.Column(db.String(32), nullable=False, unique=True, primary_key = True)
-    employee_id = db.Column(db.Integer, db.ForeignKey("employee.id"), nullable=True)
-    admin =  db.Column(db.Boolean, default=False)
+    key = db.Column(db.String(32), nullable=False,
+                    unique=True, primary_key=True)
+    employee_id = db.Column(
+        db.Integer, db.ForeignKey("employee.id"), nullable=True)
+    admin = db.Column(db.Boolean, default=False)
     employee = db.relationship('Employee', backref='api_key')
     # employee = db.relationship("Employee", back_populates="api_key", uselist=False)
-    
+
     @staticmethod
     def key_hash(key):
         return hashlib.sha256(key.encode()).digest()

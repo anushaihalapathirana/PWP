@@ -100,6 +100,7 @@ class EmployeeCollection(Resource):
             )]
         )
 
+    @require_admin
     def post(self, organization, department, role):
         """ Create a new employee
         Arguments:
@@ -139,7 +140,7 @@ class EmployeeCollection(Resource):
             )
         try:
             validate(request.json, Employee.get_schema())
-        except ValidationError:
+        except ValidationError as e:
             return create_error_message(
                 400, "Unsupported media type",
                 "Payload format is in an unsupported format"
@@ -215,6 +216,7 @@ class EmployeeItem(Resource):
         """
         return employee.serialize()
 
+    @require_employee_key
     def put(self, employee):
         """ Replace employee's basic data with new values
         Arguments:
@@ -263,6 +265,7 @@ class EmployeeItem(Resource):
 
         return Response(status=204)
 
+    @require_employee_key
     def delete(self, employee):
         """ Delete the selected employee
         Arguments:
