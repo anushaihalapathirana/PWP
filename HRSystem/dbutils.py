@@ -114,6 +114,6 @@ def generate_test_data():
     print("EMP2 TOKEN", token1)
     print("EMP1 TOKEN", token2)
 
-# ADMIN TOKEN kbgRd8GdPdCu67IMv25uSp25p6PcTA_OFo6n5njUvAs
-# EMP2 TOKEN jibi3bfcVjBgeuqcjQTvtDLWvU2M8WB6fFw5t_HvAn0
-# EMP1 TOKEN aDGtwq7RP0WSbPsPq_buHzihMKWHzXW6IPEq6BGOy9s
+# ADMIN TOKEN HSWIouJioATKxVbu0MDGhhYSzeUIgTNUzFQnoJDjJeY
+# EMP2 TOKEN 5NTb-arH7DEZrIjnEIC1XGffjJtP-qbKswTwW8anohA
+# EMP1 TOKEN 84BWovWBq3klV95Q_i2YOP49eiT-QNeMT1iYKohqNY8

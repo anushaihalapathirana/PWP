@@ -156,11 +156,6 @@ class Employee(db.Model):
             "type": "string",
             "format": "date-time"
         }
-        props["date_of_birth"] = {
-            "description": "Employee date of birth",
-            "type": "string",
-            "format": "date-time"
-        }
         props["appointment_date"] = {
             "description": "Employee date of appoinment",
             "type": "string",
