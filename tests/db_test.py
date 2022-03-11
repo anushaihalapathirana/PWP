@@ -40,30 +40,36 @@ def app():
 def _get_role(rolecode="MN"):
     return Role(
         name = "Manager",
-        code = "MN",
+        code = rolecode,
         description = "Role manager"
     )
 
-def _get_org(name="Org1"):
+def _get_org(organization_id="O001"):
     return Organization(
-        organization_id = "O001",
+        organization_id = organization_id,
         name="Org1", 
         location="oulu"
     )
     
-def _get_department():
+def _get_department(department_id="D01"):
     return Department(
-        department_id="D01",
+        department_id=department_id,
         name="dept1", 
         description="department number one")
     
-def _get_employee():
-    return Employee(employee_id = "001", first_name="anusha", last_name="pathirana",
+def _get_employee(employee_id="001"):
+    return Employee(employee_id = employee_id, first_name="anusha", last_name="pathirana",
                 address="oulu", gender="F", date_of_birth=datetime(1995, 10, 21, 11, 20, 30),
                 appointment_date=datetime(2018, 11, 21, 11, 20, 30),
                 active_emp=1, prefix_title='MISS', marritial_status='SINGLE',
                 mobile_no='21456', basic_salary=10000, account_number="11233565456")
 
+def _get_leave():
+    return LeavePlan(
+        leave_type = 'CASUAL',
+        reason = "sick",
+        leave_date = datetime(2018, 11, 21, 11, 20, 30)
+    )
     
 def test_create_instances(app):
     """
@@ -102,189 +108,374 @@ def test_create_instances(app):
         assert db_employee.organization == db_organization
         assert db_employee.department == db_department
     
-# def test_location_sensor_one_to_one(app):
-#     """
-#     Tests that the relationship between sensor and location is one-to-one.
-#     i.e. that we cannot assign the same location for two sensors.
-#     """
+def test_employee_organization_one_to_many(app):
+    """
+    Tests that the relationship between employee and organization is one-to-many.
+    i.e. that we can assign the same organization for two employees.
+    """
     
-#     with app.app_context():
-#         location = _get_location()
-#         sensor_1 = _get_sensor(1)
-#         sensor_2 = _get_sensor(2)
-#         sensor_1.location = location
-#         sensor_2.location = location
-#         db.session.add(location)
-#         db.session.add(sensor_1)
-#         db.session.add(sensor_2)    
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()
-        
-# def test_measurement_ondelete_sensor(app):
-#     """
-#     Tests that measurement's sensor foreign key is set to null when the sensor
-#     is deleted.
-#     """
-    
-#     with app.app_context():
-#         measurement = _get_measurement()
-#         sensor = _get_sensor()
-#         measurement.sensor = sensor
-#         db.session.add(measurement)
-#         db.session.commit()
-#         db.session.delete(sensor)
-#         db.session.commit()
-#         assert measurement.sensor is None
-        
-# def test_location_columns(app):
-#     """
-#     Tests the types and restrictions of location columns. Checks that numerical
-#     values only accepts numbers, name must be present and is unique, and that
-#     all of the columns are optional. 
-#     """
-    
-#     with app.app_context():
-#         location = _get_location()
-#         location.latitude = str(location.latitude) + "°"
-#         db.session.add(location)
-#         with pytest.raises(StatementError):
-#             db.session.commit()
-            
-#         db.session.rollback()
-            
-#         location = _get_location()
-#         location.longitude = str(location.longitude) + "°"
-#         db.session.add(location)
-#         with pytest.raises(StatementError):
-#             db.session.commit()
-        
-#         db.session.rollback()
+    with app.app_context():
+        organization1 = _get_org()
+        emp1 = _get_employee("002")
+        emp2 = _get_employee("003")
+        emp1.organization = organization1
+        emp2.organization = organization1
+        db.session.add(organization1)
+        db.session.add(emp1)
+        db.session.add(emp2)
+        db.session.commit()
 
-#         location = _get_location()
-#         location.altitude = str(location.altitude) + "m"
-#         db.session.add(location)
-#         with pytest.raises(StatementError):
-#             db.session.commit()
+        assert Employee.query.count() == 2
+        assert Organization.query.count() == 1
         
-#         db.session.rollback()
-        
-#         location = _get_location()
-#         location.name = None
-#         db.session.add(location)
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()
-        
-#         db.session.rollback()
-
-#         location_1 = _get_location()
-#         location_2 = _get_location()
-#         db.session.add(location_1)
-#         db.session.add(location_2)
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()
-        
-#         db.session.rollback()
-
-#         location = Location(name="site-test")
-#         db.session.add(location)
-#         db.session.commit()
+def test_employee_role_one_to_many(app):
+    """
+    Tests that the relationship between employee and role is one-to-many.
+    i.e. that we can assign the same role for two employees.
+    """
     
-# def test_sensor_columns(app):
-#     """
-#     Tests sensor columns' restrictions. Name must be unique, and name and model
-#     must be mandatory.
-#     """
+    with app.app_context():
+        role = _get_role()
+        emp1 = _get_employee("002")
+        emp2 = _get_employee("003")
+        emp1.role = role
+        emp2.role = role
+        db.session.add(role)
+        db.session.add(emp1)
+        db.session.add(emp2)
+        db.session.commit()
 
-#     with app.app_context():
-#         sensor_1 = _get_sensor()
-#         sensor_2 = _get_sensor()
-#         db.session.add(sensor_1)
-#         db.session.add(sensor_2)    
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()
+        assert Employee.query.count() == 2
+        assert role.query.count() == 1
 
-#         db.session.rollback()
-        
-#         sensor = _get_sensor()
-#         sensor.name = None
-#         db.session.add(sensor)
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()
-        
-#         db.session.rollback()
-        
-#         sensor = _get_sensor()
-#         sensor.model = None
-#         db.session.add(sensor)
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()    
+def test_employee_department_one_to_many(app):
+    """
+    Tests that the relationship between employee and department is one-to-many.
+    i.e. that we can assign the same department for two employees.
+    """
     
-# def test_measurement_columns(app):
-#     """
-#     Tests that a measurement value only accepts floating point values and that
-#     time only accepts datetime values.
-#     """
-    
-#     with app.app_context():
-#         measurement = _get_measurement()
-#         measurement.value = str(measurement.value) + "kg"
-#         db.session.add(measurement)
-#         with pytest.raises(StatementError):
-#             db.session.commit()
-            
-#         db.session.rollback()
-        
-#         measurement = _get_measurement()
-#         measurement.time = time.time()
-#         db.session.add(measurement)
-#         with pytest.raises(StatementError):
-#             db.session.commit()
-    
-# def test_deployment_columns(app):
-#     """
-#     Tests that all columns in the deployment table are mandatory. Also tests
-#     that start and end only accept datetime values.
-#     """
-    
-#     with app.app_context():
-#         # Tests for nullable
-#         deployment = _get_deployment()
-#         deployment.start = None
-#         db.session.add(deployment)
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()
-        
-#         db.session.rollback()
+    with app.app_context():
+        department = _get_department()
+        emp1 = _get_employee("002")
+        emp2 = _get_employee("003")
+        emp1.department = department
+        emp2.department = department
+        db.session.add(department)
+        db.session.add(emp1)
+        db.session.add(emp2)
+        db.session.commit()
 
-#         deployment = _get_deployment()
-#         deployment.end = None
-#         db.session.add(deployment)
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()
-        
-#         db.session.rollback()
+        assert Employee.query.count() == 2
+        assert Department.query.count() == 1
 
-#         deployment = _get_deployment()
-#         deployment.name = None
-#         db.session.add(deployment)
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()
-        
-#         db.session.rollback()
-            
-#         # Tests for column type
-#         deployment = _get_deployment()
-#         deployment.start = time.time()
-#         db.session.add(deployment)
-#         with pytest.raises(StatementError):
-#             db.session.commit()
-        
-#         db.session.rollback()
-        
-#         deployment = _get_deployment()
-#         deployment.end = time.time()
-#         db.session.add(deployment)
-#         with pytest.raises(StatementError):
-#             db.session.commit()
+def test_emp_ondelete_organization(app):
+    """
+    Tests that employee's organization foreign key is set to null when the employee
+    is deleted.
+    """
     
-#         db.session.rollback()
+    with app.app_context():
+        organization = _get_org()
+        emp = _get_employee()
+        emp.Organization = organization
+        db.session.add(emp)
+        db.session.add(organization)
+        db.session.commit()
+        db.session.delete(organization)
+        db.session.commit()
+        assert emp.organization is None
+
+def test_emp_ondelete_department(app):
+    """
+    Tests that employee's department foreign key is set to null when the employee
+    is deleted.
+    """
+    
+    with app.app_context():
+        department = _get_department()
+        emp = _get_employee()
+        emp.Department = department
+        db.session.add(emp)
+        db.session.add(department)
+        db.session.commit()
+        db.session.delete(department)
+        db.session.commit()
+        assert emp.department is None
+
+def test_measurement_ondelete_role(app):
+    """
+    Tests that employee's role foreign key is set to null when the employee
+    is deleted.
+    """
+    
+    with app.app_context():
+        role = _get_role()
+        emp = _get_employee()
+        emp.Role = role
+        db.session.add(emp)
+        db.session.add(role)
+        db.session.commit()
+        db.session.delete(role)
+        db.session.commit()
+        assert emp.role is None
+        
+def test_role_columns(app):
+    """
+    Tests the types and restrictions of role columns. Checks that numerical
+    values only accepts numbers, name must be present and is unique, and that
+    all of the columns are optional. 
+    """
+    
+    with app.app_context():
+        
+        role = _get_role()
+        role.code = None
+        db.session.add(role)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        
+        db.session.rollback()
+    
+        role = _get_role()
+        role.name = None
+        db.session.add(role)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        
+        db.session.rollback()
+
+        role_1 = _get_role()
+        role_2 = _get_role()
+        db.session.add(role_1)
+        db.session.add(role_2)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        
+        db.session.rollback()
+
+        role = Role(name="test", code="TEST")
+        db.session.add(role)
+        db.session.commit()
+    
+def test_department_columns(app):
+    """
+    Tests the types and restrictions of department columns. Checks that numerical
+    values only accepts numbers, name must be present and is unique, and that
+    all of the columns are optional. 
+    """
+    
+    with app.app_context():
+        
+        department = _get_department()
+        department.department_id = None
+        db.session.add(department)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        
+        db.session.rollback()
+    
+        department = _get_department()
+        department.name = None
+        db.session.add(department)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        
+        db.session.rollback()
+
+        department_1 = _get_department()
+        department_2 = _get_department()
+        db.session.add(department_1)
+        db.session.add(department_2)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        
+        db.session.rollback()
+
+        department = Department(name="test", department_id="D03")
+        db.session.add(department)
+        db.session.commit()
+
+def test_Org_columns(app):
+    """
+    Tests the types and restrictions of organization columns. Checks that numerical
+    values only accepts numbers, name must be present and is unique, and that
+    all of the columns are optional. 
+    """
+    
+    with app.app_context():
+        
+        organization = _get_org()
+        organization.organization_id = None
+        db.session.add(organization)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        
+        db.session.rollback()
+    
+        organization = _get_org()
+        organization.name = None
+        db.session.add(organization)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        
+        db.session.rollback()
+
+        organization = _get_org()
+        organization.location = None
+        db.session.add(organization)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        
+        db.session.rollback()
+
+        org_1 = _get_org()
+        org_2 = _get_org()
+        db.session.add(org_1)
+        db.session.add(org_2)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        
+        db.session.rollback()
+
+        organization = Organization(name="test", organization_id="O03", location="oulu")
+        db.session.add(organization)
+        db.session.commit()
+
+def test_emp_columns(app):
+    """
+    Tests the types and restrictions of employee columns. Checks that numerical
+    values only accepts numbers, name must be present and is unique, and that
+    all of the columns are optional. 
+    """
+    
+    with app.app_context():
+
+        emp = _get_employee()
+        emp.appointment_date = ""
+        db.session.add(emp)
+        with pytest.raises(StatementError):
+            db.session.commit()
+        db.session.rollback()
+
+        emp = _get_employee()
+        emp.date_of_birth = ""
+        db.session.add(emp)
+        with pytest.raises(StatementError):
+            db.session.commit()
+        db.session.rollback()
+
+        emp = _get_employee()
+        emp.employee_id = None
+        db.session.add(emp)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        db.session.rollback()
+    
+        emp = _get_employee()
+        emp.first_name = None
+        db.session.add(emp)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        db.session.rollback()
+
+        emp = _get_employee()
+        emp.last_name = None
+        db.session.add(emp)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        db.session.rollback()
+
+        emp = _get_employee()
+        emp.address = None
+        db.session.add(emp)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        db.session.rollback()
+
+        emp = _get_employee()
+        emp.gender = None
+        db.session.add(emp)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        db.session.rollback()
+
+        emp = _get_employee()
+        emp.appointment_date = None
+        db.session.add(emp)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        db.session.rollback()
+
+        emp = _get_employee()
+        emp.mobile_no = None
+        db.session.add(emp)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        db.session.rollback()
+
+        emp = _get_employee()
+        emp.basic_salary = None
+        db.session.add(emp)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        db.session.rollback()
+
+        emp = _get_employee()
+        emp.account_number = None
+        db.session.add(emp)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        db.session.rollback()
+
+        emp1 = _get_employee()
+        emp2 = _get_employee()
+        db.session.add(emp1)
+        db.session.add(emp2)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        
+        db.session.rollback()
+
+        emp = Employee(employee_id = '001', first_name="anusha", last_name="pathirana",
+                address="oulu", gender="F", date_of_birth=datetime(1995, 10, 21, 11, 20, 30),
+                appointment_date=datetime(2018, 11, 21, 11, 20, 30),
+                active_emp=1, prefix_title='MISS', marritial_status='SINGLE',
+                mobile_no='21456', basic_salary=10000, account_number="11233565456")
+        db.session.add(emp)
+        db.session.commit()
+
+def test_leave_columns(app):
+    """
+    Tests the types and restrictions of leave plan columns. Checks that numerical
+    values only accepts numbers, name must be present and is unique, and that
+    all of the columns are optional. 
+    """
+    
+    with app.app_context():
+        
+        leave = _get_leave()
+        leave.leave_date = ""
+        db.session.add(leave)
+        with pytest.raises(StatementError):
+            db.session.commit()
+        
+        db.session.rollback()
+    
+        leave = _get_leave()
+        leave.leave_type = None
+        db.session.add(leave)
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+        
+        db.session.rollback()
+
+        leave = _get_leave()
+        leave.leave_date = None
+        db.session.add(leave)
+        with pytest.raises(IntegrityError):
+            db.session.commit()        
+        db.session.rollback()
+
+        leave = LeavePlan(leave_type='MEDICAL', leave_date=datetime(2018, 11, 21, 11, 20, 30))
+        db.session.add(leave)
+        db.session.commit()
