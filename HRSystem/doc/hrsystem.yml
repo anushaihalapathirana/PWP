@@ -46,7 +46,7 @@ components:
     leaveplan:
       description: leave plan id
       in: path
-      name: leave plan
+      name: leaveplan
       required: true
       schema:
         type: string
