@@ -27,9 +27,12 @@ class EmployeeByRlationCollection(Resource):
         - GET all the employees
 
     """
+    def page_key(*args, **kwargs):
+        return str(request.path)
 
     @classmethod
     @require_admin
+    @cache.cached(make_cache_key=page_key)
     def get(cls, organization=None, department=None, role=None):
         """ GET list of employees
             Endpoint:
@@ -236,8 +239,12 @@ class EmployeeItem(Resource):
                     department=None,
                     role=None)])
 
+    def page_key(*args, **kwargs):
+        return str(request.path)
+
     @classmethod
     @require_employee_key
+    @cache.cached(make_cache_key=page_key)
     def get(cls, employee):
         """ get details of one employee
             Arguments:
