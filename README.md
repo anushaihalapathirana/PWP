@@ -110,6 +110,8 @@ Test coverage html report - You can view test coverage report by using below com
 python3 -m pytest --cov-report html --cov=.
 ```
 
+test cases can be use to detect 400, 404, 409, 415 and 403 errors
+
 # Run swagger
 
 Install flasgger and pyyaml
