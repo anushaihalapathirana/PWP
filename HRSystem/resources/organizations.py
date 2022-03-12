@@ -8,7 +8,7 @@ from flask_restful import Resource
 from HRSystem import db
 from HRSystem.models import Organization
 from HRSystem.utils import create_error_message
-
+from HRSystem.utils import require_admin
 
 class OrganizationCollection(Resource):
     """ This class contains the GET and POST method implementations for organization data
@@ -18,6 +18,7 @@ class OrganizationCollection(Resource):
 
     """
     @classmethod
+    @require_admin
     def get(cls):
         """ GET list of organizations
             Arguments:
@@ -35,6 +36,7 @@ class OrganizationCollection(Resource):
         return response_data
 
     @classmethod
+    @require_admin
     def post(cls):
         """ Create a new organization
         Arguments:
@@ -98,8 +100,8 @@ class OrganizationItem(Resource):
         Returns:
         Endpoint: /api/organization/<organization>/
     """
-
     @classmethod
+    @require_admin
     def get(cls, organization):
         """ get details of one organization
         Arguments:
@@ -115,6 +117,7 @@ class OrganizationItem(Resource):
         return response_data
 
     @classmethod
+    @require_admin
     def delete(cls, organization):
         """ Delete the selected organization
         Arguments:
@@ -131,6 +134,7 @@ class OrganizationItem(Resource):
         return Response(status=204)
 
     @classmethod
+    @require_admin
     def put(cls, organization):
         """ Replace organization's basic data with new values
         Arguments:
@@ -170,7 +174,7 @@ class OrganizationItem(Resource):
 
         try:
             db.session.commit()
-        except Exception:
+        except (Exception, ):
             return create_error_message(
                 500, "Internal server Error",
                 "Error while adding the role"

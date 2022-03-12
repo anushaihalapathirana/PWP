@@ -82,7 +82,7 @@ class LeavePlanByEmployeellection(Resource):
 
             db.session.add(leaveplan)
             db.session.commit()
-        except Exception:
+        except (Exception, ):
             return create_error_message(
                 500, "Internal server Error",
                 "Error while adding the leave"
@@ -135,7 +135,7 @@ class LeavePlanItem(Resource):
 
         try:
             db.session.commit()
-        except Exception:
+        except (Exception, ):
             return create_error_message(
                 500, "Internal server Error",
                 "Error while updating the employee"
