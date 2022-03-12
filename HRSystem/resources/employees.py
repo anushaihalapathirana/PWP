@@ -236,8 +236,12 @@ class EmployeeItem(Resource):
                     department=None,
                     role=None)])
 
+    def page_key(*args, **kwargs):
+        return str(request.path)
+
     @classmethod
     @require_employee_key
+    @cache.cached(make_cache_key=page_key)
     def get(cls, employee):
         """ get details of one employee
             Arguments:
