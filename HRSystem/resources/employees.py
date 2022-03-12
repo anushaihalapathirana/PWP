@@ -294,7 +294,7 @@ class EmployeeItem(Resource):
                 department=employee.department,
                 organnization=employee.organization,
                 role=employee.role)
-        except Exception:
+        except (Exception, ):
             return create_error_message(
                 500, "Internal server Error",
                 "Error while updating the employee"
@@ -322,7 +322,7 @@ class EmployeeItem(Resource):
             db.session.commit()
             self._clear_cache(department=dept,
                               organnization=org, role=role)
-        except Exception:
+        except (Exception, ):
             return create_error_message(
                 500, "Internal server Error",
                 "Error while deleting the employee"

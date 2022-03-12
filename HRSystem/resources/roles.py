@@ -8,7 +8,7 @@ from werkzeug.exceptions import HTTPException
 from HRSystem import db
 from HRSystem.models import Role
 from HRSystem.utils import create_error_message
-
+from HRSystem.utils import require_admin
 
 class RoleCollection(Resource):
     """ This class contains the GET and POST method implementations for role data
@@ -17,6 +17,7 @@ class RoleCollection(Resource):
         Endpoint: /api/roles/
     """
     @classmethod
+    @require_admin
     def get(cls):
         """ GET list of roles
             Arguments:
@@ -34,6 +35,7 @@ class RoleCollection(Resource):
         return response_data
 
     @classmethod
+    @require_admin
     def post(cls):
         """ Create a new Role
         Arguments:
@@ -97,6 +99,7 @@ class RoleItem(Resource):
         Endpoint - /api/roles/<role>
     """
     @classmethod
+    @require_admin
     def get(cls, role):
         """ get details of one role
         Arguments:
@@ -113,6 +116,7 @@ class RoleItem(Resource):
         return response_data
 
     @classmethod
+    @require_admin
     def delete(cls, role):
         """ Delete the selected role
         Arguments:
@@ -130,6 +134,7 @@ class RoleItem(Resource):
         return Response(status=204)
 
     @classmethod
+    @require_admin
     def put(cls, role):
         """ Replace role's basic data with new values
         Arguments:
@@ -169,7 +174,7 @@ class RoleItem(Resource):
 
         try:
             db.session.commit()
-        except Exception:
+        except (Exception, ):
             return create_error_message(
                 500, "Internal server Error",
                 "Error while updating the role"

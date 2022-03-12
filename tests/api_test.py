@@ -203,7 +203,11 @@ class TestRoleCollection(object):
         """
         Test get all roles method
         """
-        resp = client.get(self.RESOURCE_URL)
+        token = "testtoken"
+
+        resp = client.get(self.RESOURCE_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 3
@@ -212,27 +216,39 @@ class TestRoleCollection(object):
         """
         Test create role functionality
         """
+        token = "testtoken"
         valid = _get_role_json()
         # test with wrong content type
-        resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
+        resp = client.post(self.RESOURCE_URL, data=json.dumps(valid), headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 415
 
         # test with valid and see that it exists afterward
-        resp = client.post(self.RESOURCE_URL, json=valid)
+        resp = client.post(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 201
 
         # send same data again for 409
-        resp = client.post(self.RESOURCE_URL, json=valid)
+        resp = client.post(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 409
 
         # remove model field for 500
         resp = client.post(self.RESOURCE_URL, json={
-                           "name": "role-10", "code": "Code-7", "description": "new role"})
+                           "name": "role-10", "code": "Code-7", "description": "new role"},
+                           headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 500
 
         # remove model field for 400
         valid.pop("name")
-        resp = client.post(self.RESOURCE_URL, json=valid)
+        resp = client.post(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 400
 
 
@@ -242,53 +258,77 @@ class TestRoleItem(object):
     """
     RESOURCE_URL = "/api/roles/Code-2/"
     INVALID_URL = "/api/roles/role-ne/"
+    token = "testtoken"
 
     def test_get(self, client):
         """
         Test to get one role item
         """
-        resp = client.get(self.RESOURCE_URL)
+        token = "testtoken"
+        resp = client.get(self.RESOURCE_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        resp = client.get(self.INVALID_URL)
+        resp = client.get(self.INVALID_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 404
 
     def test_put(self, client):
         """
         Test to edit role
         """
+        token = "testtoken"
         valid = _get_role_json_put()
 
         # test with wrong content type
-        resp = client.put(self.RESOURCE_URL, data=json.dumps(valid))
+        resp = client.put(self.RESOURCE_URL, data=json.dumps(valid), headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 415
 
-        resp = client.put(self.INVALID_URL, json=valid)
+        resp = client.put(self.INVALID_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 404
 
         # test with valid (only change model)
         valid["description"] = "new code"
-        resp = client.put(self.RESOURCE_URL, json=valid)
+        resp = client.put(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 204
 
         # remove field for 400
         valid.pop("name")
-        resp = client.put(self.RESOURCE_URL, json=valid)
+        resp = client.put(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 400
 
         # send same data again for 409
-        resp = client.post(self.RESOURCE_URL, json=valid)
+        resp = client.post(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 405
 
     def test_delete(self, client):
         """
         Test delete one role
         """
-        resp = client.delete(self.RESOURCE_URL)
+        token = "testtoken"
+        resp = client.delete(self.RESOURCE_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 204
-        resp = client.delete(self.RESOURCE_URL)
+        resp = client.delete(self.RESOURCE_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 404
-        resp = client.delete(self.INVALID_URL)
+        resp = client.delete(self.INVALID_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 404
 
 
@@ -302,7 +342,10 @@ class TestOrganizationCollection(object):
         """
         Test to get all organizations
         """
-        resp = client.get(self.RESOURCE_URL)
+        token = "testtoken"
+        resp = client.get(self.RESOURCE_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 3
@@ -311,27 +354,39 @@ class TestOrganizationCollection(object):
         """
         Test to add organizations
         """
+        token = "testtoken"
         valid = _get_org_json()
         # test with wrong content type
-        resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
+        resp = client.post(self.RESOURCE_URL, data=json.dumps(valid), headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 415
 
         # test with valid and see that it exists afterward
-        resp = client.post(self.RESOURCE_URL, json=valid)
+        resp = client.post(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 201
 
         # send same data again for 409
-        resp = client.post(self.RESOURCE_URL, json=valid)
+        resp = client.post(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 409
 
         # remove model field for 500
         resp = client.post(self.RESOURCE_URL, json={
-                           "organization_id": "O10", "name": "org-5", "location": "location-5"})
+                           "organization_id": "O10", "name": "org-5", "location": "location-5"},
+                           headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 500
 
         # remove model field for 400
         valid.pop("name")
-        resp = client.post(self.RESOURCE_URL, json=valid)
+        resp = client.post(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 400
 
 
@@ -346,49 +401,72 @@ class TestOranizationItem(object):
         """
         Test to get one organizations
         """
-        resp = client.get(self.RESOURCE_URL)
+        token = "testtoken"
+        resp = client.get(self.RESOURCE_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        resp = client.get(self.INVALID_URL)
+        resp = client.get(self.INVALID_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 404
 
     def test_put(self, client):
         """
         Test to edit organizations
         """
+        token = "testtoken"
         valid = _get_org_json_put()
 
         # test with wrong content type
-        resp = client.put(self.RESOURCE_URL, data=json.dumps(valid))
+        resp = client.put(self.RESOURCE_URL, data=json.dumps(valid), headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 415
 
-        resp = client.put(self.INVALID_URL, json=valid)
+        resp = client.put(self.INVALID_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 404
 
         # test with valid (only change model)
         valid["location"] = "put method location update"
         print(valid)
-        resp = client.put(self.RESOURCE_URL, json=valid)
+        resp = client.put(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 204
 
         # remove field for 400
         valid.pop("name")
-        resp = client.put(self.RESOURCE_URL, json=valid)
+        resp = client.put(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 400
 
         # send same data again for 409
-        resp = client.post(self.RESOURCE_URL, json=valid)
+        resp = client.post(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 405
 
     def test_delete(self, client):
         """
         Test to delete all organizations
         """
-        resp = client.delete(self.RESOURCE_URL)
+        token = "testtoken"
+        resp = client.delete(self.RESOURCE_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 204
-        resp = client.delete(self.RESOURCE_URL)
+        resp = client.delete(self.RESOURCE_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 404
-        resp = client.delete(self.INVALID_URL)
+        resp = client.delete(self.INVALID_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 404
 
 
@@ -402,7 +480,10 @@ class TestDepartmentCollection(object):
         """
         Test to get all deparments
         """
-        resp = client.get(self.RESOURCE_URL)
+        token = "testtoken"
+        resp = client.get(self.RESOURCE_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body) == 3
@@ -411,27 +492,39 @@ class TestDepartmentCollection(object):
         """
         Test to add deparments
         """
+        token = "testtoken"
         valid = _get_dept_json()
         # test with wrong content type
-        resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
+        resp = client.post(self.RESOURCE_URL, data=json.dumps(valid), headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 415
 
         # test with valid and see that it exists afterward
-        resp = client.post(self.RESOURCE_URL, json=valid)
+        resp = client.post(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 201
 
         # send same data again for 409
-        resp = client.post(self.RESOURCE_URL, json=valid)
+        resp = client.post(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 409
 
         # remove model field for 500
         resp = client.post(self.RESOURCE_URL, json={
-                           "department_id": "D10", "name": "dept-5", "description": "department-5"})
+                           "department_id": "D10", "name": "dept-5", "description": "department-5"},
+                           headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 500
 
         # remove model field for 400
         valid.pop("name")
-        resp = client.post(self.RESOURCE_URL, json=valid)
+        resp = client.post(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 400
 
 
@@ -446,49 +539,72 @@ class TestDepartmentItem(object):
         """
         Test to get one deparment
         """
-        resp = client.get(self.RESOURCE_URL)
+        token = "testtoken"
+        resp = client.get(self.RESOURCE_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        resp = client.get(self.INVALID_URL)
+        resp = client.get(self.INVALID_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 404
 
     def test_put(self, client):
         """
         Test to edit deparments
         """
+        token = "testtoken"
         valid = _get_dept_json_put()
 
         # test with wrong content type
-        resp = client.put(self.RESOURCE_URL, data=json.dumps(valid))
+        resp = client.put(self.RESOURCE_URL, data=json.dumps(valid), headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 415
 
-        resp = client.put(self.INVALID_URL, json=valid)
+        resp = client.put(self.INVALID_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 404
 
         # test with valid (only change model)
         valid["location"] = "put method location update"
         print(valid)
-        resp = client.put(self.RESOURCE_URL, json=valid)
+        resp = client.put(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 204
 
         # remove field for 400
         valid.pop("name")
-        resp = client.put(self.RESOURCE_URL, json=valid)
+        resp = client.put(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 400
 
         # send same data again for 409
-        resp = client.post(self.RESOURCE_URL, json=valid)
+        resp = client.post(self.RESOURCE_URL, json=valid, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 405
 
     def test_delete(self, client):
         """
         Test to delete deparments
         """
-        resp = client.delete(self.RESOURCE_URL)
+        token = "testtoken"
+        resp = client.delete(self.RESOURCE_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 204
-        resp = client.delete(self.RESOURCE_URL)
+        resp = client.delete(self.RESOURCE_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 404
-        resp = client.delete(self.INVALID_URL)
+        resp = client.delete(self.INVALID_URL, headers={
+            "HRSystem-Api-Key": token
+        })
         assert resp.status_code == 404
 
 

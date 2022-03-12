@@ -9,7 +9,7 @@ from werkzeug.exceptions import HTTPException
 from HRSystem import db
 from HRSystem.models import Department
 from HRSystem.utils import create_error_message
-
+from HRSystem.utils import require_admin
 
 class DepartmentCollection(Resource):
 
@@ -19,6 +19,7 @@ class DepartmentCollection(Resource):
         Endpoint: /api/departments/
     """
     @classmethod
+    @require_admin
     def get(cls):
         """ GET list of departments
             Arguments:
@@ -36,6 +37,7 @@ class DepartmentCollection(Resource):
         return response_data
 
     @classmethod
+    @require_admin
     def post(cls):
         """ Create a new department
         Arguments:
@@ -81,7 +83,7 @@ class DepartmentCollection(Resource):
 
             db.session.add(dept)
             db.session.commit()
-        except Exception as error:
+        except (Exception, RuntimeError) as error:
             print("error", error)
             if isinstance(error, HTTPException):
                 return create_error_message(
@@ -104,6 +106,7 @@ class DepartmentItem(Resource):
         Endpoint: /api/departments/<Department:department>/
     """
     @classmethod
+    @require_admin
     def get(cls, department):
         """ get details of one department
         Arguments:
@@ -120,6 +123,7 @@ class DepartmentItem(Resource):
         return response_data
 
     @classmethod
+    @require_admin
     def delete(cls, department):
         """ Delete the selected department
         Arguments:
@@ -137,6 +141,7 @@ class DepartmentItem(Resource):
         return Response(status=204)
 
     @classmethod
+    @require_admin
     def put(cls, department):
         """ Replace department's basic data with new values
         Arguments:
@@ -175,7 +180,7 @@ class DepartmentItem(Resource):
 
         try:
             db.session.commit()
-        except Exception:
+        except (Exception, RuntimeError):
             return create_error_message(
                 500, "Internal server Error",
                 "Error while updating the department"
