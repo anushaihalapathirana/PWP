@@ -15,38 +15,38 @@ tags:
     description: "leave plan API"
 components:
   parameters:
-    role:
+    role_code:
       description: role code
       in: path
-      name: role
+      name: role_code
       required: true
       schema:
         type: string
-    organization:
+    organization_id:
       description: organization id
       in: path
-      name: organization
+      name: organization_id
       required: true
       schema:
         type: string
-    department:
+    department_id:
       description: department id
       in: path
-      name: department
+      name: department_id
       required: true
       schema:
         type: string
-    employee:
+    employee_id:
       description: employee id
       in: path
-      name: employee
+      name: employee_id
       required: true
       schema:
         type: string
-    leaveplan:
+    leaveplan_id:
       description: leave plan id
       in: path
-      name: leaveplan
+      name: leaveplan_id
       required: true
       schema:
         type: string
@@ -229,9 +229,9 @@ paths:
           description: A role with the same code already exists
         '415':
           description: Wrong media type was used
-  /roles/{role}/:
+  /roles/{role_code}/:
     parameters:
-    - $ref: '#/components/parameters/role'
+    - $ref: '#/components/parameters/role_code'
     get:
       tags: 
         - roles
@@ -326,9 +326,9 @@ paths:
           description: A organization with the same code already exists
         '415':
           description: Wrong media type was used
-  /organizations/{organization}/:
+  /organizations/{organization_id}/:
     parameters:
-    - $ref: '#/components/parameters/organization'
+    - $ref: '#/components/parameters/organization_id'
     get:
       tags: 
         - organizations
@@ -423,9 +423,9 @@ paths:
           description: A department with the same code already exists
         '415':
           description: Wrong media type was used
-  /departments/{department}/:
+  /departments/{department_id}/:
     parameters:
-    - $ref: '#/components/parameters/department'
+    - $ref: '#/components/parameters/department_id'
     get:
       tags: 
         - departments
@@ -522,7 +522,7 @@ paths:
                 basic_salary: 56665
                 account_number: FI54545k
   
-  /organizations/{organization}/roles/{role}/employees/:
+  /organizations/{organization_id}/roles/{role_code}/employees/:
     get:
       tags: 
         - employees
@@ -530,8 +530,8 @@ paths:
       security:
         - HRSystemKey: [admin]
       parameters:
-        - $ref: '#/components/parameters/organization'
-        - $ref: '#/components/parameters/role'
+        - $ref: '#/components/parameters/organization_id'
+        - $ref: '#/components/parameters/role_code'
       responses:
         '200':
           description: List of employees
@@ -567,7 +567,7 @@ paths:
                 basic_salary: 56665
                 account_number: FI54545k
   
-  /organizations/{organization}/employees/:
+  /organizations/{organization_id}/employees/:
     get:
       tags: 
         - employees
@@ -575,7 +575,7 @@ paths:
       security:
         - HRSystemKey: [admin]
       parameters:
-        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/organization_id'
       responses:
         '200':
           description: List of employees
@@ -611,7 +611,7 @@ paths:
                 basic_salary: 56665
                 account_number: FI54545k
   
-  /organizations/{organization}/departments/{department}/employees/:
+  /organizations/{organization_id}/departments/{department_id}/employees/:
     get:
       tags: 
         - employees
@@ -619,8 +619,8 @@ paths:
       security:
         - HRSystemKey: [admin]
       parameters:
-        - $ref: '#/components/parameters/organization'
-        - $ref: '#/components/parameters/department'
+        - $ref: '#/components/parameters/organization_id'
+        - $ref: '#/components/parameters/department_id'
       responses:
         '200':
           description: List of employees
@@ -656,7 +656,7 @@ paths:
                 basic_salary: 56665
                 account_number: FI54545k
   
-  /organizations/{organization}/departments/{department}/roles/{role}/employees/:
+  /organizations/{organization_id}/departments/{department_id}/roles/{role_code}/employees/:
     get:
       tags: 
         - employees
@@ -664,9 +664,9 @@ paths:
       security:
         - HRSystemKey: [admin]
       parameters:
-        - $ref: '#/components/parameters/organization'
-        - $ref: '#/components/parameters/department'
-        - $ref: '#/components/parameters/role'
+        - $ref: '#/components/parameters/organization_id'
+        - $ref: '#/components/parameters/department_id'
+        - $ref: '#/components/parameters/role_code'
       responses:
         '200':
           description: List of employees
@@ -702,15 +702,15 @@ paths:
                 basic_salary: 56665
                 account_number: FI54545k
 
-  /organizations/{organization}/departments/{department}/roles/{role}/employees/:
+  /organizations/{organization_id}/departments/{department_id}/roles/{role_code}/employees/:
     post:
       tags: 
         - employees
       description: Create a new employee
       parameters:
-        - $ref: '#/components/parameters/organization'
-        - $ref: '#/components/parameters/department'
-        - $ref: '#/components/parameters/role'
+        - $ref: '#/components/parameters/organization_id'
+        - $ref: '#/components/parameters/department_id'
+        - $ref: '#/components/parameters/role_code'
       requestBody:
         description: JSON document that contains basic data for a new employee
         content:
@@ -742,9 +742,9 @@ paths:
         '415':
           description: Wrong media type was used
 
-  /employees/{employee}/:
+  /employees/{employee_id}/:
     parameters:
-    - $ref: '#/components/parameters/employee'
+    - $ref: '#/components/parameters/employee_id'
     get:
       tags: 
         - employees
@@ -822,9 +822,9 @@ paths:
         '404':
           description: The employee was not found
 
-  /employees/{employee}/leaveplans/:
+  /employees/{employee_id}/leaveplans/:
     parameters:
-    - $ref: '#/components/parameters/employee'
+    - $ref: '#/components/parameters/employee_id'
     get:
       tags: 
         - leaveplans
@@ -867,9 +867,9 @@ paths:
         '415':
           description: Wrong media type was used
 
-  /leaveplans/{leaveplan}/:
+  /leaveplans/{leaveplan_id}/:
     parameters:
-    - $ref: '#/components/parameters/leaveplan'
+    - $ref: '#/components/parameters/leaveplan_id'
     put:
       tags: 
         - leaveplans

@@ -160,7 +160,7 @@ class Employee(db.Model):
         }
         props["date_of_birth"] = {
             "description": "Employee date of birth",
-            "type": "string",
+            "type": ["string", "null"],
             "format": "date-time"
         }
         props["appointment_date"] = {
@@ -170,13 +170,13 @@ class Employee(db.Model):
         }
         props["prefix_title"] = {
             "description": "Employee name title",
-            "type": "string",
+            "type": ["string", "null"],
             "enum": [e.name for e in TitleEnum]
         }
         props["marritial_status"] = {
             "description": "Employee merritial status",
             "enum": [e.name for e in MarritialEnum],
-            "type": "string"
+            "type": ["string", "null"]
         }
         props["mobile_no"] = {
             "description": "Employee mobile number",
@@ -232,7 +232,6 @@ class Organization(db.Model):
         Serialize method
         """
         org = {
-            "id": self.id,
             "organization_id": self.organization_id,
             "name": self.name,
             "location": self.location
@@ -277,7 +276,7 @@ class Department(db.Model):
         }
         props["description"] = {
             "description": "department description",
-            "type": "string"
+            "type": ["string", "null"]
         }
         return schema
 
@@ -330,7 +329,7 @@ class Role(db.Model):
         }
         props["description"] = {
             "description": "description of role",
-            "type": "string"
+            "type": ["string", "null"]
         }
         return schema
 
@@ -339,7 +338,6 @@ class Role(db.Model):
         Serialize method
         """
         role = {
-            "id": self.id,
             "name": self.name,
             "code": self.code,
             "description": self.description and self.description
@@ -390,7 +388,7 @@ class LeavePlan(db.Model):
         }
         props["reason"] = {
             "description": "reason for leave",
-            "type": "string"
+            "type": ["string", "null"]
         }
         return schema
 
