@@ -78,8 +78,10 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
-disable = duplicate-code # This is due to the duplicate codes in error handling 
+disable = duplicate-code, # This is due to the duplicate codes in error handling 
       # parts of organization, department and role resource files
+      broad-except # We need to use Exception to catch all the other exceptions
+      # including server errors and run time errors
 
 
 # Enable the message, report, category or checker with the given id(s). You can

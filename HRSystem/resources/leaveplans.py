@@ -129,9 +129,9 @@ class LeavePlanItem(Resource):
                 "JSON format is not valid"
             )
 
-        old_Leave_Plan = copy(leaveplan)
+        old_leave_plan = copy(leaveplan)
         leaveplan.deserialize(request)
-        leaveplan.id = old_Leave_Plan.id
+        leaveplan.id = old_leave_plan.id
 
         try:
             db.session.commit()
