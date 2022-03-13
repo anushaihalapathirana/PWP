@@ -309,7 +309,7 @@ class EmployeeItem(Resource):
 
         return Response(status=204)
 
-    @require_employee_key
+    @require_admin
     def delete(self, employee):
         """ Delete the selected employee
         Arguments:
