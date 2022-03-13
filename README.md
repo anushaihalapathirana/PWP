@@ -13,6 +13,10 @@ The database we are using for the project is SQLAlchemy version 1.4
 
 - Libraries used : flask, flask_sqlalchemy
 
+Clone the project using below command
+
+``` git clone https://github.com/anushaihalapathirana/PWP.git```
+
 Please install all the dependencies using
 ```  
     pip install -r requirements.txt
@@ -29,9 +33,11 @@ export FLASK_APP=HRSystem
 
 Our system contains with 2 databases. HR Core database and Payroll database.
 
+This project only contains HR core API
+
 Follow below instructions to setup the databases
 
-***Note*** : _the sqlite db files are already present in the project (hrcodedb and payrolldb). Please delete them first to run these scripts_
+***Note*** : _the sqlite db files are already present in the project (hrcodedb). Please delete them first to run these scripts_
 
 
 1. __init__.py file contains the script to create the HRCore database and then insert data to the database. You can change/add/delete insert values in there.
@@ -39,12 +45,6 @@ Follow below instructions to setup the databases
 ```  
     flask init-db
     flask testgen
-```
-
-2. run payrolldb_data_script.py file using below command. it will generate the payroll database and insert data to the table.
-
-```
-    python payrolldb_data_script.py
 ```
 
 More details about the database can be found here - https://github.com/anushaihalapathirana/PWP/wiki/Database-design-and-implementation
@@ -58,6 +58,7 @@ flask run
 ```
 
 Development server will run on http://127.0.0.1:5000/
+
 Swagger API documentation can found in http://127.0.0.1:5000/apidocs/
 
 
@@ -114,7 +115,7 @@ test cases can be use to detect 400, 404, 409, 415 and 403 errors
 
 # Run swagger
 
-Install flasgger and pyyaml
+Install flasgger and pyyaml. These are covered in requirement.txt file
 
 ```
 pip install flasgger
