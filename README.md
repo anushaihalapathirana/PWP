@@ -26,7 +26,7 @@ Configurations - If necessary
 
 ```
 export FLASK_ENV=development
-export FLASK_APP=HRSystem
+export FLASK_APP=hr_system
 ```
 
 # Setup database
@@ -77,7 +77,7 @@ pip install pylint
 Run below command to run pylint in project
 
 ``` 
-pylint HRSystem
+pylint hr_system
 ```
 
 # How to run tests

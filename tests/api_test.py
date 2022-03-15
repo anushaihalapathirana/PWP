@@ -12,8 +12,8 @@ from sqlalchemy.engine import Engine
 from sqlalchemy import event
 from sqlalchemy.exc import IntegrityError, StatementError
 
-from HRSystem import create_app, db
-from HRSystem.models import *
+from hr_system import create_app, db
+from hr_system.models import *
 
 
 @event.listens_for(Engine, "connect")

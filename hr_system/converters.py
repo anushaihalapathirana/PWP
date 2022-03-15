@@ -3,8 +3,8 @@
 This file contains the Converter methods
 """
 from werkzeug.routing import BaseConverter
-from HRSystem.models import Role, Department, Organization, LeavePlan, Employee
-from HRSystem.utils import create_error_message
+from hr_system.models import Role, Department, Organization, LeavePlan, Employee
+from hr_system.utils import create_error_message
 
 
 class RoleConverter(BaseConverter):

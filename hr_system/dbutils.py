@@ -5,8 +5,8 @@ import secrets
 from datetime import datetime
 import click
 from flask.cli import with_appcontext
-from HRSystem import db
-from HRSystem.models import Role, Employee, Department, Organization, LeavePlan, ApiKey
+from hr_system import db
+from hr_system.models import Role, Employee, Department, Organization, LeavePlan, ApiKey
 
 
 @click.command("init-db")

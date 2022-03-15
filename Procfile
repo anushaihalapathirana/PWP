@@ -1,1 +1,1 @@
-web: HRSystem
+web: hr_system

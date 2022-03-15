@@ -5,10 +5,10 @@ from jsonschema import validate, ValidationError
 from flask import Response, request
 from flask_restful import Resource
 from werkzeug.exceptions import HTTPException
-from HRSystem import db
-from HRSystem.models import Role
-from HRSystem.utils import create_error_message
-from HRSystem.utils import require_admin
+from hr_system import db
+from hr_system.models import Role
+from hr_system.utils import create_error_message
+from hr_system.utils import require_admin
 
 class RoleCollection(Resource):
     """ This class contains the GET and POST method implementations for role data
@@ -16,9 +16,8 @@ class RoleCollection(Resource):
         Returns:
         Endpoint: /api/roles/
     """
-    @classmethod
     @require_admin
-    def get(cls):
+    def get(self):
         """ GET list of roles
             Arguments:
             Returns:
@@ -34,9 +33,8 @@ class RoleCollection(Resource):
             response_data.append(role.serialize())
         return response_data
 
-    @classmethod
     @require_admin
-    def post(cls):
+    def post(self):
         """ Create a new Role
         Arguments:
             request:
@@ -98,9 +96,8 @@ class RoleItem(Resource):
         Returns:
         Endpoint - /api/roles/<role>
     """
-    @classmethod
     @require_admin
-    def get(cls, role):
+    def get(self, role):
         """ get details of one role
         Arguments:
             role
@@ -115,9 +112,8 @@ class RoleItem(Resource):
 
         return response_data
 
-    @classmethod
     @require_admin
-    def delete(cls, role):
+    def delete(self, role):
         """ Delete the selected role
         Arguments:
             role
@@ -133,9 +129,8 @@ class RoleItem(Resource):
 
         return Response(status=204)
 
-    @classmethod
     @require_admin
-    def put(cls, role):
+    def put(self, role):
         """ Replace role's basic data with new values
         Arguments:
             role

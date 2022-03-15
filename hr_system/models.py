@@ -4,7 +4,7 @@ Database model file
 import hashlib
 from enum import Enum
 from datetime import datetime
-from HRSystem import db
+from hr_system import db
 
 
 class TitleEnum(Enum):

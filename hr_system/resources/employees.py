@@ -6,12 +6,12 @@ from flask_restful import Resource
 from jsonschema import validate, ValidationError
 from flask import Response, request
 from werkzeug.exceptions import HTTPException
-from HRSystem import db
-from HRSystem.models import Employee
-from HRSystem.utils import create_error_message
-from HRSystem import cache
-from HRSystem import api
-from HRSystem.utils import require_admin, require_employee_key
+from hr_system import db
+from hr_system.models import Employee
+from hr_system.utils import create_error_message
+from hr_system import cache
+from hr_system import api
+from hr_system.utils import require_admin, require_employee_key
 
 
 class EmployeeByRlationCollection(Resource):
@@ -27,13 +27,12 @@ class EmployeeByRlationCollection(Resource):
         - GET all the employees
 
     """
-    def page_key(*args, **kwargs):
+    def page_key(self, *args, **kwargs):
         return str(request.path)
 
-    @classmethod
     @require_admin
     @cache.cached(make_cache_key=page_key)
-    def get(cls, organization=None, department=None, role=None):
+    def get(self, organization=None, department=None, role=None):
         """ GET list of employees
             Endpoint:
         "/organizations/<Organization:organization>/departments/
@@ -242,10 +241,9 @@ class EmployeeItem(Resource):
     def page_key(*args, **kwargs):
         return str(request.path)
 
-    @classmethod
     @require_employee_key
     @cache.cached(make_cache_key=page_key)
-    def get(cls, employee):
+    def get(self, employee):
         """ get details of one employee
             Arguments:
                 employee

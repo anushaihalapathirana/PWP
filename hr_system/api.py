@@ -3,13 +3,13 @@ This file contains the mapping of api resources
 """
 from flask import Blueprint
 from flask_restful import Api
-from HRSystem.resources.roles import RoleCollection, RoleItem
-from HRSystem.resources.organizations import OrganizationCollection, OrganizationItem
-from HRSystem.resources.departments import DepartmentCollection, DepartmentItem
-from HRSystem.resources.employees import (
+from hr_system.resources.roles import RoleCollection, RoleItem
+from hr_system.resources.organizations import OrganizationCollection, OrganizationItem
+from hr_system.resources.departments import DepartmentCollection, DepartmentItem
+from hr_system.resources.employees import (
     EmployeeByRlationCollection, EmployeeCollection, EmployeeItem
 )
-from HRSystem.resources.leaveplans import LeavePlanByEmployeellection, LeavePlanItem
+from hr_system.resources.leaveplans import LeavePlanByEmployeellection, LeavePlanItem
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 api = Api(api_bp)

@@ -6,7 +6,7 @@ from flask import Flask
 from flasgger import Swagger, swag_from
 from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
-from HRSystem.constants import *
+from hr_system.constants import *
 
 db = SQLAlchemy()
 cache = Cache()
@@ -49,7 +49,7 @@ def create_app(test_config=None):
     db.init_app(app)
     cache.init_app(app)
 
-    from HRSystem.converters import (RoleConverter,
+    from hr_system.converters import (RoleConverter,
                                     DepartmentConverter,
                                     OrganizationConverter,
                                     LeavePlanConverter,
@@ -62,7 +62,7 @@ def create_app(test_config=None):
     app.url_map.converters["LeavePlan"] = LeavePlanConverter
     app.url_map.converters["Employee"] = EmployeeConverter
 
-    from HRSystem.dbutils import init_db_command, generate_test_data
+    from hr_system.dbutils import init_db_command, generate_test_data
     from . import api
 
     app.cli.add_command(init_db_command)

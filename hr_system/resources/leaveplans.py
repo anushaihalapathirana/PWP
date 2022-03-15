@@ -5,9 +5,9 @@ from copy import copy
 from flask_restful import Resource
 from jsonschema import validate, ValidationError
 from flask import Response, request
-from HRSystem import db
-from HRSystem.utils import create_error_message
-from HRSystem.models import LeavePlan
+from hr_system import db
+from hr_system.utils import create_error_message
+from hr_system.models import LeavePlan
 
 
 class LeavePlanByEmployeellection(Resource):
@@ -19,8 +19,7 @@ class LeavePlanByEmployeellection(Resource):
 
     """
 
-    @classmethod
-    def get(cls, employee=None):
+    def get(self, employee=None):
         """ GET list of leaves of given employee
             Arguments: Employee id
             Returns:
@@ -41,8 +40,7 @@ class LeavePlanByEmployeellection(Resource):
 
         return leaveplan_response
 
-    @classmethod
-    def post(cls, employee):
+    def post(self, employee):
         """ Create a new leave
         Arguments:
             employee
@@ -97,8 +95,7 @@ class LeavePlanItem(Resource):
         Endpoint: /api/leaveplans/<LeavePlan:leaveplan>/
     """
 
-    @classmethod
-    def put(cls, leaveplan):
+    def put(self, leaveplan):
         """ Replace leaveplan's basic data with new values
         Arguments:
             leaveplan
@@ -143,8 +140,7 @@ class LeavePlanItem(Resource):
 
         return Response(status=204)
 
-    @classmethod
-    def delete(cls, leaveplan):
+    def delete(self, leaveplan):
         """ Delete the selected leaveplan
         Arguments:
             leaveplan

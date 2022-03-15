@@ -1,9 +1,10 @@
 """
 This file contains the util functions
+
 """
 import secrets
 from flask import abort, request
-from HRSystem.models import ApiKey
+from hr_system.models import ApiKey
 
 
 def create_error_message(status_code, error, message=None):

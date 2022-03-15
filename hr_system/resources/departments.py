@@ -1,57 +1,56 @@
 """
-    This resource file contains the organization related REST calls implementation
+    This resource file contains the department related REST calls implementation
 """
+from copy import copy
 from jsonschema import validate, ValidationError
 from flask import Response, request
-from werkzeug.exceptions import HTTPException
 from flask_restful import Resource
-from HRSystem import db
-from HRSystem.models import Organization
-from HRSystem.utils import create_error_message
-from HRSystem.utils import require_admin
+from werkzeug.exceptions import HTTPException
+from hr_system import db
+from hr_system.models import Department
+from hr_system.utils import create_error_message
+from hr_system.utils import require_admin
 
-class OrganizationCollection(Resource):
-    """ This class contains the GET and POST method implementations for organization data
+class DepartmentCollection(Resource):
+
+    """ This class contains the GET and POST method implementations for department data
         Arguments:
         Returns:
-        Endpoint: /api/organizations/
-
+        Endpoint: /api/departments/
     """
-    @classmethod
     @require_admin
-    def get(cls):
-        """ GET list of organizations
+    def get(self):
+        """ GET list of departments
             Arguments:
             Returns:
-                List of organizations
+                List of departments
             responses:
                 '200':
-                description: The organizations retrieve successfully
+                description: The departments retrieve successfully
         """
         response_data = []
-        orgs = Organization.query.all()
+        depts = Department.query.all()
 
-        for org in orgs:
-            response_data.append(org.serialize())
+        for dept in depts:
+            response_data.append(dept.serialize())
         return response_data
 
-    @classmethod
     @require_admin
-    def post(cls):
-        """ Create a new organization
+    def post(self):
+        """ Create a new department
         Arguments:
             request:
                 name: abc
-                location: oulu
-                organization_id: D01
+                description: deptartment of tech
+                department_id: D01
         Returns:
             responses:
                 '201':
-                description: The organization was created successfully
+                description: The department was created successfully
                 '400':
                 description: The request body was not valid
                 '409':
-                description: A organization with the same id already exists
+                description: A department with the same id already exists
                 '415':
                 description: Wrong media type was used
         """
@@ -60,28 +59,30 @@ class OrganizationCollection(Resource):
                 415, "Invalid JSON document",
                 "JSON format is not valid"
             )
+
         try:
-            validate(request.json, Organization.get_schema())
+            validate(request.json, Department.get_schema())
         except ValidationError:
             return create_error_message(
                 400, "Unsupported media type",
                 "Payload format is in an unsupported format"
             )
+
         try:
-            db_org = Organization.query.filter_by(
-                organization_id=request.json["organization_id"]
-            ).first()
-            if db_org is not None:
+            db_dept = Department.query.filter_by(
+                department_id=request.json["department_id"]).first()
+            if db_dept is not None:
                 return create_error_message(
                     409, "Already Exist",
                     "Department id is already exist"
                 )
-            org = Organization()
-            org.deserialize(request)
+            dept = Department()
+            dept.deserialize(request)
 
-            db.session.add(org)
+            db.session.add(dept)
             db.session.commit()
-        except Exception as error:
+        except (Exception, RuntimeError) as error:
+            print("error", error)
             if isinstance(error, HTTPException):
                 return create_error_message(
                     409, "Already Exist",
@@ -91,70 +92,68 @@ class OrganizationCollection(Resource):
                 500, "Internal Server Error",
                 "Internal Server Error occurred!"
             )
+
         return Response(response={}, status=201)
 
 
-class OrganizationItem(Resource):
-    """ This class contains the GET, PUT and DELETE method implementations for a single org
+class DepartmentItem(Resource):
+
+    """ This class contains the GET, PUT and DELETE method implementations for a single department
         Arguments:
         Returns:
-        Endpoint: /api/organization/<organization>/
+        Endpoint: /api/departments/<Department:department>/
     """
-    @classmethod
     @require_admin
-    def get(cls, organization):
-        """ get details of one organization
+    def get(self, department):
+        """ get details of one department
         Arguments:
-            organization
+            department
         Returns:
             Response
                 '200':
-                description: Data of list of organization
+                description: Data of list of department
                 '404':
-                description: The organization was not found
+                description: The department was not found
         """
-        response_data = organization.serialize()
+        response_data = department.serialize()
+
         return response_data
 
-    @classmethod
     @require_admin
-    def delete(cls, organization):
-        """ Delete the selected organization
+    def delete(self, department):
+        """ Delete the selected department
         Arguments:
-            organization
+            department
         Returns:
             responses:
                 '204':
-                    description: The organization was successfully deleted
+                    description: The department was successfully deleted
                 '404':
-                    description: The organization was not found
+                    description: The department was not found
         """
-        db.session.delete(organization)
+        db.session.delete(department)
         db.session.commit()
+
         return Response(status=204)
 
-    @classmethod
     @require_admin
-    def put(cls, organization):
-        """ Replace organization's basic data with new values
+    def put(self, department):
+        """ Replace department's basic data with new values
         Arguments:
-            organization
+            department
         Returns:
             responses:
                 '204':
-                description: The organization's attributes were updated successfully
+                description: The department's attributes were updated successfully
                 '400':
                 description: The request body was not valid
                 '404':
-                description: The organization was not found
+                description: The department was not found
                 '409':
-                description: A organization with the same name already exists
+                description: A department with the same name already exists
                 '415':
                 description: Wrong media type was used
         """
-        db_org = Organization.query.filter_by(
-            organization_id=organization.organization_id).first()
-
         if not request.json:
             return create_error_message(
                 415, "Unsupported media type",
@@ -162,22 +161,24 @@ class OrganizationItem(Resource):
             )
 
         try:
-            validate(request.json, Organization.get_schema())
+            validate(request.json, Department.get_schema())
         except ValidationError:
             return create_error_message(
                 400, "Invalid JSON document",
                 "JSON format is not valid"
             )
 
-        db_org.name = request.json["name"]
-        db_org.location = request.json["location"]
+        old_dept = copy(department)
+        department.deserialize(request)
+        department.id = old_dept.id
+        department.department_id = old_dept.department_id
 
         try:
             db.session.commit()
-        except (Exception, ):
+        except (Exception, RuntimeError):
             return create_error_message(
                 500, "Internal server Error",
-                "Error while adding the role"
+                "Error while updating the department"
             )
 
         return Response(status=204)
