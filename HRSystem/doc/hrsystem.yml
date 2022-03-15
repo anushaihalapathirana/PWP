@@ -194,6 +194,8 @@ paths:
       tags: 
         - roles 
       description: Get the list of managed roles
+      security:
+        - HRSystemKey: [admin]
       responses:
         '200':
           description: List of roles
@@ -210,6 +212,8 @@ paths:
       tags: 
         - roles
       description: Create a new Role
+      security:
+        - HRSystemKey: [admin]
       requestBody:
         description: JSON document that contains basic data for a new role
         content:
@@ -217,9 +221,9 @@ paths:
             schema:
               $ref: '#/components/schemas/Role'
             example:
-              name: Manager
-              code: MAN
-              description: Manager role
+              name: role test
+              code: TEST
+              description: new test role to add
       responses:
         '201':
           description: The Role was created successfully
@@ -236,6 +240,8 @@ paths:
       tags: 
         - roles
       description: Get details of one role
+      security:
+        - HRSystemKey: [admin]
       responses:
         '200':
           description: Data of single role
@@ -245,15 +251,17 @@ paths:
                 roles:
                   description: A role of en employee
                   value:
-                    name: Manager
-                    code: MAN
-                    description: Manager role
+                    name: role test
+                    code: TEST
+                    description: new test role to add
         '404':
           description: The role was not found
     put:
       tags: 
         - roles
       description: Replace role's basic data with new values
+      security:
+        - HRSystemKey: [admin]
       requestBody:
         description: JSON document that contains new basic data for the role
         content:
@@ -261,9 +269,9 @@ paths:
             schema:
               $ref: '#/components/schemas/Role'
             example:
-              name: Team lead
-              code: TL
-              description: Team lead role
+              name: role test edited
+              code: TEST
+              description: new test role to edit
       responses:
         '204':
           description: The role's attributes were updated successfully
@@ -279,6 +287,8 @@ paths:
      tags: 
         - roles
      description: Delete the selected role
+     security:
+        - HRSystemKey: [admin]
      responses:
        '204':
          description: The role was successfully deleted
@@ -291,6 +301,8 @@ paths:
       tags: 
         - organizations
       description: Get the list of managed organizations
+      security:
+        - HRSystemKey: [admin]
       responses:
         '200':
           description: List of organizations
@@ -307,6 +319,8 @@ paths:
       tags: 
         - organizations
       description: Create a new organization
+      security:
+        - HRSystemKey: [admin]
       requestBody:
         description: JSON document that contains basic data for a new organization
         content:
@@ -314,9 +328,9 @@ paths:
             schema:
               $ref: '#/components/schemas/Organization'
             example:
-              name: organization1
-              location: location1
-              organization_id: O05
+              name: testOrg
+              location: testLoc
+              organization_id: O07
       responses:
         '201':
           description: The organization was created successfully
@@ -333,6 +347,8 @@ paths:
       tags: 
         - organizations
       description: Get details of one organization
+      security:
+        - HRSystemKey: [admin]
       responses:
         '200':
           description: Data of single organization
@@ -342,15 +358,17 @@ paths:
                 organizations:
                   description: A organization of en employee
                   value:
-                    name: organization 1
-                    location: location1
-                    organization_id: O01
+                    name: testOrg
+                    location: testLoc
+                    organization_id: O07
         '404':
           description: The organization was not found
     put:
       tags: 
         - organizations
       description: Replace organization's basic data with new values
+      security:
+        - HRSystemKey: [admin]
       requestBody:
         description: JSON document that contains new basic data for the organization
         content:
@@ -358,9 +376,9 @@ paths:
             schema:
               $ref: '#/components/schemas/Organization'
             example:
-              name: organization 1
-              location: location 2
-              organization_id: O01
+              name: testOrg edit
+              location: testLoc edit
+              organization_id: O07
       responses:
         '204':
           description: The organization's attributes were updated successfully
@@ -376,6 +394,8 @@ paths:
       tags: 
         - organizations
       description: Delete the selected organization
+      security:
+        - HRSystemKey: [admin]
       responses:
         '204':
           description: The organization was successfully deleted
@@ -388,6 +408,8 @@ paths:
       tags: 
         - departments
       description: Get the list of managed department
+      security:
+        - HRSystemKey: [admin]
       responses:
         '200':
           description: List of department
@@ -404,16 +426,20 @@ paths:
       tags: 
         - departments
       description: Create a new department
+      security:
+        - HRSystemKey: [admin]
       requestBody:
         description: JSON document that contains basic data for a new department
+        security:
+        - HRSystemKey: [admin]
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Department'
             example:
-              name: department1
-              description: department 1
-              department_id: D05
+              name: test department
+              description: department to test
+              department_id: D07
       responses:
         '201':
           description: The department was created successfully
@@ -430,6 +456,8 @@ paths:
       tags: 
         - departments
       description: Get details of one department
+      security:
+        - HRSystemKey: [admin]
       responses:
         '200':
           description: Data of single department
@@ -439,15 +467,17 @@ paths:
                 departments:
                   description: A department of en employee
                   value:
-                    name: department 1
-                    location: department
-                    department_id: D01
+                    name: test department
+                    description: department to test
+                    department_id: D07
         '404':
           description: The department was not found
     put:
       tags: 
         - departments
       description: Replace department's basic data with new values
+      security:
+        - HRSystemKey: [admin]
       requestBody:
         description: JSON document that contains new basic data for the department
         content:
@@ -455,9 +485,9 @@ paths:
             schema:
               $ref: '#/components/schemas/Department'
             example:
-              name: department 1
-              description: department 2
-              department_id: D01
+              name: test department edit
+              description: department to test edit
+              department_id: D07
       responses:
         '204':
           description: The department's attributes were updated successfully
@@ -473,6 +503,8 @@ paths:
       tags: 
         - departments
       description: Delete the selected department
+      security:
+        - HRSystemKey: [admin]
       responses:
         '204':
           description: The department was successfully deleted
@@ -707,6 +739,8 @@ paths:
       tags: 
         - employees
       description: Create a new employee
+      security:
+        - HRSystemKey: [admin]
       parameters:
         - $ref: '#/components/parameters/organization_id'
         - $ref: '#/components/parameters/department_id'
@@ -718,20 +752,20 @@ paths:
             schema:
               $ref: '#/components/schemas/Employee'
             example:
-              employee_id: E01
+              employee_id: E07
               first_name: test emp
-              middle_name: middle name
-              last_name: last name 1
-              address: oulu
+              middle_name: middle test name
+              last_name: last name test
+              address: test address
               gender: M
               date_of_birth: "1998-08-25T11:20:30"
               appointment_date: "2005-08-25T11:20:30"
               active_emp: 1
               prefix_title: MR
               marritial_status: SINGLE
-              mobile_no: N756982365
-              basic_salary: 56665
-              account_number: FI545455
+              mobile_no: N7546882365
+              basic_salary: 4565
+              account_number: FI5896455
       responses:
         '201':
           description: The employee was created successfully
@@ -750,7 +784,7 @@ paths:
         - employees
       description: Get details of one employee
       security:
-        - HRSystemKey: []
+        - HRSystemKey: [employee]
       responses:
         '200':
           description: Data of single employee
@@ -780,6 +814,8 @@ paths:
       tags: 
         - employees
       description: Replace employee's basic data with new values
+      security:
+        - HRSystemKey: [employee]
       requestBody:
         description: JSON document that contains new basic data for the employee
         content:
@@ -787,20 +823,20 @@ paths:
             schema:
               $ref: '#/components/schemas/Employee'
             example:
-              employee_id: E01
-              first_name: test 1
-              middle_name: middle 1
-              last_name: last name 1
-              address: oulu
+              employee_id: E07
+              first_name: test 1 name edit
+              middle_name: middle name edit
+              last_name: last name edit
+              address: address edit
               gender: M
               date_of_birth: "1998-08-25T11:20:30"
               appointment_date: "2005-08-25T11:20:30"
               active_emp: 1
               prefix_title: MR
               marritial_status: SINGLE
-              mobile_no: N756982365
+              mobile_no: N75562365
               basic_salary: 56665
-              account_number: FI545455
+              account_number: FI5455455
       responses:
         '204':
           description: The employee's attributes were updated successfully
@@ -816,6 +852,8 @@ paths:
       tags: 
         - employees
       description: Delete the selected employee
+      security:
+        - HRSystemKey: [admin]
       responses:
         '204':
           description: The employee was successfully deleted
