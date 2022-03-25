@@ -1,14 +1,16 @@
 """
     This resource file contains the role related REST calls implementation
 """
+import json
 from jsonschema import validate, ValidationError
-from flask import Response, request
+from flask import Response, request, url_for
 from flask_restful import Resource
 from werkzeug.exceptions import HTTPException
 from hr_system import db
 from hr_system.models import Role
-from hr_system.utils import create_error_message
+from hr_system.utils import create_error_message, HRSystemBuilder
 from hr_system.utils import require_admin
+from hr_system.constants import *
 
 class RoleCollection(Resource):
     """ This class contains the GET and POST method implementations for role data
@@ -26,12 +28,24 @@ class RoleCollection(Resource):
                 '200':
                 description: The Roles retrieve successfully
         """
-        response_data = []
+
+        body = HRSystemBuilder()
+        body.add_namespace('hrsys', LINK_RELATIONS_URL)
+        body.add_control('self', url_for("api.rolecollection"))
+        body.add_control_get_roles()
+        body["item"] = []
+
         roles = Role.query.all()
 
         for role in roles:
-            response_data.append(role.serialize())
-        return response_data
+            item = HRSystemBuilder(
+                role.serialize()
+            )
+            item.add_control("self", url_for("api.roleitem", role = role))
+            item.add_control("profile", HRSYSTEM_PROFILE)
+            body["item"].append(item)
+        return Response(json.dumps(body), 200, mimetype=MASON)
+
 
     @require_admin
     def post(self):
@@ -109,8 +123,19 @@ class RoleItem(Resource):
                 description: The role was not found
         """
         response_data = role.serialize()
+        body = HRSystemBuilder(
+            response_data
+        )
+        body.add_namespace("hrsys", LINK_RELATIONS_URL)
+        body.add_control("self", url_for("api.roleitem", role=role))
+        body.add_control("profile", HRSYSTEM_PROFILE)
+        body.add_control("collection", url_for("api.rolecollection"))
+        body.add_control_delete_role(role)
+        body.add_control_modify_role(role)
+        body.add_control_get_roles()
 
-        return response_data
+        return Response(json.dumps(body), 200, mimetype=MASON)
+
 
     @require_admin
     def delete(self, role):
