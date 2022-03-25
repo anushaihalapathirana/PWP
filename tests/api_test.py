@@ -896,8 +896,8 @@ class TestLeavePlanItem(object):
     """
     Test class for Leave plan item resource
     """
-    RESOURCE_URL = "/api/leaveplans/1/"
-    INVALID_URL = "/api/leaveplans/new/"
+    RESOURCE_URL = "/api/employees/001/leaveplans/1/"
+    INVALID_URL = "/api/employees/001/leaveplans/new/"
 
     def test_put(self, client):
         """
@@ -926,13 +926,20 @@ class TestLeavePlanItem(object):
         resp = client.post(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 405
 
+        # wrong emp and leave combination
+        resp = client.put("/api/employees/002/leaveplans/1/", json=valid)
+        assert resp.status_code == 400
+
     def test_delete(self, client):
         """
         Test to get delete leave plan of an employee
         """
+        resp = client.delete("/api/employees/003/leaveplans/1/")
+        assert resp.status_code == 400
         resp = client.delete(self.RESOURCE_URL)
         assert resp.status_code == 204
         resp = client.delete(self.RESOURCE_URL)
         assert resp.status_code == 404
         resp = client.delete(self.INVALID_URL)
         assert resp.status_code == 404
+        

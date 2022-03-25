@@ -13,6 +13,14 @@ tags:
     description: "employee API"
   - name: "leaveplans"
     description: "leave plan API"
+  - name: "employee list by organization"
+    description: "employee by organization API"
+  - name: "employee list by organization and department"
+    description: "employee by organization and department API"
+  - name: "employee list by organization and role"
+    description: "employee list by organization and role"
+  - name: "employee by organization and department and role"
+    description: "employee by organization, department and role API"
 components:
   parameters:
     role_code:
@@ -169,6 +177,15 @@ components:
       - leave_type
       - leave_date
       type: object
+    Error:
+      type: object
+      properties:
+        status_code:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
   securitySchemes:
     HRSystemKey:
       type: apiKey
@@ -315,6 +332,9 @@ paths:
               - organization_id: O02
                 name: org 2
                 location: Helsnki
+              - organization_id: O03
+                name: org 3
+                location: Espoo
     post:
       tags: 
         - organizations
@@ -419,9 +439,12 @@ paths:
               - department_id: D01
                 name: dept 1
                 description: department number 1
-              - organization_id: D02
+              - department_id: D02
                 name: dept 2
                 description: department 2
+              - department_id: D03
+                name: dept 3
+                description: null
     post:
       tags: 
         - departments
@@ -465,13 +488,19 @@ paths:
             application/json:
               examples:
                 departments:
-                  description: A department of en employee
+                  description: A department of an employee
                   value:
                     name: test department
                     description: department to test
                     department_id: D07
         '404':
           description: The department was not found
+          content:
+            text/html: 
+              examples: 
+                error:
+                  value: '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"><title>404 Not Found</title><h1>Not Found</h1><p></p>'
+                
     put:
       tags: 
         - departments
@@ -553,11 +582,39 @@ paths:
                 mobile_no: N756982365
                 basic_salary: 56665
                 account_number: FI54545k
+              - employee_id: E03
+                first_name: test 3
+                middle_name: null
+                last_name: last name 3
+                address: oulu
+                gender: F
+                date_of_birth: null
+                appointment_date: "2004-08-25T11:20:30"
+                active_emp: 1
+                prefix_title: null
+                marritial_status: null
+                mobile_no: N756956365
+                basic_salary: 57555
+                account_number: FI54697
+              - employee_id: E04
+                first_name: test 4
+                middle_name: null
+                last_name: last name 4
+                address: oulu
+                gender: F
+                date_of_birth: "1995-08-21T11:20:30"
+                appointment_date: "2009-05-15T11:20:30"
+                active_emp: 1
+                prefix_title: MISS
+                marritial_status: null
+                mobile_no: N758932365
+                basic_salary: 45896
+                account_number: FI58963456
   
   /organizations/{organization_id}/roles/{role_code}/employees/:
     get:
       tags: 
-        - employees
+        - employee list by organization and role
       description: Get the list of managed employees based on their organization and role
       security:
         - HRSystemKey: [admin]
@@ -598,11 +655,39 @@ paths:
                 mobile_no: N756982365
                 basic_salary: 56665
                 account_number: FI54545k
+              - employee_id: E03
+                first_name: test 3
+                middle_name: null
+                last_name: last name 3
+                address: oulu
+                gender: F
+                date_of_birth: null
+                appointment_date: "2004-08-25T11:20:30"
+                active_emp: 1
+                prefix_title: null
+                marritial_status: null
+                mobile_no: N756956365
+                basic_salary: 57555
+                account_number: FI54697
+              - employee_id: E04
+                first_name: test 4
+                middle_name: null
+                last_name: last name 4
+                address: oulu
+                gender: F
+                date_of_birth: "1995-08-21T11:20:30"
+                appointment_date: "2009-05-15T11:20:30"
+                active_emp: 1
+                prefix_title: MISS
+                marritial_status: null
+                mobile_no: N758932365
+                basic_salary: 45896
+                account_number: FI58963456
   
   /organizations/{organization_id}/employees/:
     get:
       tags: 
-        - employees
+        - employee list by organization
       description: Get the list of employees in same organization
       security:
         - HRSystemKey: [admin]
@@ -642,11 +727,39 @@ paths:
                 mobile_no: N756982365
                 basic_salary: 56665
                 account_number: FI54545k
+              - employee_id: E03
+                first_name: test 3
+                middle_name: null
+                last_name: last name 3
+                address: oulu
+                gender: F
+                date_of_birth: null
+                appointment_date: "2004-08-25T11:20:30"
+                active_emp: 1
+                prefix_title: null
+                marritial_status: null
+                mobile_no: N756956365
+                basic_salary: 57555
+                account_number: FI54697
+              - employee_id: E04
+                first_name: test 4
+                middle_name: null
+                last_name: last name 4
+                address: oulu
+                gender: F
+                date_of_birth: "1995-08-21T11:20:30"
+                appointment_date: "2009-05-15T11:20:30"
+                active_emp: 1
+                prefix_title: MISS
+                marritial_status: null
+                mobile_no: N758932365
+                basic_salary: 45896
+                account_number: FI58963456
   
   /organizations/{organization_id}/departments/{department_id}/employees/:
     get:
       tags: 
-        - employees
+        - employee list by organization and department
       description: Get the list of employees in same organization and same department
       security:
         - HRSystemKey: [admin]
@@ -687,11 +800,39 @@ paths:
                 mobile_no: N756982365
                 basic_salary: 56665
                 account_number: FI54545k
+              - employee_id: E03
+                first_name: test 3
+                middle_name: null
+                last_name: last name 3
+                address: oulu
+                gender: F
+                date_of_birth: null
+                appointment_date: "2004-08-25T11:20:30"
+                active_emp: 1
+                prefix_title: null
+                marritial_status: null
+                mobile_no: N756956365
+                basic_salary: 57555
+                account_number: FI54697
+              - employee_id: E04
+                first_name: test 4
+                middle_name: null
+                last_name: last name 4
+                address: oulu
+                gender: F
+                date_of_birth: "1995-08-21T11:20:30"
+                appointment_date: "2009-05-15T11:20:30"
+                active_emp: 1
+                prefix_title: MISS
+                marritial_status: null
+                mobile_no: N758932365
+                basic_salary: 45896
+                account_number: FI58963456
   
   /organizations/{organization_id}/departments/{department_id}/roles/{role_code}/employees/:
     get:
       tags: 
-        - employees
+        - employee by organization and department and role
       description: Get the list of employees in same organization and same department and same role category
       security:
         - HRSystemKey: [admin]
@@ -733,11 +874,38 @@ paths:
                 mobile_no: N756982365
                 basic_salary: 56665
                 account_number: FI54545k
+              - employee_id: E03
+                first_name: test 3
+                middle_name: null
+                last_name: last name 3
+                address: oulu
+                gender: F
+                date_of_birth: null
+                appointment_date: "2004-08-25T11:20:30"
+                active_emp: 1
+                prefix_title: null
+                marritial_status: null
+                mobile_no: N756956365
+                basic_salary: 57555
+                account_number: FI54697
+              - employee_id: E04
+                first_name: test 4
+                middle_name: null
+                last_name: last name 4
+                address: oulu
+                gender: F
+                date_of_birth: "1995-08-21T11:20:30"
+                appointment_date: "2009-05-15T11:20:30"
+                active_emp: 1
+                prefix_title: MISS
+                marritial_status: null
+                mobile_no: N758932365
+                basic_salary: 45896
+                account_number: FI58963456
 
-  /organizations/{organization_id}/departments/{department_id}/roles/{role_code}/employees/:
     post:
       tags: 
-        - employees
+        - employee by organization and department and role
       description: Create a new employee
       security:
         - HRSystemKey: [admin]
@@ -880,7 +1048,11 @@ paths:
               - id: 2
                 leave_type: CASUAL
                 reason: fever
-                leave_date: "1998-08-25T11:20:30"
+                leave_date: "2001-05-22T11:20:30"
+              - id: 3
+                leave_type: CASUAL
+                reason: null
+                leave_date: "2005-10-14T11:20:30"
     post:
       tags: 
         - leaveplans
@@ -905,8 +1077,9 @@ paths:
         '415':
           description: Wrong media type was used
 
-  /leaveplans/{leaveplan_id}/:
+  /employees/{employee_id}/leaveplans/{leaveplan_id}/:
     parameters:
+    - $ref: '#/components/parameters/employee_id'
     - $ref: '#/components/parameters/leaveplan_id'
     put:
       tags: 

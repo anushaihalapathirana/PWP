@@ -92,10 +92,10 @@ class LeavePlanItem(Resource):
     """ This class contains the PUT and DELETE method implementations for a single leave
         Arguments:
         Returns:
-        Endpoint: /api/leaveplans/<LeavePlan:leaveplan>/
+        Endpoint: /api/employees/<Employee:employee>/leaveplans/<LeavePlan:leaveplan>/
     """
 
-    def put(self, leaveplan):
+    def put(self, employee, leaveplan):
         """ Replace leaveplan's basic data with new values
         Arguments:
             leaveplan
@@ -125,6 +125,13 @@ class LeavePlanItem(Resource):
                 400, "Invalid JSON document",
                 "JSON format is not valid"
             )
+        leave = LeavePlan.query.filter_by(id=leaveplan.id).first()
+
+        if (leave.employee_id != employee.id):
+            return create_error_message(
+                400, "Bad request",
+                "Given employee does not have access to the given leaveplan"
+            )
 
         old_leave_plan = copy(leaveplan)
         leaveplan.deserialize(request)
@@ -140,7 +147,7 @@ class LeavePlanItem(Resource):
 
         return Response(status=204)
 
-    def delete(self, leaveplan):
+    def delete(self, employee, leaveplan):
         """ Delete the selected leaveplan
         Arguments:
             leaveplan
@@ -151,6 +158,12 @@ class LeavePlanItem(Resource):
                 '404':
                     description: The leaveplan was not found
         """
+        leave = LeavePlan.query.filter_by(id=leaveplan.id).first()
+        if (leave.employee_id != employee.id):
+            return create_error_message(
+                400, "Bad request",
+                "Given employee does not have access to the given leaveplan"
+            )
         db.session.delete(leaveplan)
         db.session.commit()
 

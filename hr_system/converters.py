@@ -90,7 +90,6 @@ class LeavePlanConverter(BaseConverter):
         convert to a leave plan object
         """
         leaveplan = LeavePlan.query.filter_by(id=value).first()
-
         if leaveplan is None:
             return create_error_message(
                 404, "Not found",
