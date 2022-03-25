@@ -12,6 +12,7 @@ from hr_system.utils import create_error_message, HRSystemBuilder
 from hr_system.utils import require_admin
 from hr_system.constants import *
 
+
 class RoleCollection(Resource):
     """ This class contains the GET and POST method implementations for role data
         Arguments:
@@ -32,7 +33,7 @@ class RoleCollection(Resource):
         body = HRSystemBuilder()
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
         body.add_control('self', url_for("api.rolecollection"))
-        body.add_control_get_roles()
+        body.add_control_add_role()
         body["item"] = []
 
         roles = Role.query.all()
@@ -41,11 +42,10 @@ class RoleCollection(Resource):
             item = HRSystemBuilder(
                 role.serialize()
             )
-            item.add_control("self", url_for("api.roleitem", role = role))
+            item.add_control("self", url_for("api.roleitem", role=role))
             item.add_control("profile", HRSYSTEM_PROFILE)
             body["item"].append(item)
         return Response(json.dumps(body), 200, mimetype=MASON)
-
 
     @require_admin
     def post(self):
@@ -91,6 +91,8 @@ class RoleCollection(Resource):
             role.deserialize(request)
             db.session.add(role)
             db.session.commit()
+
+            location = url_for("api.roleitem", role=role)
         except Exception as error:
             if isinstance(error, HTTPException):
                 return create_error_message(
@@ -101,7 +103,9 @@ class RoleCollection(Resource):
                 500, "Internal Server Error",
                 "Internal Server Error occurred!"
             )
-        return Response(response={}, status=201)
+        return Response(response={}, status=201, headers={
+            "Location": location
+        }, mimetype=MASON)
 
 
 class RoleItem(Resource):
@@ -132,10 +136,7 @@ class RoleItem(Resource):
         body.add_control("collection", url_for("api.rolecollection"))
         body.add_control_delete_role(role)
         body.add_control_modify_role(role)
-        body.add_control_get_roles()
-
         return Response(json.dumps(body), 200, mimetype=MASON)
-
 
     @require_admin
     def delete(self, role):
@@ -152,7 +153,10 @@ class RoleItem(Resource):
         db.session.delete(role)
         db.session.commit()
 
-        return Response(status=204)
+        body = HRSystemBuilder()
+        body.add_control_get_roles()
+
+        return Response(json.dumps(body), status=204, mimetype=MASON)
 
     @require_admin
     def put(self, role):
@@ -192,6 +196,9 @@ class RoleItem(Resource):
         db_role.code = request.json["code"]
         db_role.description = request.json["description"]
 
+        body = HRSystemBuilder()
+        body.add_control_get_roles()
+
         try:
             db.session.commit()
         except (Exception, ):
@@ -200,4 +207,4 @@ class RoleItem(Resource):
                 "Error while updating the role"
             )
 
-        return Response(status=204)
+        return Response(json.dumps(body), status=204, mimetype=MASON)
