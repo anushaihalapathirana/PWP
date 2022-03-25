@@ -69,4 +69,16 @@ def create_app(test_config=None):
     app.cli.add_command(generate_test_data)
     app.register_blueprint(api.api_bp)
 
+    @app.route(LINK_RELATIONS_URL)
+    def send_link_relations():
+        return "link relations"
+
+    @app.route("/profiles/<profile>/")
+    def send_profile(profile):
+        return "you requests {} profile".format(profile)
+
+    @app.route("/admin/")
+    def admin_site():
+        return app.send_static_file("html/admin.html")
+
     return app

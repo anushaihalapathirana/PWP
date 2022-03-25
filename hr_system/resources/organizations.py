@@ -1,14 +1,16 @@
 """
     This resource file contains the organization related REST calls implementation
 """
+import json
 from jsonschema import validate, ValidationError
-from flask import Response, request
+from flask import Response, request, url_for
 from werkzeug.exceptions import HTTPException
 from flask_restful import Resource
 from hr_system import db
 from hr_system.models import Organization
-from hr_system.utils import create_error_message
+from hr_system.utils import create_error_message, HRSystemBuilder
 from hr_system.utils import require_admin
+from hr_system.constants import *
 
 class OrganizationCollection(Resource):
     """ This class contains the GET and POST method implementations for organization data
@@ -27,12 +29,22 @@ class OrganizationCollection(Resource):
                 '200':
                 description: The organizations retrieve successfully
         """
-        response_data = []
+        body = HRSystemBuilder()
+        body.add_namespace('hrsys', LINK_RELATIONS_URL)
+        body.add_control('self', url_for("api.organizationcollection"))
+        body.add_control_add_organization()
+        body["item"] = []
+
         orgs = Organization.query.all()
 
         for org in orgs:
-            response_data.append(org.serialize())
-        return response_data
+            item = HRSystemBuilder(
+                org.serialize()
+            )
+            item.add_control("self", url_for("api.organizationitem", organization=org))
+            item.add_control("profile", HRSYSTEM_PROFILE)
+            body["item"].append(item)
+        return Response(json.dumps(body), 200, mimetype=MASON)
 
     @require_admin
     def post(self):
@@ -79,6 +91,8 @@ class OrganizationCollection(Resource):
 
             db.session.add(org)
             db.session.commit()
+
+            location = url_for("api.organizationitem", organization = org)
         except Exception as error:
             if isinstance(error, HTTPException):
                 return create_error_message(
@@ -89,7 +103,9 @@ class OrganizationCollection(Resource):
                 500, "Internal Server Error",
                 "Internal Server Error occurred!"
             )
-        return Response(response={}, status=201)
+        return Response(response={}, status=201, headers={
+            "Location": location
+        })
 
 
 class OrganizationItem(Resource):
@@ -111,7 +127,16 @@ class OrganizationItem(Resource):
                 description: The organization was not found
         """
         response_data = organization.serialize()
-        return response_data
+        body = HRSystemBuilder(
+            response_data
+        )
+        body.add_namespace("hrsys", LINK_RELATIONS_URL)
+        body.add_control("self", url_for("api.organizationitem", organization=organization))
+        body.add_control("profile", HRSYSTEM_PROFILE)
+        body.add_control("collection", url_for("api.organizationcollection"))
+        body.add_control_delete_organization(organization)
+        body.add_control_modify_organization(organization)
+        return Response(json.dumps(body), 200, mimetype=MASON)
 
     @require_admin
     def delete(self, organization):
@@ -127,6 +152,7 @@ class OrganizationItem(Resource):
         """
         db.session.delete(organization)
         db.session.commit()
+
         return Response(status=204)
 
     @require_admin
@@ -172,7 +198,7 @@ class OrganizationItem(Resource):
         except (Exception, ):
             return create_error_message(
                 500, "Internal server Error",
-                "Error while adding the role"
+                "Error while adding the organization"
             )
 
         return Response(status=204)

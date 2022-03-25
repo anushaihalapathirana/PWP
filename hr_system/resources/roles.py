@@ -105,7 +105,7 @@ class RoleCollection(Resource):
             )
         return Response(response={}, status=201, headers={
             "Location": location
-        }, mimetype=MASON)
+        })
 
 
 class RoleItem(Resource):
@@ -153,10 +153,7 @@ class RoleItem(Resource):
         db.session.delete(role)
         db.session.commit()
 
-        body = HRSystemBuilder()
-        body.add_control("collection", url_for("api.rolecollection"))
-
-        return Response(json.dumps(body), status=204, mimetype=MASON)
+        return Response(status=204)
 
     @require_admin
     def put(self, role):
@@ -196,9 +193,6 @@ class RoleItem(Resource):
         db_role.code = request.json["code"]
         db_role.description = request.json["description"]
 
-        body = HRSystemBuilder()
-        body.add_control("collection", url_for("api.rolecollection"))
-
         try:
             db.session.commit()
         except (Exception, ):
@@ -207,4 +201,4 @@ class RoleItem(Resource):
                 "Error while updating the role"
             )
 
-        return Response(json.dumps(body), status=204, mimetype=MASON)
+        return Response(status=204)
