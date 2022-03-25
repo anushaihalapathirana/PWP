@@ -46,4 +46,4 @@ api.add_resource(EmployeeItem,
 api.add_resource(LeavePlanByEmployeellection,
                  "/employees/<Employee:employee>/leaveplans/")
 api.add_resource(LeavePlanItem,
-                 "/leaveplans/<LeavePlan:leaveplan>/")
+                 "/employees/<Employee:employee>/leaveplans/<LeavePlan:leaveplan>/")

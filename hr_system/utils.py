@@ -68,8 +68,6 @@ class MasonBuilder(dict):
         self["@controls"][ctrl_name] = kwargs
         self["@controls"][ctrl_name]["href"] = href
 
-
-
 class HRSystemBuilder(MasonBuilder):
 
     def add_control_get_roles(self):
