@@ -1,15 +1,18 @@
 """
     This resource file contains the department related REST calls implementation
 """
+import json
 from copy import copy
 from jsonschema import validate, ValidationError
-from flask import Response, request
+from flask import Response, request, url_for
 from flask_restful import Resource
 from werkzeug.exceptions import HTTPException
 from hr_system import db
 from hr_system.models import Department
 from hr_system.utils import create_error_message
-from hr_system.utils import require_admin
+from hr_system.utils import require_admin, HRSystemBuilder
+from hr_system.constants import *
+
 
 class DepartmentCollection(Resource):
 
@@ -28,12 +31,22 @@ class DepartmentCollection(Resource):
                 '200':
                 description: The departments retrieve successfully
         """
-        response_data = []
+        body = HRSystemBuilder()
+        body.add_namespace('hrsys', LINK_RELATIONS_URL)
+        body.add_control('self', url_for("api.departmentcollection"))
+        body.add_control_add_department()
+        body["items"] = []
+
         depts = Department.query.all()
 
         for dept in depts:
-            response_data.append(dept.serialize())
-        return response_data
+            item = HRSystemBuilder(dept.serialize())
+            item.add_control("self", url_for(
+                "api.departmentitem", department=dept))
+            item.add_control("profile", HRSYSTEM_PROFILE)
+            body["items"].append(item)
+
+        return Response(json.dumps(body), 200, mimetype=MASON)
 
     @require_admin
     def post(self):
@@ -81,6 +94,8 @@ class DepartmentCollection(Resource):
 
             db.session.add(dept)
             db.session.commit()
+
+            location = url_for("api.departmentitem", department=dept)
         except (Exception, RuntimeError) as error:
             print("error", error)
             if isinstance(error, HTTPException):
@@ -93,7 +108,9 @@ class DepartmentCollection(Resource):
                 "Internal Server Error occurred!"
             )
 
-        return Response(response={}, status=201)
+        return Response(response={}, status=201, headers={
+            "Location": location
+        })
 
 
 class DepartmentItem(Resource):
@@ -115,9 +132,12 @@ class DepartmentItem(Resource):
                 '404':
                 description: The department was not found
         """
-        response_data = department.serialize()
-
-        return response_data
+        body = HRSystemBuilder(department.serialize())
+        body.add_namespace('hrsys', LINK_RELATIONS_URL)
+        body.add_control('self', url_for(
+            "api.departmentitem", department=department))
+        body.add_control("collection", url_for("api.departmentcollection"))
+        return Response(json.dumps(body), status=200, mimetype=MASON)
 
     @require_admin
     def delete(self, department):
