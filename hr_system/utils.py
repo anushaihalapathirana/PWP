@@ -9,6 +9,7 @@ from hr_system.models import ApiKey
 from hr_system.constants import *
 from hr_system.models import *
 
+
 class MasonBuilder(dict):
     """
     A convenience class for managing dictionaries that represent Mason
@@ -68,11 +69,11 @@ class MasonBuilder(dict):
         self["@controls"][ctrl_name] = kwargs
         self["@controls"][ctrl_name]["href"] = href
 
+
 class HRSystemBuilder(MasonBuilder):
 
     def add_control_get_roles(self):
-        base_uri = url_for("api.rolecollection")
-        uri = base_uri + "?start={index}"
+        uri = url_for("api.rolecollection")
         self.add_control(
             "hrsys:roles",
             uri,
@@ -97,7 +98,17 @@ class HRSystemBuilder(MasonBuilder):
             title="Add a new role",
             schema=Role.get_schema()
         )
- 
+
+    def add_control_add_department(self):
+        self.add_control(
+            "hrsys:add-dept",
+            url_for("api.departmentcollection"),
+            method="POST",
+            encoding="json",
+            title="Add a new role",
+            schema=Department.get_schema()
+        )
+
     def add_control_modify_role(self, role):
         self.add_control(
             "edit",
@@ -122,6 +133,7 @@ class HRSystemBuilder(MasonBuilder):
             "default": "0"
         }
         return schema
+
 
 def create_error_message(status_code, error, message=None):
     """

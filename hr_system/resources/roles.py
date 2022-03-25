@@ -154,7 +154,7 @@ class RoleItem(Resource):
         db.session.commit()
 
         body = HRSystemBuilder()
-        body.add_control_get_roles()
+        body.add_control("collection", url_for("api.rolecollection"))
 
         return Response(json.dumps(body), status=204, mimetype=MASON)
 
@@ -197,7 +197,7 @@ class RoleItem(Resource):
         db_role.description = request.json["description"]
 
         body = HRSystemBuilder()
-        body.add_control_get_roles()
+        body.add_control("collection", url_for("api.rolecollection"))
 
         try:
             db.session.commit()
