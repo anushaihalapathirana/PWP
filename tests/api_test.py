@@ -201,19 +201,22 @@ def _check_namespace(client, response):
     resp = client.get(ns_href)
     assert resp.status_code == 200
 
-def _check_control_get_role_method(ctrl, client, obj):
+def _check_control_get_method(ctrl, client, obj, obj_type=None):
     """
     Checks a GET type control from a JSON object be it root document or an item
     in a collection. Also checks that the URL of the control can be accessed.
     """
     
     href = obj["@controls"][ctrl]["href"]
-    resp = client.get(href, headers={
-            "HRSystem-Api-Key": 'testtoken'
-        })
+    if obj_type=='leave':
+        resp = client.get(href)
+    else:
+        resp = client.get(href, headers={
+                "HRSystem-Api-Key": 'testtoken'
+            })
     assert resp.status_code == 200
 
-def _check_control_delete_role_method(ctrl, client, obj):
+def _check_control_delete_method(ctrl, client, obj, obj_type=None):
     """
     Checks a DELETE type control from a JSON object be it root document or an
     item in a collection. Checks the contrl's method in addition to its "href".
@@ -223,12 +226,15 @@ def _check_control_delete_role_method(ctrl, client, obj):
     href = obj["@controls"][ctrl]["href"]
     method = obj["@controls"][ctrl]["method"].lower()
     assert method == "delete"
-    resp = client.delete(href, headers={
-            "HRSystem-Api-Key": 'testtoken'
-        })
+    if obj_type=='leave':
+        resp = client.delete(href)
+    else:
+        resp = client.delete(href, headers={
+                "HRSystem-Api-Key": 'testtoken'
+            })
     assert resp.status_code == 204
 
-def _check_control_put_role_method(ctrl, client, obj):
+def _check_control_put_method(ctrl, client, obj, obj_type):
     """
     Checks a PUT type control from a JSON object be it root document or an item
     in a collection. In addition to checking the "href" attribute, also checks
@@ -245,15 +251,30 @@ def _check_control_put_role_method(ctrl, client, obj):
     schema = ctrl_obj["schema"]
     assert method == "put"
     assert encoding == "json"
-    body = _get_role_json_put()
+
+    if obj_type == 'role':
+        body = _get_role_json_put()
+    elif obj_type == 'org':
+        body = _get_org_json_put()
+    elif obj_type == 'dept':
+        body = _get_dept_json_put()
+    elif obj_type == 'emp':
+        body = _get_employee_json_put()
+    elif obj_type == 'leave':
+        body = _get_leave_json_put()
+
     body["name"] = obj["name"]
     validate(body, schema)
-    resp = client.put(href, json=body, headers={
-            "HRSystem-Api-Key": 'testtoken'
-        })
+    
+    if obj_type == 'leave':
+        resp = client.put(href, json=body)
+    else:
+        resp = client.put(href, json=body, headers={
+                "HRSystem-Api-Key": 'testtoken'
+            })
     assert resp.status_code == 204
 
-def _check_control_post_role_method(ctrl, client, obj):
+def _check_control_post_method(ctrl, client, obj, obj_type):
     """
     Checks a POST type control from a JSON object be it root document or an item
     in a collection. In addition to checking the "href" attribute, also checks
@@ -270,11 +291,25 @@ def _check_control_post_role_method(ctrl, client, obj):
     schema = ctrl_obj["schema"]
     assert method == "post"
     assert encoding == "json"
-    body = _get_role_json()
+
+    if obj_type == 'role':
+        body = _get_role_json()
+    elif obj_type == 'org':
+        body = _get_org_json()
+    elif obj_type == 'dept':
+        body = _get_dept_json()
+    elif obj_type == 'emp':
+        body = _get_employee_json()
+    elif obj_type == 'leave':
+        body = _get_leave_json()
+        
     validate(body, schema)
-    resp = client.post(href, json=body,  headers={
-            "HRSystem-Api-Key": 'testtoken'
-        })
+    if obj_type == 'leave':
+        resp = client.post(href, json=body)
+    else:
+        resp = client.post(href, json=body, headers={
+                "HRSystem-Api-Key": 'testtoken'
+            })
     assert resp.status_code == 201
 
 
@@ -297,11 +332,11 @@ class TestRoleCollection(object):
         assert resp.status_code == 200
         body = json.loads(resp.data)
         _check_namespace(client, body)
-        _check_control_post_role_method("hrsys:add-role", client, body)
+        _check_control_post_method("hrsys:add-role", client, body, 'role')
         assert len(body["item"]) == 3
         for item in body["item"]:
-            _check_control_get_role_method("self", client, item)
-            _check_control_get_role_method("profile", client, item)
+            _check_control_get_method("self", client, item)
+            _check_control_get_method("profile", client, item)
 
 
     def test_post(self, client):
@@ -364,10 +399,10 @@ class TestRoleItem(object):
         body = json.loads(resp.data)
 
         _check_namespace(client, body)
-        _check_control_get_role_method("profile", client, body)
-        _check_control_get_role_method("collection", client, body)
-        _check_control_put_role_method("edit", client, body)
-        _check_control_delete_role_method("hrsys:delete-role", client, body)
+        _check_control_get_method("profile", client, body)
+        _check_control_get_method("collection", client, body)
+        _check_control_put_method("edit", client, body, 'role')
+        _check_control_delete_method("hrsys:delete-role", client, body)
 
         resp = client.get(self.INVALID_URL, headers={
             "HRSystem-Api-Key": token
@@ -431,82 +466,6 @@ class TestRoleItem(object):
         assert resp.status_code == 404
 
 
-def _check_control_get_org_method(ctrl, client, obj):
-    """
-    Checks a GET type control from a JSON object be it root document or an item
-    in a collection. Also checks that the URL of the control can be accessed.
-    """
-    
-    href = obj["@controls"][ctrl]["href"]
-    resp = client.get(href, headers={
-            "HRSystem-Api-Key": 'testtoken'
-        })
-    assert resp.status_code == 200
-
-def _check_control_delete_org_method(ctrl, client, obj):
-    """
-    Checks a DELETE type control from a JSON object be it root document or an
-    item in a collection. Checks the contrl's method in addition to its "href".
-    Also checks that using the control results in the correct status code of 204.
-    """
-    
-    href = obj["@controls"][ctrl]["href"]
-    method = obj["@controls"][ctrl]["method"].lower()
-    assert method == "delete"
-    resp = client.delete(href, headers={
-            "HRSystem-Api-Key": 'testtoken'
-        })
-    assert resp.status_code == 204
-
-def _check_control_put_org_method(ctrl, client, obj):
-    """
-    Checks a PUT type control from a JSON object be it root document or an item
-    in a collection. In addition to checking the "href" attribute, also checks
-    that method, encoding and schema can be found from the control. Also
-    validates a valid sensor against the schema of the control to ensure that
-    they match. Finally checks that using the control results in the correct
-    status code of 204.
-    """
-    
-    ctrl_obj = obj["@controls"][ctrl]
-    href = ctrl_obj["href"]
-    method = ctrl_obj["method"].lower()
-    encoding = ctrl_obj["encoding"].lower()
-    schema = ctrl_obj["schema"]
-    assert method == "put"
-    assert encoding == "json"
-    body = _get_org_json_put()
-    body["name"] = obj["name"]
-    validate(body, schema)
-    resp = client.put(href, json=body, headers={
-            "HRSystem-Api-Key": 'testtoken'
-        })
-    assert resp.status_code == 204
-
-def _check_control_post_org_method(ctrl, client, obj):
-    """
-    Checks a POST type control from a JSON object be it root document or an item
-    in a collection. In addition to checking the "href" attribute, also checks
-    that method, encoding and schema can be found from the control. Also
-    validates a valid sensor against the schema of the control to ensure that
-    they match. Finally checks that using the control results in the correct
-    status code of 201.
-    """
-    
-    ctrl_obj = obj["@controls"][ctrl]
-    href = ctrl_obj["href"]
-    method = ctrl_obj["method"].lower()
-    encoding = ctrl_obj["encoding"].lower()
-    schema = ctrl_obj["schema"]
-    assert method == "post"
-    assert encoding == "json"
-    body = _get_org_json()
-    validate(body, schema)
-    resp = client.post(href, json=body,  headers={
-            "HRSystem-Api-Key": 'testtoken'
-        })
-    assert resp.status_code == 201
-
 class TestOrganizationCollection(object):
     """
     This class test organization collection resource
@@ -525,11 +484,11 @@ class TestOrganizationCollection(object):
         assert resp.status_code == 200
         body = json.loads(resp.data)
         _check_namespace(client, body)
-        _check_control_post_org_method("hrsys:add-organization", client, body)
+        _check_control_post_method("hrsys:add-organization", client, body, 'org')
         assert len(body["item"]) == 3
         for item in body["item"]:
-            _check_control_get_org_method("self", client, item)
-            _check_control_get_org_method("profile", client, item)
+            _check_control_get_method("self", client, item)
+            _check_control_get_method("profile", client, item)
 
     def test_post(self, client):
         """
@@ -590,10 +549,10 @@ class TestOranizationItem(object):
         body = json.loads(resp.data)
 
         _check_namespace(client, body)
-        _check_control_get_org_method("profile", client, body)
-        _check_control_get_org_method("collection", client, body)
-        _check_control_put_org_method("edit", client, body)
-        _check_control_delete_org_method("hrsys:delete-organization", client, body)
+        _check_control_get_method("profile", client, body)
+        _check_control_get_method("collection", client, body)
+        _check_control_put_method("edit", client, body, 'org')
+        _check_control_delete_method("hrsys:delete-organization", client, body)
 
         resp = client.get(self.INVALID_URL, headers={
             "HRSystem-Api-Key": token
@@ -657,7 +616,6 @@ class TestOranizationItem(object):
         })
         assert resp.status_code == 404
 
-
 class TestDepartmentCollection(object):
     """
     Test class for department collection resource
@@ -669,12 +627,18 @@ class TestDepartmentCollection(object):
         Test to get all deparments
         """
         token = "testtoken"
+
         resp = client.get(self.RESOURCE_URL, headers={
             "HRSystem-Api-Key": token
         })
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        assert len(body) == 3
+        _check_namespace(client, body)
+        _check_control_post_method("hrsys:add-dept", client, body, 'dept')
+        assert len(body["item"]) == 3
+        for item in body["item"]:
+            _check_control_get_method("self", client, item)
+            _check_control_get_method("profile", client, item)
 
     def test_post(self, client):
         """
@@ -733,6 +697,13 @@ class TestDepartmentItem(object):
         })
         assert resp.status_code == 200
         body = json.loads(resp.data)
+
+        _check_namespace(client, body)
+        _check_control_get_method("profile", client, body)
+        _check_control_get_method("collection", client, body)
+        _check_control_put_method("edit", client, body, 'dept')
+        _check_control_delete_method("hrsys:delete-dept", client, body)
+
         resp = client.get(self.INVALID_URL, headers={
             "HRSystem-Api-Key": token
         })
@@ -1056,10 +1027,11 @@ class TestLeavePlanByEmployeellection(object):
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        assert len(body) == 1
-
-        resp = client.get(self.ERROR_URL)
-        assert resp.status_code == 404
+        _check_namespace(client, body)
+        _check_control_post_method("hrsys:add-leave", client, body, 'leave')
+        assert len(body["item"]) == 1
+        for item in body["item"]:
+            _check_control_get_method("profile", client, item, 'leave')
 
     def test_post(self, client):
         """

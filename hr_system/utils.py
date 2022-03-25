@@ -152,6 +152,7 @@ class HRSystemBuilder(MasonBuilder):
             schema=Organization.get_schema()
         )
 
+    # department
     def add_control_add_department(self):
         self.add_control(
             "hrsys:add-dept",
@@ -162,7 +163,71 @@ class HRSystemBuilder(MasonBuilder):
             schema=Department.get_schema()
         )
 
-    
+    def add_control_get_department(self):
+        uri = url_for("api.departmentcollection")
+        self.add_control(
+            "hrsys:departments",
+            uri,
+            isHrefTemplate=True,
+            schema=self._paginator_schema()
+        )
+
+    def add_control_delete_department(self, department):
+        self.add_control(
+            "hrsys:delete-dept",
+            url_for("api.departmentitem", department=department),
+            method="DELETE",
+            title="Delete this department"
+        )
+
+    def add_control_modify_department(self, department):
+        self.add_control(
+            "edit",
+            url_for("api.departmentitem", department=department),
+            method="PUT",
+            encoding="json",
+            title="Edit this department",
+            schema=Department.get_schema()
+        )
+
+    # leaveplan
+    def add_control_add_leave(self, emp):
+        self.add_control(
+            "hrsys:add-leave",
+            url_for("api.leaveplanbyemployeellection", employee = emp),
+            method="POST",
+            encoding="json",
+            title="Add a new leave",
+            schema=LeavePlan.get_schema()
+        )
+
+    def add_control_get_leave(self, emp):
+        uri = url_for("api.leaveplanbyemployeellection", employee = emp)
+        self.add_control(
+            "hrsys:leaves",
+            uri,
+            isHrefTemplate=True,
+            schema=self._paginator_schema()
+        )
+
+    def add_control_delete_leave(self, emp, leave):
+        self.add_control(
+            "hrsys:delete-leave",
+            url_for("api.leaveplanitem", employee=emp, leaveplan=leave),
+            method="DELETE",
+            title="Delete this leave"
+        )
+
+    def add_control_modify_leave(self, emp, leave):
+        self.add_control(
+            "edit",
+            url_for("api.leaveplanitem", employee=emp, leaveplan=leave),
+            method="PUT",
+            encoding="json",
+            title="Edit this leave",
+            schema=LeavePlan.get_schema()
+        )
+
     @staticmethod
     def _paginator_schema():
         schema = {

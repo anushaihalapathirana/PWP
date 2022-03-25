@@ -1,13 +1,15 @@
 """
     This resource file contains the leaves related REST calls implementation
 """
+import json
 from copy import copy
 from flask_restful import Resource
 from jsonschema import validate, ValidationError
-from flask import Response, request
+from flask import Response, request, url_for
 from hr_system import db
-from hr_system.utils import create_error_message
+from hr_system.utils import create_error_message, HRSystemBuilder
 from hr_system.models import LeavePlan
+from hr_system.constants import *
 
 
 class LeavePlanByEmployeellection(Resource):
@@ -28,6 +30,13 @@ class LeavePlanByEmployeellection(Resource):
                 '200':
                 description: The leaves retrieve successfully
         """
+
+        body = HRSystemBuilder()
+        body.add_namespace('hrsys', LINK_RELATIONS_URL)
+        body.add_control('self', url_for("api.leaveplanbyemployeellection", employee = employee))
+        body.add_control_add_leave(employee)
+        body["item"] = []
+
         leaveplan_response = []
         leaves = []
 
@@ -36,9 +45,14 @@ class LeavePlanByEmployeellection(Resource):
         )
 
         for leave in leaves:
-            leaveplan_response.append(leave.serialize())
+            item = HRSystemBuilder(
+                leave.serialize()
+            )
+            item.add_control("self", url_for("api.leaveplanitem", employee = employee, leaveplan=leave))
+            item.add_control("profile", HRSYSTEM_PROFILE)
+            body["item"].append(item)
 
-        return leaveplan_response
+        return Response(json.dumps(body), 200, mimetype=MASON)
 
     def post(self, employee):
         """ Create a new leave
