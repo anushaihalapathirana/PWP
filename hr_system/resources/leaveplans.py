@@ -110,6 +110,35 @@ class LeavePlanItem(Resource):
         Endpoint: /api/employees/<Employee:employee>/leaveplans/<LeavePlan:leaveplan>/
     """
 
+    def get(self, employee, leaveplan):
+        """ get details of one leaveplan for an employee
+        Arguments:
+            employee
+            role
+        Returns:
+            Response
+                '200':
+                description: Data of leaveplan
+                '404':
+                description: The leaveplan is not found
+        """
+
+        if leaveplan.employee_id != employee.id:
+            return create_error_message(404, "Unable to find corrosponding leaveplan")
+        response_data = leaveplan.serialize()
+        body = HRSystemBuilder(
+            response_data
+        )
+        body.add_namespace("hrsys", LINK_RELATIONS_URL)
+        body.add_control("self", url_for("api.leaveplanitem",
+                         leaveplan=leaveplan, employee=employee))
+        body.add_control("profile", HRSYSTEM_PROFILE)
+        body.add_control("collection", url_for(
+            "api.leaveplanbyemployeellection", employee=employee))
+        body.add_control_modify_leave(emp=employee, leave=leaveplan)
+        body.add_control_delete_leave(emp=employee, leave=leaveplan)
+        return Response(json.dumps(body), 200, mimetype=MASON)
+
     def put(self, employee, leaveplan):
         """ Replace leaveplan's basic data with new values
         Arguments:

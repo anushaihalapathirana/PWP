@@ -81,7 +81,6 @@ class HRSystemBuilder(MasonBuilder):
         self.add_control(
             "hrsys:roles",
             uri,
-            isHrefTemplate=True,
             schema=self._paginator_schema()
         )
 
@@ -120,7 +119,6 @@ class HRSystemBuilder(MasonBuilder):
         self.add_control(
             "hrsys:organizations",
             uri,
-            isHrefTemplate=True,
             schema=self._paginator_schema()
         )
 
@@ -257,7 +255,6 @@ class HRSystemBuilder(MasonBuilder):
         self.add_control(
             "hrsys:departments",
             uri,
-            isHrefTemplate=True,
             schema=self._paginator_schema()
         )
 
@@ -295,8 +292,8 @@ class HRSystemBuilder(MasonBuilder):
         self.add_control(
             "hrsys:leaves",
             uri,
-            isHrefTemplate=True,
-            schema=self._paginator_schema()
+            method="GET",
+            title="get employee leave plans"
         )
 
     def add_control_delete_leave(self, emp, leave):
