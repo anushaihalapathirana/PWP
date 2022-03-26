@@ -33,11 +33,11 @@ class LeavePlanByEmployeellection(Resource):
 
         body = HRSystemBuilder()
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
-        body.add_control('self', url_for("api.leaveplanbyemployeellection", employee = employee))
+        body.add_control('self', url_for(
+            "api.leaveplanbyemployeellection", employee=employee))
         body.add_control_add_leave(employee)
-        body["item"] = []
+        body["items"] = []
 
-        leaveplan_response = []
         leaves = []
 
         leaves = LeavePlan.query.join(LeavePlan.employee).filter(
@@ -48,9 +48,10 @@ class LeavePlanByEmployeellection(Resource):
             item = HRSystemBuilder(
                 leave.serialize()
             )
-            item.add_control("self", url_for("api.leaveplanitem", employee = employee, leaveplan=leave))
+            item.add_control("self", url_for(
+                "api.leaveplanitem", employee=employee, leaveplan=leave))
             item.add_control("profile", HRSYSTEM_PROFILE)
-            body["item"].append(item)
+            body["items"].append(item)
 
         return Response(json.dumps(body), 200, mimetype=MASON)
 

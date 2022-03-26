@@ -12,6 +12,7 @@ from hr_system.utils import create_error_message, HRSystemBuilder
 from hr_system.utils import require_admin
 from hr_system.constants import *
 
+
 class OrganizationCollection(Resource):
     """ This class contains the GET and POST method implementations for organization data
         Arguments:
@@ -33,7 +34,7 @@ class OrganizationCollection(Resource):
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
         body.add_control('self', url_for("api.organizationcollection"))
         body.add_control_add_organization()
-        body["item"] = []
+        body["items"] = []
 
         orgs = Organization.query.all()
 
@@ -41,9 +42,10 @@ class OrganizationCollection(Resource):
             item = HRSystemBuilder(
                 org.serialize()
             )
-            item.add_control("self", url_for("api.organizationitem", organization=org))
+            item.add_control("self", url_for(
+                "api.organizationitem", organization=org))
             item.add_control("profile", HRSYSTEM_PROFILE)
-            body["item"].append(item)
+            body["items"].append(item)
         return Response(json.dumps(body), 200, mimetype=MASON)
 
     @require_admin
@@ -92,7 +94,7 @@ class OrganizationCollection(Resource):
             db.session.add(org)
             db.session.commit()
 
-            location = url_for("api.organizationitem", organization = org)
+            location = url_for("api.organizationitem", organization=org)
         except Exception as error:
             if isinstance(error, HTTPException):
                 return create_error_message(
@@ -131,7 +133,8 @@ class OrganizationItem(Resource):
             response_data
         )
         body.add_namespace("hrsys", LINK_RELATIONS_URL)
-        body.add_control("self", url_for("api.organizationitem", organization=organization))
+        body.add_control("self", url_for(
+            "api.organizationitem", organization=organization))
         body.add_control("profile", HRSYSTEM_PROFILE)
         body.add_control("collection", url_for("api.organizationcollection"))
         body.add_control_delete_organization(organization)
