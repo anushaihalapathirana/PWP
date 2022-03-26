@@ -339,18 +339,12 @@ def create_error_message(status_code, error, message=None):
     Return
         - Error object
     """
-    # resource_url = request.path
-    # body = MasonBuilder(resource_url=resource_url)
-    # body.add_error(error, message)
-    # body.add_control("profile", href=ERROR_PROFILE)
-    # return Response(json.dumps(body), status_code, mimetype=MASON)
-
-    error_message = {
-        'Code': status_code,
-        'Error': error,
-        'Message': message
-    }
-    return abort(status_code, error_message)
+    resource_url = request.path
+    body = MasonBuilder(resource_url=resource_url)
+    body.add_error(error, message)
+    body.add_control("profile", href=ERROR_PROFILE)
+    error_response = Response(json.dumps(body), status_code, mimetype=MASON)
+    return abort(error_response)
 
 
 def require_admin(func):
