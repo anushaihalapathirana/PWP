@@ -1057,6 +1057,17 @@ class TestLeavePlanItem(object):
     RESOURCE_URL = "/api/employees/001/leaveplans/1/"
     INVALID_URL = "/api/employees/001/leaveplans/new/"
 
+
+    def test_get(self, client):
+        """
+        Test to get one leave
+        """
+        resp = client.get(self.RESOURCE_URL)
+        assert resp.status_code == 200
+        body = json.loads(resp.data)
+        resp = client.get(self.INVALID_URL)
+        assert resp.status_code == 404
+
     def test_put(self, client):
         """
         Test to edit leave plan

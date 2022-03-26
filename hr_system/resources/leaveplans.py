@@ -124,7 +124,7 @@ class LeavePlanItem(Resource):
         """
 
         if leaveplan.employee_id != employee.id:
-            return create_error_message(404, "Unable to find corrosponding leaveplan")
+            return create_error_message(400, "Unable to find corrosponding leaveplan")
         response_data = leaveplan.serialize()
         body = HRSystemBuilder(
             response_data
@@ -174,7 +174,7 @@ class LeavePlanItem(Resource):
         if (leave.employee_id != employee.id):
             return create_error_message(
                 400, "Bad request",
-                "Given employee does not have access to the given leaveplan"
+                "Unable to find corrosponding leaveplan"
             )
 
         old_leave_plan = copy(leaveplan)
@@ -206,7 +206,7 @@ class LeavePlanItem(Resource):
         if (leave.employee_id != employee.id):
             return create_error_message(
                 400, "Bad request",
-                "Given employee does not have access to the given leaveplan"
+                "Unable to find corrosponding leaveplan"
             )
         db.session.delete(leaveplan)
         db.session.commit()

@@ -1081,6 +1081,24 @@ paths:
     parameters:
     - $ref: '#/components/parameters/employee_id'
     - $ref: '#/components/parameters/leaveplan_id'
+    get:
+      tags: 
+        - leaveplans
+      description: Get a specific leave
+      responses:
+        '200':
+          description: one leave item
+          content:
+            application/json:
+              example:
+              - id: 1
+                leave_type: MEDICAL
+                reason: fever
+                leave_date: "1998-08-25T11:20:30"
+        '404':
+          description: Employee or leave not found
+        '400':
+          description: Unable to find corrosponding leaveplan
     put:
       tags: 
         - leaveplans
@@ -1099,7 +1117,7 @@ paths:
         '204':
           description: The leaveplan's attributes were updated successfully
         '400':
-          description: The request body was not valid
+          description: The request body was not valid or Unable to find corrosponding leaveplan
         '404':
           description: The leaveplan was not found
         '409':
@@ -1115,3 +1133,5 @@ paths:
           description: The leaveplan was successfully deleted
         '404':
           description: The leaveplan was not found
+        '400':
+          description: Unable to find corrosponding leaveplan
