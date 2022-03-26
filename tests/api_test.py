@@ -333,8 +333,8 @@ class TestRoleCollection(object):
         body = json.loads(resp.data)
         _check_namespace(client, body)
         _check_control_post_method("hrsys:add-role", client, body, 'role')
-        assert len(body["item"]) == 3
-        for item in body["item"]:
+        assert len(body["items"]) == 3
+        for item in body["items"]:
             _check_control_get_method("self", client, item)
             _check_control_get_method("profile", client, item)
 
@@ -485,8 +485,8 @@ class TestOrganizationCollection(object):
         body = json.loads(resp.data)
         _check_namespace(client, body)
         _check_control_post_method("hrsys:add-organization", client, body, 'org')
-        assert len(body["item"]) == 3
-        for item in body["item"]:
+        assert len(body["items"]) == 3
+        for item in body["items"]:
             _check_control_get_method("self", client, item)
             _check_control_get_method("profile", client, item)
 
@@ -634,8 +634,8 @@ class TestDepartmentCollection(object):
         body = json.loads(resp.data)
         _check_namespace(client, body)
         _check_control_post_method("hrsys:add-dept", client, body, 'dept')
-        assert len(body["item"]) == 3
-        for item in body["item"]:
+        assert len(body["items"]) == 3
+        for item in body["items"]:
             _check_control_get_method("self", client, item)
             _check_control_get_method("profile", client, item)
 
@@ -1027,8 +1027,8 @@ class TestLeavePlanByEmployeellection(object):
         body = json.loads(resp.data)
         _check_namespace(client, body)
         _check_control_post_method("hrsys:add-leave", client, body, 'leave')
-        assert len(body["item"]) == 1
-        for item in body["item"]:
+        assert len(body["items"]) == 1
+        for item in body["items"]:
             _check_control_get_method("profile", client, item, 'leave')
 
     def test_post(self, client):
