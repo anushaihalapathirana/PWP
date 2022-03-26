@@ -319,8 +319,15 @@ class EmployeeItem(Resource):
             organization=employee.organization, role=employee.role)
         body.add_control_employee_by_org_dept_role(
             organization=employee.organization, department=employee.department, role=employee.role)
+
+        body.add_control_organization(organization=employee.organization)
+        body.add_control_department(department=employee.department)
+        body.add_control_role(role=employee.role)
+        body.add_control_get_leave(emp=employee)
+
         body.add_control_delete_employee(employee=employee)
         body.add_control_modify_employee(employee=employee)
+        body.add_control_add_leave(emp=employee)
         return Response(json.dumps(body), status=200, mimetype=MASON)
 
     @require_employee_key

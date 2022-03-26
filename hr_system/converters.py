@@ -18,21 +18,16 @@ class RoleConverter(BaseConverter):
         """
         role = Role.query.filter_by(code=value).first()
         if role is None:
-            err =  create_error_message(
+            return create_error_message(
                 404, "Not found",
                 "Role not found"
             )
-            print('--------- err -----------')
-            print(err)
-            return err
         return role
 
     def to_url(self, value):
         """
         return role code
         """
-        print("------------role ---------------")
-        print(value)
         return str(value.code)
 
 
