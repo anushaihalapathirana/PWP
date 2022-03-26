@@ -71,6 +71,10 @@ class MasonBuilder(dict):
 
 
 class HRSystemBuilder(MasonBuilder):
+    """
+    HR system mason builder. this class manage all mason objects
+    """
+    # role
 
     def add_control_get_roles(self):
         uri = url_for("api.rolecollection")
@@ -99,6 +103,56 @@ class HRSystemBuilder(MasonBuilder):
             schema=Role.get_schema()
         )
 
+    def add_control_modify_role(self, role):
+        self.add_control(
+            "edit",
+            url_for("api.roleitem", role=role),
+            method="PUT",
+            encoding="json",
+            title="Edit this role",
+            schema=Role.get_schema()
+        )
+
+    # organization
+
+    def add_control_get_organization(self):
+        uri = url_for("api.organizationcollection")
+        self.add_control(
+            "hrsys:organizations",
+            uri,
+            isHrefTemplate=True,
+            schema=self._paginator_schema()
+        )
+
+    def add_control_delete_organization(self, organization):
+        self.add_control(
+            "hrsys:delete-organization",
+            url_for("api.organizationitem", organization=organization),
+            method="DELETE",
+            title="Delete this organization"
+        )
+
+    def add_control_add_organization(self):
+        self.add_control(
+            "hrsys:add-organization",
+            url_for("api.organizationcollection"),
+            method="POST",
+            encoding="json",
+            title="Add a new organization",
+            schema=Organization.get_schema()
+        )
+
+    def add_control_modify_organization(self, organization):
+        self.add_control(
+            "edit",
+            url_for("api.organizationitem", organization=organization),
+            method="PUT",
+            encoding="json",
+            title="Edit this organization",
+            schema=Organization.get_schema()
+        )
+
+    # department
     def add_control_add_department(self):
         self.add_control(
             "hrsys:add-dept",
@@ -198,14 +252,69 @@ class HRSystemBuilder(MasonBuilder):
             title="get employees by organization,department and role"
         )
 
-    def add_control_modify_role(self, role):
+    def add_control_get_department(self):
+        uri = url_for("api.departmentcollection")
+        self.add_control(
+            "hrsys:departments",
+            uri,
+            isHrefTemplate=True,
+            schema=self._paginator_schema()
+        )
+
+    def add_control_delete_department(self, department):
+        self.add_control(
+            "hrsys:delete-dept",
+            url_for("api.departmentitem", department=department),
+            method="DELETE",
+            title="Delete this department"
+        )
+
+    def add_control_modify_department(self, department):
         self.add_control(
             "edit",
-            url_for("api.roleitem", role=role),
+            url_for("api.departmentitem", department=department),
             method="PUT",
             encoding="json",
-            title="Edit this role",
-            schema=Role.get_schema()
+            title="Edit this department",
+            schema=Department.get_schema()
+        )
+
+    # leaveplan
+    def add_control_add_leave(self, emp):
+        self.add_control(
+            "hrsys:add-leave",
+            url_for("api.leaveplanbyemployeellection", employee=emp),
+            method="POST",
+            encoding="json",
+            title="Add a new leave",
+            schema=LeavePlan.get_schema()
+        )
+
+    def add_control_get_leave(self, emp):
+        uri = url_for("api.leaveplanbyemployeellection", employee=emp)
+        self.add_control(
+            "hrsys:leaves",
+            uri,
+            isHrefTemplate=True,
+            schema=self._paginator_schema()
+        )
+
+    def add_control_delete_leave(self, emp, leave):
+        self.add_control(
+            "hrsys:delete-leave",
+            url_for("api.leaveplanitem", employee=emp, leaveplan=leave),
+            method="DELETE",
+            title="Delete this leave"
+        )
+
+    def add_control_modify_leave(self, emp, leave):
+        self.add_control(
+            "edit",
+            url_for("api.leaveplanitem", employee=emp, leaveplan=leave),
+            method="PUT",
+            encoding="json",
+            title="Edit this leave",
+            schema=LeavePlan.get_schema()
         )
 
     @staticmethod
@@ -230,6 +339,12 @@ def create_error_message(status_code, error, message=None):
     Return
         - Error object
     """
+    # resource_url = request.path
+    # body = MasonBuilder(resource_url=resource_url)
+    # body.add_error(error, message)
+    # body.add_control("profile", href=ERROR_PROFILE)
+    # return Response(json.dumps(body), status_code, mimetype=MASON)
+
     error_message = {
         'Code': status_code,
         'Error': error,

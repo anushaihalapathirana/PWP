@@ -17,6 +17,7 @@ class RoleConverter(BaseConverter):
         convert to a role object
         """
         role = Role.query.filter_by(code=value).first()
+        print(role)
         if role is None:
             return create_error_message(
                 404, "Not found",
