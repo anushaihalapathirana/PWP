@@ -106,8 +106,6 @@ class EmployeeByRlationCollection(Resource):
             body.add_control_role(role=role)
             body.add_control("up", url_for(
                 "api.employeebyrlationcollection", organization=None, department=None, role=None))
-            body.add_control("up", url_for(
-                "api.employeebyrlationcollection", organization=None, department=None, role=None))
 
         elif organization is not None:
             employees = Employee.query.join(Employee.organization).filter(

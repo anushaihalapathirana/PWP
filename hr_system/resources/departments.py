@@ -35,7 +35,7 @@ class DepartmentCollection(Resource):
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
         body.add_control('self', url_for("api.departmentcollection"))
         body.add_control_add_department()
-        body["item"] = []
+        body["items"] = []
 
         depts = Department.query.all()
 
@@ -44,7 +44,7 @@ class DepartmentCollection(Resource):
             item.add_control("self", url_for(
                 "api.departmentitem", department=dept))
             item.add_control("profile", HRSYSTEM_PROFILE)
-            body["item"].append(item)
+            body["items"].append(item)
 
         return Response(json.dumps(body), 200, mimetype=MASON)
 

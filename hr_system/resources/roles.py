@@ -34,7 +34,7 @@ class RoleCollection(Resource):
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
         body.add_control('self', url_for("api.rolecollection"))
         body.add_control_add_role()
-        body["item"] = []
+        body["items"] = []
 
         roles = Role.query.all()
 
@@ -44,7 +44,7 @@ class RoleCollection(Resource):
             )
             item.add_control("self", url_for("api.roleitem", role=role))
             item.add_control("profile", HRSYSTEM_PROFILE)
-            body["item"].append(item)
+            body["items"].append(item)
         return Response(json.dumps(body), 200, mimetype=MASON)
 
     @require_admin
