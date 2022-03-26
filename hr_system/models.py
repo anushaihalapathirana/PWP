@@ -90,7 +90,10 @@ class Employee(db.Model):
             "marritial_status": self.marritial_status and self.marritial_status.name,
             "mobile_no": self.mobile_no,
             "basic_salary": self.basic_salary,
-            "account_number": self.account_number}
+            "account_number": self.account_number,
+            "role": self.role.code,
+            "organization": self.organization.organization_id,
+            "department": self.department.department_id}
         return employee
 
     def deserialize(self, request):

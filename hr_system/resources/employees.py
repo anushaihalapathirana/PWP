@@ -1,17 +1,19 @@
 """
     This resource file contains the employee related REST calls implementation
 """
+import json
 from copy import copy
 from flask_restful import Resource
 from jsonschema import validate, ValidationError
-from flask import Response, request
+from flask import Response, request, url_for
 from werkzeug.exceptions import HTTPException
 from hr_system import db
 from hr_system.models import Employee
 from hr_system.utils import create_error_message
 from hr_system import cache
 from hr_system import api
-from hr_system.utils import require_admin, require_employee_key
+from hr_system.utils import require_admin, require_employee_key, HRSystemBuilder
+from hr_system.constants import *
 
 
 class EmployeeByRlationCollection(Resource):
@@ -27,11 +29,12 @@ class EmployeeByRlationCollection(Resource):
         - GET all the employees
 
     """
+
     def page_key(self, *args, **kwargs):
         return str(request.path)
 
     @require_admin
-    @cache.cached(make_cache_key=page_key)
+    # @cache.cached(make_cache_key=page_key)
     def get(self, organization=None, department=None, role=None):
         """ GET list of employees
             Endpoint:
@@ -52,8 +55,12 @@ class EmployeeByRlationCollection(Resource):
                 '200':
                 description: The organizations retrieve successfully
         """
-        employees_response = []
         employees = []
+
+        body = HRSystemBuilder()
+        body.add_namespace('hrsys', LINK_RELATIONS_URL)
+        body["items"] = []
+
         if organization is not None and department is not None and role is not None:
             employees = Employee.query.join(
                 Employee.organization).join(
@@ -62,6 +69,16 @@ class EmployeeByRlationCollection(Resource):
                 Employee.organization == organization,
                 Employee.role == role,
                 Employee.department == department)
+            body.add_control('self', url_for("api.employeebyrlationcollection", organization=organization,
+                                             department=department, role=role
+                                             ))
+            body.add_control_add_employee(
+                role=role, department=department, organization=organization)
+            body.add_control_organization(organization=organization)
+            body.add_control_department(department=department)
+            body.add_control_role(role=role)
+            body.add_control("up", url_for(
+                "api.employeebyrlationcollection", organization=None, department=None, role=None))
 
         elif organization is not None and department is not None:
             employees = Employee.query.join(
@@ -69,23 +86,55 @@ class EmployeeByRlationCollection(Resource):
                 Employee.department).filter(
                 Employee.organization == organization,
                 Employee.department == department)
+            body.add_control('self', url_for("api.employeebyrlationcollection", organization=organization,
+                                             department=department, role=None
+                                             ))
+            body.add_control_organization(organization=organization)
+            body.add_control_department(department=department)
+            body.add_control("up", url_for(
+                "api.employeebyrlationcollection", organization=None, department=None, role=None))
 
         elif organization is not None and role is not None:
             employees = Employee.query.join(
                 Employee.organization).join(
                 Employee.role).filter(
                 Employee.organization == organization, Employee.role == role)
+            body.add_control('self', url_for("api.employeebyrlationcollection", organization=organization,
+                                             department=None, role=role
+                                             ))
+            body.add_control_organization(organization=organization)
+            body.add_control_role(role=role)
+            body.add_control("up", url_for(
+                "api.employeebyrlationcollection", organization=None, department=None, role=None))
+            body.add_control("up", url_for(
+                "api.employeebyrlationcollection", organization=None, department=None, role=None))
+
         elif organization is not None:
             employees = Employee.query.join(Employee.organization).filter(
                 Employee.organization == organization
             )
+            body.add_control('self', url_for("api.employeebyrlationcollection", organization=organization,
+                                             department=None, role=None
+                                             ))
+            body.add_control_organization(organization=organization)
+            body.add_control("up", url_for(
+                "api.employeebyrlationcollection", organization=None, department=None, role=None))
         else:
             employees = Employee.query.all()
-
+            body.add_control('self', url_for("api.employeebyrlationcollection", organization=organization,
+                                             department=None, role=None
+                                             ))
         for employee in employees:
-            employees_response.append(employee.serialize())
+            item = HRSystemBuilder(
+                employee.serialize()
+            )
+            item.add_control("self", url_for(
+                "api.employeeitem", employee=employee))
+            item.add_control("profile", HRSYSTEM_PROFILE)
 
-        return employees_response
+            body["items"].append(item)
+
+        return Response(json.dumps(body), status=200, mimetype=MASON)
 
 
 class EmployeeCollection(Resource):
@@ -190,7 +239,8 @@ class EmployeeCollection(Resource):
 
             db.session.add(employee)
             db.session.commit()
-
+            location = url_for(
+                "api.employeeitem", organization=organization, department=department, role=role)
             self._clear_cache(department=department,
                               organnization=organization, role=role)
         except Exception as error:
@@ -203,7 +253,9 @@ class EmployeeCollection(Resource):
                 500, "Internal Server Error",
                 "Internal Server Error occurred!"
             )
-        return Response(response={}, status=201)
+        return Response(response={}, status=201, headers={
+            "Location": location
+        })
 
 
 class EmployeeItem(Resource):
@@ -242,7 +294,7 @@ class EmployeeItem(Resource):
         return str(request.path)
 
     @require_employee_key
-    @cache.cached(make_cache_key=page_key)
+    # @cache.cached(make_cache_key=page_key)
     def get(self, employee):
         """ get details of one employee
             Arguments:
@@ -254,7 +306,24 @@ class EmployeeItem(Resource):
                     '404':
                     description: The employee was not found
         """
-        return employee.serialize()
+        response = employee.serialize()
+        body = HRSystemBuilder(response)
+        body.add_namespace('hrsys', LINK_RELATIONS_URL)
+
+        body.add_control("self", url_for(
+            "api.employeeitem", employee=employee))
+        body.add_control("collection", url_for(
+            "api.employeebyrlationcollection", organization=None, department=None, role=None))
+        body.add_control_employee_by_org(organization=employee.organization)
+        body.add_control_employee_by_org_dept(
+            organization=employee.organization, department=employee.department)
+        body.add_control_employee_by_org_role(
+            organization=employee.organization, role=employee.role)
+        body.add_control_employee_by_org_dept_role(
+            organization=employee.organization, department=employee.department, role=employee.role)
+        body.add_control_delete_employee(employee=employee)
+        body.add_control_modify_employee(employee=employee)
+        return Response(json.dumps(body), status=200, mimetype=MASON)
 
     @require_employee_key
     def put(self, employee):

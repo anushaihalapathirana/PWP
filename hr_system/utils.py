@@ -105,8 +105,97 @@ class HRSystemBuilder(MasonBuilder):
             url_for("api.departmentcollection"),
             method="POST",
             encoding="json",
-            title="Add a new role",
+            title="Add a new department",
             schema=Department.get_schema()
+        )
+
+    def add_control_add_employee(self, role, department, organization):
+        self.add_control(
+            "hrsys:add-employee",
+            url_for("api.employeecollection", organization=organization,
+                    department=department, role=role),
+            method="POST",
+            encoding="json",
+            title="Add a new employee given the organization department and role",
+            schema=Employee.get_schema()
+        )
+
+    def add_control_modify_employee(self, employee):
+        self.add_control(
+            "edit",
+            url_for("api.employeeitem", employee=employee),
+            method="PUT",
+            encoding="json",
+            title="Edit this employee",
+            schema=Employee.get_schema()
+        )
+
+    def add_control_delete_employee(self, employee):
+        self.add_control(
+            "hrsys:delete-employee",
+            url_for("api.employeeitem", employee=employee),
+            method="DELETE",
+            title="Delete this employee"
+        )
+
+    def add_control_organization(self, organization):
+        self.add_control(
+            "hrsys:organization",
+            url_for("api.organizationitem", organization=organization),
+            method="GET",
+            title="get organization"
+        )
+
+    def add_control_department(self, department):
+        self.add_control(
+            "hrsys:department",
+            url_for("api.departmentitem", department=department),
+            method="GET",
+            title="get department",
+        )
+
+    def add_control_role(self, role):
+        self.add_control(
+            "hrsys:role",
+            url_for("api.roleitem", role=role),
+            method="GET",
+            title="get role"
+        )
+
+    def add_control_employee_by_org(self, organization):
+        self.add_control(
+            "hrsys:by-org",
+            url_for("api.employeebyrlationcollection",
+                    organization=organization, role=None, department=None),
+            method="GET",
+            title="get employees by organization"
+        )
+
+    def add_control_employee_by_org_dept(self, organization, department):
+        self.add_control(
+            "hrsys:by-org-dept",
+            url_for("api.employeebyrlationcollection",
+                    organization=organization, role=None, department=department),
+            method="GET",
+            title="get employees by organization and department"
+        )
+
+    def add_control_employee_by_org_role(self, organization, role):
+        self.add_control(
+            "hrsys:by-org-role",
+            url_for("api.employeebyrlationcollection",
+                    organization=organization, role=role, department=None),
+            method="GET",
+            title="get employees by organization and role"
+        )
+
+    def add_control_employee_by_org_dept_role(self, organization, department, role):
+        self.add_control(
+            "hrsys:by-org-dept-role",
+            url_for("api.employeebyrlationcollection",
+                    organization=organization, role=role, department=department),
+            method="GET",
+            title="get employees by organization,department and role"
         )
 
     def add_control_modify_role(self, role):
