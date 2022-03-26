@@ -104,7 +104,7 @@ class LeavePlanByEmployeellection(Resource):
             )
         return Response(response={}, status=201, headers={
             "Location": location
-        })
+        }, mimetype=MASON)
 
 
 class LeavePlanItem(Resource):
@@ -193,7 +193,7 @@ class LeavePlanItem(Resource):
                 "Error while updating the employee"
             )
 
-        return Response(status=204)
+        return Response(status=204, mimetype=MASON)
 
     def delete(self, employee, leaveplan):
         """ Delete the selected leaveplan
@@ -215,4 +215,4 @@ class LeavePlanItem(Resource):
         db.session.delete(leaveplan)
         db.session.commit()
 
-        return Response(status=204)
+        return Response(status=204, mimetype=MASON)

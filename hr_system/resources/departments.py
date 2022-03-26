@@ -110,7 +110,7 @@ class DepartmentCollection(Resource):
 
         return Response(response={}, status=201, headers={
             "Location": location
-        })
+        }, mimetype=MASON)
 
 
 class DepartmentItem(Resource):
@@ -157,7 +157,7 @@ class DepartmentItem(Resource):
         db.session.delete(department)
         db.session.commit()
 
-        return Response(status=204)
+        return Response(status=204, mimetype=MASON)
 
     @require_admin
     def put(self, department):
@@ -204,4 +204,4 @@ class DepartmentItem(Resource):
                 "Error while updating the department"
             )
 
-        return Response(status=204)
+        return Response(status=204, mimetype=MASON)

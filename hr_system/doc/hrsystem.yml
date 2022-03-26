@@ -288,7 +288,7 @@ paths:
       requestBody:
         description: JSON document that contains basic data for a new role
         content:
-          application/json:
+          application/vnd.mason+json:
             schema:
               $ref: '#/components/schemas/Role'
             example:
@@ -443,7 +443,7 @@ paths:
       requestBody:
         description: JSON document that contains new basic data for the role
         content:
-          application/json:
+          application/vnd.mason+json:
             schema:
               $ref: '#/components/schemas/Role'
             example:
@@ -621,7 +621,7 @@ paths:
       requestBody:
         description: JSON document that contains basic data for a new organization
         content:
-          application/json:
+          application/vnd.mason+json:
             schema:
               $ref: '#/components/schemas/Organization'
             example:
@@ -761,7 +761,7 @@ paths:
       requestBody:
         description: JSON document that contains new basic data for the organization
         content:
-          application/json:
+          application/vnd.mason+json:
             schema:
               $ref: '#/components/schemas/Organization'
             example:
@@ -936,7 +936,7 @@ paths:
         security:
         - HRSystemKey: [admin]
         content:
-          application/json:
+          application/vnd.mason+json:
             schema:
               $ref: '#/components/schemas/Department'
             example:
@@ -1078,7 +1078,7 @@ paths:
       requestBody:
         description: JSON document that contains new basic data for the department
         content:
-          application/json:
+          application/vnd.mason+json:
             schema:
               $ref: '#/components/schemas/Department'
             example:
@@ -1572,7 +1572,7 @@ paths:
       requestBody:
         description: JSON document that contains basic data for a new employee
         content:
-          application/json:
+          application/vnd.mason+json:
             schema:
               $ref: '#/components/schemas/Employee'
             example:
@@ -1873,7 +1873,7 @@ paths:
       requestBody:
         description: JSON document that contains new basic data for the employee
         content:
-          application/json:
+          application/vnd.mason+json:
             schema:
               $ref: '#/components/schemas/Employee'
             example:
@@ -2062,7 +2062,7 @@ paths:
       requestBody:
         description: JSON document that contains basic data for a new leave
         content:
-          application/json:
+          application/vnd.mason+json:
             schema:
               $ref: '#/components/schemas/LeavePlan'
             example:
@@ -2226,7 +2226,7 @@ paths:
       requestBody:
         description: JSON document that contains new basic data for the leaveplan
         content:
-          application/json:
+          application/vnd.mason+json:
             schema:
               $ref: '#/components/schemas/LeavePlan'
             example:

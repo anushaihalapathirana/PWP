@@ -253,7 +253,7 @@ class EmployeeCollection(Resource):
             )
         return Response(response={}, status=201, headers={
             "Location": location
-        })
+        }, mimetype=MASON)
 
 
 class EmployeeItem(Resource):
@@ -379,7 +379,7 @@ class EmployeeItem(Resource):
                 "Error while updating the employee"
             )
 
-        return Response(status=204)
+        return Response(status=204, mimetype=MASON)
 
     @require_admin
     def delete(self, employee):
@@ -407,4 +407,4 @@ class EmployeeItem(Resource):
                 "Error while deleting the employee"
             )
 
-        return Response(status=204)
+        return Response(status=204, mimetype=MASON)
