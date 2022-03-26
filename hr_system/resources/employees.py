@@ -240,7 +240,7 @@ class EmployeeCollection(Resource):
             db.session.add(employee)
             db.session.commit()
             location = url_for(
-                "api.employeeitem", organization=organization, department=department, role=role)
+                "api.employeeitem", employee=employee)
             self._clear_cache(department=department,
                               organnization=organization, role=role)
         except Exception as error:
