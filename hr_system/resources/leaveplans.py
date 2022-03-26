@@ -95,12 +95,16 @@ class LeavePlanByEmployeellection(Resource):
 
             db.session.add(leaveplan)
             db.session.commit()
-        except (Exception, ):
+            location = url_for("api.leaveplanitem", leaveplan=leaveplan, employee = employee)
+        except Exception as e:
+            print(e)
             return create_error_message(
                 500, "Internal server Error",
                 "Error while adding the leave"
             )
-        return Response(response={}, status=201)
+        return Response(response={}, status=201, headers={
+            "Location": location
+        })
 
 
 class LeavePlanItem(Resource):

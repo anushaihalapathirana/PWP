@@ -217,14 +217,68 @@ paths:
         '200':
           description: List of roles
           content:
-            application/json:
+            application/vnd.mason+json:
               example:
-              - name: Manager
-                code: MAN
-                description: manager role
-              - name: Engineer
-                code: ENG
-                description: null
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                "@controls":
+                  self:
+                    href: "/api/roles/"
+                  hrsys:add-role:
+                    method: POST
+                    encoding: json
+                    title: Add a new role
+                    schema:
+                      type: object
+                      required:
+                      - name
+                      - code
+                      properties:
+                        name:
+                          description: Role's unique name
+                          type: string
+                        code:
+                          description: unique code of role
+                          type: string
+                        description:
+                          description: description of role
+                          type:
+                          - string
+                          - 'null'
+                    href: "/api/roles/"
+                items:
+                - name: Team Lead
+                  code: TL
+                  description:
+                  "@controls":
+                    self:
+                      href: "/api/roles/TL/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                - name: Manager
+                  code: MAN
+                  description: Role manager
+                  "@controls":
+                    self:
+                      href: "/api/roles/MAN/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+        '403':
+          description: Authentication error
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/roles/"
+                "@error":
+                  "@message": Forbidden
+                  "@messages":
+                  - Authentication error
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+
+
     post:
       tags: 
         - roles
@@ -244,12 +298,61 @@ paths:
       responses:
         '201':
           description: The Role was created successfully
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Location URL for created role
         '400':
           description: The request body was not valid
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: /api/roles/
+                "@error": 
+                  "@message": "Invalid request"
+                  "@messages":
+                    - The request body was not valid
+                  "@controls":
+                    profile:
+                      href: /profiles/error/
         '409':
           description: A role with the same code already exists
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: /api/roles/
+                "@error": 
+                  "@message": Conflict
+                  "@messages": Role exist
+                  "@controls":
+                    profile:
+                      href: /profiles/error/
         '415':
           description: Wrong media type was used
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: /api/roles/
+                "@error": 
+                  "@message": Unsupported media type
+                  "@messages": Unsupported media type
+                  "@controls":
+                    profile:
+                      href: /profiles/error/
+        '403':
+          description: Authentication error
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: /api/roles/
+                "@error": 
+                  "@message": Forbidden
+                  "@messages": Authentication error
+                  "@controls":
+                    profile:
+                      href: /profiles/error/
+
   /roles/{role_code}/:
     parameters:
     - $ref: '#/components/parameters/role_code'
@@ -261,18 +364,76 @@ paths:
         - HRSystemKey: [admin]
       responses:
         '200':
-          description: Data of single role
+          description: List of roles
           content:
-            application/json:
-              examples:
-                roles:
-                  description: A role of en employee
-                  value:
-                    name: role test
-                    code: TEST
-                    description: new test role to add
+            application/vnd.mason+json:
+              example:
+                name: Manager
+                code: MAN
+                description: Role manager
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                "@controls":
+                  self:
+                    href: "/api/roles/MAN/"
+                  profile:
+                    href: "/profiles/hrsystem/"
+                  collection:
+                    href: "/api/roles/"
+                  hrsys:delete-role:
+                    method: DELETE
+                    title: Delete this role
+                    href: "/api/roles/MAN/"
+                  edit:
+                    method: PUT
+                    encoding: json
+                    title: Edit this role
+                    schema:
+                      type: object
+                      required:
+                      - name
+                      - code
+                      properties:
+                        name:
+                          description: Role's unique name
+                          type: string
+                        code:
+                          description: unique code of role
+                          type: string
+                        description:
+                          description: description of role
+                          type:
+                          - string
+                          - 'null'
+                    href: "/api/roles/MAN/"
         '404':
           description: The role was not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/roles/MANkk/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - Role not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+        '403':
+          description: Authentication error
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/roles/MANkk/"
+                "@error":
+                  "@message": Forbidden
+                  "@messages":
+                  - Authentication error
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+
     put:
       tags: 
         - roles
@@ -294,12 +455,68 @@ paths:
           description: The role's attributes were updated successfully
         '400':
           description: The request body was not valid
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/roles/MAN/"
+                "@error":
+                  "@message": Bad request
+                  "@messages": Bad request
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '404':
           description: The role was not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/roles/MANkk/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - Role not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '409':
           description: A role with the same name already exists
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/roles/MANkk/"
+                "@error":
+                  "@message": Conflict
+                  "@messages":
+                  - Role exist
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '415':
           description: Wrong media type was used
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/roles/MANkk/"
+                "@error":
+                  "@message": Unsupported media type
+                  "@messages":
+                  - unsupported media type
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+        '403':
+          description: Authentication error
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/roles/MANkk/"
+                "@error":
+                  "@message": Forbidden
+                  "@messages":
+                  - Authentication error
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
     delete:
      tags: 
         - roles
@@ -307,10 +524,34 @@ paths:
      security:
         - HRSystemKey: [admin]
      responses:
-       '204':
+        '204':
          description: The role was successfully deleted
-       '404':
+        '404':
          description: The role was not found
+         content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/roles/MANkk/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - Role not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+        '403':
+          description: Authentication error
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/roles/MANkk/"
+                "@error":
+                  "@message": Forbidden
+                  "@messages":
+                  - Authentication error
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
 
 
   /organizations/:
@@ -324,17 +565,53 @@ paths:
         '200':
           description: List of organizations
           content:
-            application/json:
+            application/vnd.mason+json:
               example:
-              - organization_id: O01
-                name: org 1
-                location: oulu
-              - organization_id: O02
-                name: org 2
-                location: Helsnki
-              - organization_id: O03
-                name: org 3
-                location: Espoo
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                "@controls":
+                  self:
+                    href: "/api/organizations/"
+                  hrsys:add-organization:
+                    method: POST
+                    encoding: json
+                    title: Add a new organization
+                    schema:
+                      type: object
+                      required:
+                      - organization_id
+                      - name
+                      - location
+                      properties:
+                        organization_id:
+                          description: organization id
+                          type: string
+                        name:
+                          description: organization name
+                          type: string
+                        location:
+                          description: organization location
+                          type: string
+                    href: "/api/organizations/"
+                items:
+                - organization_id: O02
+                  name: Org21
+                  location: helsinki
+                  "@controls":
+                    self:
+                      href: "/api/organizations/O02/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                - organization_id: O01
+                  name: Org11
+                  location: oulu
+                  "@controls":
+                    self:
+                      href: "/api/organizations/O01/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+
     post:
       tags: 
         - organizations
@@ -354,12 +631,61 @@ paths:
       responses:
         '201':
           description: The organization was created successfully
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Location URL for created organization
         '400':
           description: The request body was not valid
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/"
+                "@error":
+                  "@message": Bad request
+                  "@messages":
+                  -
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '409':
           description: A organization with the same code already exists
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/"
+                "@error":
+                  "@message": Conflict
+                  "@messages": Already exist
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '415':
           description: Wrong media type was used
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/"
+                "@error":
+                  "@message": Unsupported Media Type
+                  "@messages": Wrong media type was used
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+        '403':
+          description: Wrong media type was used
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/"
+                "@error":
+                  "@message": Forbidden
+                  "@messages": Authentication error
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+
   /organizations/{organization_id}/:
     parameters:
     - $ref: '#/components/parameters/organization_id'
@@ -371,18 +697,61 @@ paths:
         - HRSystemKey: [admin]
       responses:
         '200':
-          description: Data of single organization
+          description: data of an organization
           content:
-            application/json:
-              examples:
-                organizations:
-                  description: A organization of en employee
-                  value:
-                    name: testOrg
-                    location: testLoc
-                    organization_id: O07
+            application/vnd.mason+json:
+              example:
+                organization_id: O01
+                name: Org11
+                location: oulu
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                "@controls":
+                  self:
+                    href: "/api/organizations/O01/"
+                  profile:
+                    href: "/profiles/hrsystem/"
+                  collection:
+                    href: "/api/organizations/"
+                  hrsys:delete-organization:
+                    method: DELETE
+                    title: Delete this organization
+                    href: "/api/organizations/O01/"
+                  edit:
+                    method: PUT
+                    encoding: json
+                    title: Edit this organization
+                    schema:
+                      type: object
+                      required:
+                      - organization_id
+                      - name
+                      - location
+                      properties:
+                        organization_id:
+                          description: organization id
+                          type: string
+                        name:
+                          description: organization name
+                          type: string
+                        location:
+                          description: organization location
+                          type: string
+                    href: "/api/organizations/O01/"
+
         '404':
           description: The organization was not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/005"
+                "@error":
+                  "@message": Not found
+                  "@messages": organization was not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
     put:
       tags: 
         - organizations
@@ -404,12 +773,64 @@ paths:
           description: The organization's attributes were updated successfully
         '400':
           description: The request body was not valid
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/005"
+                "@error":
+                  "@message": Bad request
+                  "@messages": bad request
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '404':
           description: The organization was not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/005"
+                "@error":
+                  "@message": Not found
+                  "@messages": organization was not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '409':
           description: A organization with the same name already exists
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/005"
+                "@error":
+                  "@message": Conflict
+                  "@messages": organization exist
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '415':
           description: Wrong media type was used
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/005"
+                "@error":
+                  "@message": Unsupported media type
+                  "@messages": unsupported media
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+        '403':
+          description: authentication error
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/005"
+                "@error":
+                  "@message": Forbidden
+                  "@messages": Authentication error
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
     delete:
       tags: 
         - organizations
@@ -421,6 +842,28 @@ paths:
           description: The organization was successfully deleted
         '404':
           description: The organization was not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/005"
+                "@error":
+                  "@message": Not found
+                  "@messages": organization was not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+        '403':
+          description: authentication error
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/005"
+                "@error":
+                  "@message": Forbidden
+                  "@messages": Authentication error
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
 
 
   /departments/:
@@ -434,17 +877,54 @@ paths:
         '200':
           description: List of department
           content:
-            application/json:
+            application/vnd.mason+json:
               example:
-              - department_id: D01
-                name: dept 1
-                description: department number 1
-              - department_id: D02
-                name: dept 2
-                description: department 2
-              - department_id: D03
-                name: dept 3
-                description: null
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                "@controls":
+                  self:
+                    href: "/api/departments/"
+                  hrsys:add-dept:
+                    method: POST
+                    encoding: json
+                    title: Add a new department
+                    schema:
+                      type: object
+                      required:
+                      - department_id
+                      - name
+                      properties:
+                        department_id:
+                          description: department id
+                          type: string
+                        name:
+                          description: department name
+                          type: string
+                        description:
+                          description: department description
+                          type:
+                          - string
+                          - 'null'
+                    href: "/api/departments/"
+                items:
+                - department_id: D03
+                  name: dept55
+                  description: department number three
+                  "@controls":
+                    self:
+                      href: "/api/departments/D03/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                - department_id: D02
+                  name: dept44
+                  description: null
+                  "@controls":
+                    self:
+                      href: "/api/departments/D02/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+
     post:
       tags: 
         - departments
@@ -466,12 +946,62 @@ paths:
       responses:
         '201':
           description: The department was created successfully
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Location URL for created department
         '400':
           description: The request body was not valid
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/departments/"
+                "@error":
+                  "@message": Bad request
+                  "@messages":
+                  -
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '409':
           description: A department with the same code already exists
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/departments/"
+                "@error":
+                  "@message": Conflict
+                  "@messages": Department exists
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '415':
           description: Wrong media type was used
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/departments/"
+                "@error":
+                  "@message": Unsupported media type
+                  "@messages": Unsupported media type
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+        '403':
+          description: Forbidden
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/departments/"
+                "@error":
+                  "@message": Authentication Error
+                  "@messages":
+                  -
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+     
   /departments/{department_id}/:
     parameters:
     - $ref: '#/components/parameters/department_id'
@@ -483,24 +1013,62 @@ paths:
         - HRSystemKey: [admin]
       responses:
         '200':
-          description: Data of single department
+          description: List of department
           content:
-            application/json:
-              examples:
-                departments:
-                  description: A department of an employee
-                  value:
-                    name: test department
-                    description: department to test
-                    department_id: D07
+            application/vnd.mason+json:
+              example:
+                department_id: D01
+                name: dept34
+                description: department number one
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                "@controls":
+                  self:
+                    href: "/api/departments/D01/"
+                  profile:
+                    href: "/profiles/hrsystem/"
+                  collection:
+                    href: "/api/departments/"
+                  hrsys:delete-dept:
+                    method: DELETE
+                    title: Delete this department
+                    href: "/api/departments/D01/"
+                  edit:
+                    method: PUT
+                    encoding: json
+                    title: Edit this department
+                    schema:
+                      type: object
+                      required:
+                      - department_id
+                      - name
+                      properties:
+                        department_id:
+                          description: department id
+                          type: string
+                        name:
+                          description: department name
+                          type: string
+                        description:
+                          description: department description
+                          type:
+                          - string
+                          - 'null'
+                    href: "/api/departments/D01/"
         '404':
           description: The department was not found
           content:
-            text/html: 
-              examples: 
-                error:
-                  value: '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"><title>404 Not Found</title><h1>Not Found</h1><p></p>'
-                
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/departments/555/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - Department not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"   
     put:
       tags: 
         - departments
@@ -522,12 +1090,57 @@ paths:
           description: The department's attributes were updated successfully
         '400':
           description: The request body was not valid
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/departments/555/"
+                "@error":
+                  "@message": Bad Request
+                  "@messages":
+                  - Bad request
+                "@controls":
+                  profile:
+                    href: "/profiles/error/" 
         '404':
           description: The department was not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/departments/555/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - Department not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/" 
         '409':
           description: A department with the same name already exists
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/departments/555/"
+                "@error":
+                  "@message": Conflict
+                  "@messages":
+                  - A department with the same name already exists
+                "@controls":
+                  profile:
+                    href: "/profiles/error/" 
         '415':
           description: Wrong media type was used
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/departments/555/"
+                "@error":
+                  "@message": Unsupported media type
+                  "@messages":
+                  - wrong mwdia type
+                "@controls":
+                  profile:
+                    href: "/profiles/error/" 
+
     delete:
       tags: 
         - departments
@@ -539,6 +1152,17 @@ paths:
           description: The department was successfully deleted
         '404':
           description: The department was not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/departments/555/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - A department not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/" 
 
 
   /employees/:
@@ -552,64 +1176,60 @@ paths:
         '200':
           description: List of employees
           content:
-            application/json:
+            application/vnd.mason+json:
               example:
-              - employee_id: E01
-                first_name: test 1
-                middle_name: middle 1
-                last_name: last name 1
-                address: oulu
-                gender: M
-                date_of_birth: "1998-08-25T11:20:30"
-                appointment_date: "2005-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: MR
-                marritial_status: SINGLE
-                mobile_no: N756982365
-                basic_salary: 56665
-                account_number: FI545455
-              - employee_id: E02
-                first_name: test 2
-                middle_name: middle 2
-                last_name: last name 2
-                address: oulu
-                gender: F
-                date_of_birth: "1998-08-25T11:20:30"
-                appointment_date: "2005-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: MISS
-                marritial_status: SINGLE
-                mobile_no: N756982365
-                basic_salary: 56665
-                account_number: FI54545k
-              - employee_id: E03
-                first_name: test 3
-                middle_name: null
-                last_name: last name 3
-                address: oulu
-                gender: F
-                date_of_birth: null
-                appointment_date: "2004-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: null
-                marritial_status: null
-                mobile_no: N756956365
-                basic_salary: 57555
-                account_number: FI54697
-              - employee_id: E04
-                first_name: test 4
-                middle_name: null
-                last_name: last name 4
-                address: oulu
-                gender: F
-                date_of_birth: "1995-08-21T11:20:30"
-                appointment_date: "2009-05-15T11:20:30"
-                active_emp: 1
-                prefix_title: MISS
-                marritial_status: null
-                mobile_no: N758932365
-                basic_salary: 45896
-                account_number: FI58963456
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                items:
+                - employee_id: E02
+                  first_name: sameera
+                  last_name: panditha
+                  middle_name:
+                  address: raksila
+                  gender: M
+                  date_of_birth: '1998-08-25T11:20:30'
+                  appointment_date: '2018-11-21T11:20:30'
+                  active_emp: true
+                  prefix_title: MR
+                  marritial_status: SINGLE
+                  mobile_no: '21456'
+                  basic_salary: 10000
+                  account_number: '11233565456'
+                  role: RES
+                  organization: O02
+                  department: D01
+                  "@controls":
+                    self:
+                      href: "/api/employees/E02/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                - employee_id: E01
+                  first_name: anusha
+                  last_name: pathirana
+                  middle_name:
+                  address: oulu
+                  gender: F
+                  date_of_birth: '1995-10-21T11:20:30'
+                  appointment_date: '2018-11-21T11:20:30'
+                  active_emp: true
+                  prefix_title: MISS
+                  marritial_status: SINGLE
+                  mobile_no: '21456'
+                  basic_salary: 10000
+                  account_number: '11233565456'
+                  role: MAN
+                  organization: O01
+                  department: D02
+                  "@controls":
+                    self:
+                      href: "/api/employees/E01/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                "@controls":
+                  self:
+                    href: "/api/employees/"
+
   
   /organizations/{organization_id}/roles/{role_code}/employees/:
     get:
@@ -625,64 +1245,48 @@ paths:
         '200':
           description: List of employees
           content:
-            application/json:
+            application/vnd.mason+json:
               example:
-              - employee_id: E01
-                first_name: test 1
-                middle_name: middle 1
-                last_name: last name 1
-                address: oulu
-                gender: M
-                date_of_birth: "1998-08-25T11:20:30"
-                appointment_date: "2005-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: MR
-                marritial_status: SINGLE
-                mobile_no: N756982365
-                basic_salary: 56665
-                account_number: FI545455
-              - employee_id: E02
-                first_name: test 2
-                middle_name: middle 2
-                last_name: last name 2
-                address: oulu
-                gender: F
-                date_of_birth: "1998-08-25T11:20:30"
-                appointment_date: "2005-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: MISS
-                marritial_status: SINGLE
-                mobile_no: N756982365
-                basic_salary: 56665
-                account_number: FI54545k
-              - employee_id: E03
-                first_name: test 3
-                middle_name: null
-                last_name: last name 3
-                address: oulu
-                gender: F
-                date_of_birth: null
-                appointment_date: "2004-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: null
-                marritial_status: null
-                mobile_no: N756956365
-                basic_salary: 57555
-                account_number: FI54697
-              - employee_id: E04
-                first_name: test 4
-                middle_name: null
-                last_name: last name 4
-                address: oulu
-                gender: F
-                date_of_birth: "1995-08-21T11:20:30"
-                appointment_date: "2009-05-15T11:20:30"
-                active_emp: 1
-                prefix_title: MISS
-                marritial_status: null
-                mobile_no: N758932365
-                basic_salary: 45896
-                account_number: FI58963456
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                items:
+                - employee_id: E01
+                  first_name: anusha
+                  last_name: pathirana
+                  middle_name:
+                  address: oulu
+                  gender: F
+                  date_of_birth: '1995-10-21T11:20:30'
+                  appointment_date: '2018-11-21T11:20:30'
+                  active_emp: true
+                  prefix_title: MISS
+                  marritial_status: SINGLE
+                  mobile_no: '21456'
+                  basic_salary: 10000
+                  account_number: '11233565456'
+                  role: MAN
+                  organization: O01
+                  department: D02
+                  "@controls":
+                    self:
+                      href: "/api/employees/E01/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                "@controls":
+                  self:
+                    href: "/api/organizations/O01/roles/MAN/employees/"
+                  hrsys:organization:
+                    method: GET
+                    title: get organization
+                    href: "/api/organizations/O01/"
+                  hrsys:role:
+                    method: GET
+                    title: get role
+                    href: "/api/roles/MAN/"
+                  up:
+                    href: "/api/employees/"
+
   
   /organizations/{organization_id}/employees/:
     get:
@@ -697,64 +1301,66 @@ paths:
         '200':
           description: List of employees
           content:
-            application/json:
+            application/vnd.mason+json:
               example:
-              - employee_id: E01
-                first_name: test 1
-                middle_name: middle 1
-                last_name: last name 1
-                address: oulu
-                gender: M
-                date_of_birth: "1998-08-25T11:20:30"
-                appointment_date: "2005-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: MR
-                marritial_status: SINGLE
-                mobile_no: N756982365
-                basic_salary: 56665
-                account_number: FI545455
-              - employee_id: E02
-                first_name: test 2
-                middle_name: middle 2
-                last_name: last name 2
-                address: oulu
-                gender: F
-                date_of_birth: "1998-08-25T11:20:30"
-                appointment_date: "2005-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: MISS
-                marritial_status: SINGLE
-                mobile_no: N756982365
-                basic_salary: 56665
-                account_number: FI54545k
-              - employee_id: E03
-                first_name: test 3
-                middle_name: null
-                last_name: last name 3
-                address: oulu
-                gender: F
-                date_of_birth: null
-                appointment_date: "2004-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: null
-                marritial_status: null
-                mobile_no: N756956365
-                basic_salary: 57555
-                account_number: FI54697
-              - employee_id: E04
-                first_name: test 4
-                middle_name: null
-                last_name: last name 4
-                address: oulu
-                gender: F
-                date_of_birth: "1995-08-21T11:20:30"
-                appointment_date: "2009-05-15T11:20:30"
-                active_emp: 1
-                prefix_title: MISS
-                marritial_status: null
-                mobile_no: N758932365
-                basic_salary: 45896
-                account_number: FI58963456
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                items:
+                - employee_id: E04
+                  first_name: john
+                  last_name: snow
+                  middle_name:
+                  address: helsinki
+                  gender: M
+                  date_of_birth: '1998-12-01T11:20:30'
+                  appointment_date: '2018-11-21T11:20:30'
+                  active_emp: true
+                  prefix_title: MR
+                  marritial_status: SINGLE
+                  mobile_no: '21456'
+                  basic_salary: 10000
+                  account_number: '11233565456'
+                  role: ATL
+                  organization: O01
+                  department: D01
+                  "@controls":
+                    self:
+                      href: "/api/employees/E04/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                - employee_id: E01
+                  first_name: anusha
+                  last_name: pathirana
+                  middle_name:
+                  address: oulu
+                  gender: F
+                  date_of_birth: '1995-10-21T11:20:30'
+                  appointment_date: '2018-11-21T11:20:30'
+                  active_emp: true
+                  prefix_title: MISS
+                  marritial_status: SINGLE
+                  mobile_no: '21456'
+                  basic_salary: 10000
+                  account_number: '11233565456'
+                  role: MAN
+                  organization: O01
+                  department: D02
+                  "@controls":
+                    self:
+                      href: "/api/employees/E01/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                "@controls":
+                  self:
+                    href: "/api/organizations/O01/employees/"
+                  hrsys:organization:
+                    method: GET
+                    title: get organization
+                    href: "/api/organizations/O01/"
+                  up:
+                    href: "/api/employees/"
+
   
   /organizations/{organization_id}/departments/{department_id}/employees/:
     get:
@@ -770,64 +1376,48 @@ paths:
         '200':
           description: List of employees
           content:
-            application/json:
+            application/vnd.mason+json:
               example:
-              - employee_id: E01
-                first_name: test 1
-                middle_name: middle 1
-                last_name: last name 1
-                address: oulu
-                gender: M
-                date_of_birth: "1998-08-25T11:20:30"
-                appointment_date: "2005-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: MR
-                marritial_status: SINGLE
-                mobile_no: N756982365
-                basic_salary: 56665
-                account_number: FI545455
-              - employee_id: E02
-                first_name: test 2
-                middle_name: middle 2
-                last_name: last name 2
-                address: oulu
-                gender: F
-                date_of_birth: "1998-08-25T11:20:30"
-                appointment_date: "2005-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: MISS
-                marritial_status: SINGLE
-                mobile_no: N756982365
-                basic_salary: 56665
-                account_number: FI54545k
-              - employee_id: E03
-                first_name: test 3
-                middle_name: null
-                last_name: last name 3
-                address: oulu
-                gender: F
-                date_of_birth: null
-                appointment_date: "2004-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: null
-                marritial_status: null
-                mobile_no: N756956365
-                basic_salary: 57555
-                account_number: FI54697
-              - employee_id: E04
-                first_name: test 4
-                middle_name: null
-                last_name: last name 4
-                address: oulu
-                gender: F
-                date_of_birth: "1995-08-21T11:20:30"
-                appointment_date: "2009-05-15T11:20:30"
-                active_emp: 1
-                prefix_title: MISS
-                marritial_status: null
-                mobile_no: N758932365
-                basic_salary: 45896
-                account_number: FI58963456
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                items:
+                - employee_id: E01
+                  first_name: anusha
+                  last_name: pathirana
+                  middle_name:
+                  address: oulu
+                  gender: F
+                  date_of_birth: '1995-10-21T11:20:30'
+                  appointment_date: '2018-11-21T11:20:30'
+                  active_emp: true
+                  prefix_title: MISS
+                  marritial_status: SINGLE
+                  mobile_no: '21456'
+                  basic_salary: 10000
+                  account_number: '11233565456'
+                  role: MAN
+                  organization: O01
+                  department: D02
+                  "@controls":
+                    self:
+                      href: "/api/employees/E01/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                "@controls":
+                  self:
+                    href: "/api/organizations/O01/departments/D02/employees/"
+                  hrsys:organization:
+                    method: GET
+                    title: get organization
+                    href: "/api/organizations/O01/"
+                  hrsys:department:
+                    method: GET
+                    title: get department
+                    href: "/api/departments/D02/"
+                  up:
+                    href: "/api/employees/"
+
   
   /organizations/{organization_id}/departments/{department_id}/roles/{role_code}/employees/:
     get:
@@ -844,64 +1434,130 @@ paths:
         '200':
           description: List of employees
           content:
-            application/json:
+            application/vnd.mason+json:
               example:
-              - employee_id: E01
-                first_name: test 1
-                middle_name: middle 1
-                last_name: last name 1
-                address: oulu
-                gender: M
-                date_of_birth: "1998-08-25T11:20:30"
-                appointment_date: "2005-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: MR
-                marritial_status: SINGLE
-                mobile_no: N756982365
-                basic_salary: 56665
-                account_number: FI545455
-              - employee_id: E02
-                first_name: test 2
-                middle_name: middle 2
-                last_name: last name 2
-                address: oulu
-                gender: F
-                date_of_birth: "1998-08-25T11:20:30"
-                appointment_date: "2005-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: MISS
-                marritial_status: SINGLE
-                mobile_no: N756982365
-                basic_salary: 56665
-                account_number: FI54545k
-              - employee_id: E03
-                first_name: test 3
-                middle_name: null
-                last_name: last name 3
-                address: oulu
-                gender: F
-                date_of_birth: null
-                appointment_date: "2004-08-25T11:20:30"
-                active_emp: 1
-                prefix_title: null
-                marritial_status: null
-                mobile_no: N756956365
-                basic_salary: 57555
-                account_number: FI54697
-              - employee_id: E04
-                first_name: test 4
-                middle_name: null
-                last_name: last name 4
-                address: oulu
-                gender: F
-                date_of_birth: "1995-08-21T11:20:30"
-                appointment_date: "2009-05-15T11:20:30"
-                active_emp: 1
-                prefix_title: MISS
-                marritial_status: null
-                mobile_no: N758932365
-                basic_salary: 45896
-                account_number: FI58963456
+                "@namespaces":
+                hrsys:
+                  name: "/hr_system/link-relations/"
+                items:
+                - employee_id: E01
+                  first_name: anusha
+                  last_name: pathirana
+                  middle_name:
+                  address: oulu
+                  gender: F
+                  date_of_birth: '1995-10-21T11:20:30'
+                  appointment_date: '2018-11-21T11:20:30'
+                  active_emp: true
+                  prefix_title: MISS
+                  marritial_status: SINGLE
+                  mobile_no: '21456'
+                  basic_salary: 10000
+                  account_number: '11233565456'
+                  role: MAN
+                  organization: O01
+                  department: D02
+                  "@controls":
+                    self:
+                      href: "/api/employees/E01/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                "@controls":
+                  self:
+                    href: "/api/organizations/O01/departments/D02/roles/MAN/employees/"
+                  hrsys:add-employee:
+                    method: POST
+                    encoding: json
+                    title: Add a new employee given the organization department and role
+                    schema:
+                      type: object
+                      required:
+                      - first_name
+                      - last_name
+                      - address
+                      - gender
+                      - appointment_date
+                      - active_emp
+                      - mobile_no
+                      - basic_salary
+                      - account_number
+                      properties:
+                        employee_id:
+                          description: Employee unique id
+                          type: string
+                        first_name:
+                          description: Employee First name
+                          type: string
+                        middle_name:
+                          description: Employee middle name
+                          type:
+                          - string
+                          - 'null'
+                        last_name:
+                          description: Employee last name
+                          type: string
+                        address:
+                          description: Employee address
+                          type: string
+                        gender:
+                          description: Employee gender
+                          type: string
+                        date_of_birth:
+                          description: Employee date of birth
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        appointment_date:
+                          description: Employee date of appoinment
+                          type: string
+                          format: date-time
+                        prefix_title:
+                          description: Employee name title
+                          type:
+                          - string
+                          - 'null'
+                          enum:
+                          - MR
+                          - MISS
+                          - MRS
+                          - DR
+                        marritial_status:
+                          description: Employee merritial status
+                          enum:
+                          - MARRIED
+                          - DIVORCED
+                          - SINGLE
+                          - WIDOWED
+                          - UNAVAILABLE
+                          type:
+                          - string
+                          - 'null'
+                        mobile_no:
+                          description: Employee mobile number
+                          type: string
+                        basic_salary:
+                          description: Employee basic salary
+                          type: number
+                        account_number:
+                          description: Employee bank account number
+                          type: string
+                    href: "/api/organizations/O01/departments/D02/roles/MAN/employees/"
+                  hrsys:organization:
+                    method: GET
+                    title: get organization
+                    href: "/api/organizations/O01/"
+                  hrsys:department:
+                    method: GET
+                    title: get department
+                    href: "/api/departments/D02/"
+                  hrsys:role:
+                    method: GET
+                    title: get role
+                    href: "/api/roles/MAN/"
+                  up:
+                    href: "/api/employees/"
+
 
     post:
       tags: 
@@ -937,12 +1593,63 @@ paths:
       responses:
         '201':
           description: The employee was created successfully
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Location URL for created employee
         '400':
           description: The request body was not valid
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/ss/departments/z/roles/s/employees/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - Organization not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"    
         '409':
           description: A employee with the same code already exists
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/ss/departments/z/roles/s/employees/"
+                "@error":
+                  "@message": Conflict
+                  "@messages":
+                  - Employee exist
+                "@controls":
+                  profile:
+                    href: "/profiles/error/" 
         '415':
           description: Wrong media type was used
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/ss/departments/z/roles/s/employees/"
+                "@error":
+                  "@message": Unsupported media type
+                  "@messages":
+                  - Unsuported media type
+                "@controls":
+                  profile:
+                    href: "/profiles/error/" 
+        '403':
+          description: Authentication error
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/organizations/ss/departments/z/roles/s/employees/"
+                "@error":
+                  "@message": Forbidden
+                  "@messages":
+                  - Auth error
+                "@controls":
+                  profile:
+                    href: "/profiles/error/" 
 
   /employees/{employee_id}/:
     parameters:
@@ -955,29 +1662,208 @@ paths:
         - HRSystemKey: [employee]
       responses:
         '200':
-          description: Data of single employee
+          description: data of one employee
           content:
-            application/json:
-              examples:
-                departments:
-                  description: employee data
-                  value:
-                    employee_id: E01
-                    first_name: test 1
-                    middle_name: middle 1
-                    last_name: last name 1
-                    address: oulu
-                    gender: M
-                    date_of_birth: "1998-08-25T11:20:30"
-                    appointment_date: "2005-08-25T11:20:30"
-                    active_emp: 1
-                    prefix_title: MR
-                    marritial_status: SINGLE
-                    mobile_no: N756982365
-                    basic_salary: 56665
-                    account_number: FI545455
+            application/vnd.mason+json:
+              example:
+                employee_id: E01
+                first_name: anusha
+                last_name: pathirana
+                middle_name:
+                address: oulu
+                gender: F
+                date_of_birth: '1995-10-21T11:20:30'
+                appointment_date: '2018-11-21T11:20:30'
+                active_emp: true
+                prefix_title: MISS
+                marritial_status: SINGLE
+                mobile_no: '21456'
+                basic_salary: 10000
+                account_number: '11233565456'
+                role: MAN
+                organization: O01
+                department: D02
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                "@controls":
+                  self:
+                    href: "/api/employees/E01/"
+                  collection:
+                    href: "/api/employees/"
+                  hrsys:by-org:
+                    method: GET
+                    title: get employees by organization
+                    href: "/api/organizations/O01/employees/"
+                  hrsys:by-org-dept:
+                    method: GET
+                    title: get employees by organization and department
+                    href: "/api/organizations/O01/departments/D02/employees/"
+                  hrsys:by-org-role:
+                    method: GET
+                    title: get employees by organization and role
+                    href: "/api/organizations/O01/roles/MAN/employees/"
+                  hrsys:by-org-dept-role:
+                    method: GET
+                    title: get employees by organization,department and role
+                    href: "/api/organizations/O01/departments/D02/roles/MAN/employees/"
+                  hrsys:organization:
+                    method: GET
+                    title: get organization
+                    href: "/api/organizations/O01/"
+                  hrsys:department:
+                    method: GET
+                    title: get department
+                    href: "/api/departments/D02/"
+                  hrsys:role:
+                    method: GET
+                    title: get role
+                    href: "/api/roles/MAN/"
+                  hrsys:leaves:
+                    method: GET
+                    title: get employee leave plans
+                    href: "/api/employees/E01/leaveplans/"
+                  hrsys:delete-employee:
+                    method: DELETE
+                    title: Delete this employee
+                    href: "/api/employees/E01/"
+                  edit:
+                    method: PUT
+                    encoding: json
+                    title: Edit this employee
+                    schema:
+                      type: object
+                      required:
+                      - first_name
+                      - last_name
+                      - address
+                      - gender
+                      - appointment_date
+                      - active_emp
+                      - mobile_no
+                      - basic_salary
+                      - account_number
+                      properties:
+                        employee_id:
+                          description: Employee unique id
+                          type: string
+                        first_name:
+                          description: Employee First name
+                          type: string
+                        middle_name:
+                          description: Employee middle name
+                          type:
+                          - string
+                          - 'null'
+                        last_name:
+                          description: Employee last name
+                          type: string
+                        address:
+                          description: Employee address
+                          type: string
+                        gender:
+                          description: Employee gender
+                          type: string
+                        date_of_birth:
+                          description: Employee date of birth
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        appointment_date:
+                          description: Employee date of appoinment
+                          type: string
+                          format: date-time
+                        prefix_title:
+                          description: Employee name title
+                          type:
+                          - string
+                          - 'null'
+                          enum:
+                          - MR
+                          - MISS
+                          - MRS
+                          - DR
+                        marritial_status:
+                          description: Employee merritial status
+                          enum:
+                          - MARRIED
+                          - DIVORCED
+                          - SINGLE
+                          - WIDOWED
+                          - UNAVAILABLE
+                          type:
+                          - string
+                          - 'null'
+                        mobile_no:
+                          description: Employee mobile number
+                          type: string
+                        basic_salary:
+                          description: Employee basic salary
+                          type: number
+                        account_number:
+                          description: Employee bank account number
+                          type: string
+                    href: "/api/employees/E01/"
+                  hrsys:add-leave:
+                    method: POST
+                    encoding: json
+                    title: Add a new leave
+                    schema:
+                      type: object
+                      required:
+                      - leave_type
+                      - leave_date
+                      properties:
+                        leave_type:
+                          description: Type of leave
+                          type: string
+                          enum:
+                          - MEDICAL
+                          - CASUAL
+                          - PATERNITY
+                          - MATERNITY
+                          - SABBATICAL
+                          - UNPAID
+                        leave_date:
+                          description: leave date
+                          type: string
+                          format: date-time
+                        reason:
+                          description: reason for leave
+                          type:
+                          - string
+                          - 'null'
+                    href: "/api/employees/E01/leaveplans/"
+
+                
         '404':
           description: The employee was not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E01x/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - employee not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+        '403':
+          description: Authentication error
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E01x/"
+                "@error":
+                  "@message": Forbidden
+                  "@messages":
+                  - Authentication error
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+
     put:
       tags: 
         - employees
@@ -1010,12 +1896,69 @@ paths:
           description: The employee's attributes were updated successfully
         '400':
           description: The request body was not valid
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E01x/"
+                "@error":
+                  "@message": Bad request
+                  "@messages":
+                  - bad request
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '404':
           description: The employee was not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E01x/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - employee not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '409':
           description: A employee with the same name already exists
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E01x/"
+                "@error":
+                  "@message": Conflict
+                  "@messages":
+                  - employee exist
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '415':
           description: Wrong media type was used
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E01x/"
+                "@error":
+                  "@message": Unsupported media type
+                  "@messages":
+                  - unsupported media type
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+        '403':
+          description: Authentication error
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E01x/"
+                "@error":
+                  "@message": Forbidden
+                  "@messages":
+                  - Authentication error
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
     delete:
       tags: 
         - employees
@@ -1027,6 +1970,30 @@ paths:
           description: The employee was successfully deleted
         '404':
           description: The employee was not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E01x/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - employee not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+        '403':
+          description: Authentication error
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E01x/"
+                "@error":
+                  "@message": Forbidden
+                  "@messages":
+                  - Authentication error
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
 
   /employees/{employee_id}/leaveplans/:
     parameters:
@@ -1037,22 +2004,57 @@ paths:
       description: Get the leaveplans
       responses:
         '200':
-          description: List of leaves
+          description: Leave plan of employee
           content:
-            application/json:
+            application/vnd.mason+json:
               example:
-              - id: 1
-                leave_type: MEDICAL
-                reason: fever
-                leave_date: "1998-08-25T11:20:30"
-              - id: 2
-                leave_type: CASUAL
-                reason: fever
-                leave_date: "2001-05-22T11:20:30"
-              - id: 3
-                leave_type: CASUAL
-                reason: null
-                leave_date: "2005-10-14T11:20:30"
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                "@controls":
+                  self:
+                    href: "/api/employees/E03/leaveplans/"
+                  hrsys:add-leave:
+                    method: POST
+                    encoding: json
+                    title: Add a new leave
+                    schema:
+                      type: object
+                      required:
+                      - leave_type
+                      - leave_date
+                      properties:
+                        leave_type:
+                          description: Type of leave
+                          type: string
+                          enum:
+                          - MEDICAL
+                          - CASUAL
+                          - PATERNITY
+                          - MATERNITY
+                          - SABBATICAL
+                          - UNPAID
+                        leave_date:
+                          description: leave date
+                          type: string
+                          format: date-time
+                        reason:
+                          description: reason for leave
+                          type:
+                          - string
+                          - 'null'
+                    href: "/api/employees/E03/leaveplans/"
+                items:
+                - id: 1
+                  leave_type: CASUAL
+                  reason:
+                  leave_date: '2018-12-01T11:20:30'
+                  "@controls":
+                    self:
+                      href: "/api/employees/E03/leaveplans/1/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+
     post:
       tags: 
         - leaveplans
@@ -1070,12 +2072,63 @@ paths:
       responses:
         '201':
           description: The leave was created successfully
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Location URL for created leave
         '400':
           description: The request body was not valid
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E03kks/leaveplans/"
+                "@error":
+                  "@message": Bad request
+                  "@messages":
+                  - bad request
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '409':
           description: A leave with the same id already exists
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E03kks/leaveplans/"
+                "@error":
+                  "@message": Conflict
+                  "@messages":
+                  - leave id exist
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '415':
           description: Wrong media type was used
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E03kks/leaveplans/"
+                "@error":
+                  "@message": Unsupported media type
+                  "@messages":
+                  - Unsupported media type
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
+        '404':
+          description: employee not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E03kks/leaveplans/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - employee not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
 
   /employees/{employee_id}/leaveplans/{leaveplan_id}/:
     parameters:
@@ -1089,16 +2142,83 @@ paths:
         '200':
           description: one leave item
           content:
-            application/json:
+            application/vnd.mason+json:
               example:
-              - id: 1
-                leave_type: MEDICAL
-                reason: fever
-                leave_date: "1998-08-25T11:20:30"
+                id: 1
+                leave_type: CASUAL
+                reason:
+                leave_date: '2018-12-01T11:20:30'
+                "@namespaces":
+                  hrsys:
+                    name: "/hr_system/link-relations/"
+                "@controls":
+                  self:
+                    href: "/api/employees/E03/leaveplans/1/"
+                  profile:
+                    href: "/profiles/hrsystem/"
+                  collection:
+                    href: "/api/employees/E03/leaveplans/"
+                  edit:
+                    method: PUT
+                    encoding: json
+                    title: Edit this leave
+                    schema:
+                      type: object
+                      required:
+                      - leave_type
+                      - leave_date
+                      properties:
+                        leave_type:
+                          description: Type of leave
+                          type: string
+                          enum:
+                          - MEDICAL
+                          - CASUAL
+                          - PATERNITY
+                          - MATERNITY
+                          - SABBATICAL
+                          - UNPAID
+                        leave_date:
+                          description: leave date
+                          type: string
+                          format: date-time
+                        reason:
+                          description: reason for leave
+                          type:
+                          - string
+                          - 'null'
+                    href: "/api/employees/E03/leaveplans/1/"
+                  hrsys:delete-leave:
+                    method: DELETE
+                    title: Delete this leave
+                    href: "/api/employees/E03/leaveplans/1/"
+
         '404':
           description: Employee or leave not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E03x/leaveplans/1/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - employee not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '400':
           description: Unable to find corrosponding leaveplan
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E03x/leaveplans/1/"
+                "@error":
+                  "@message": Bad request
+                  "@messages":
+                  - Unable to find corresponding leave
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
     put:
       tags: 
         - leaveplans
@@ -1118,12 +2238,56 @@ paths:
           description: The leaveplan's attributes were updated successfully
         '400':
           description: The request body was not valid or Unable to find corrosponding leaveplan
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E03x/leaveplans/1/"
+                "@error":
+                  "@message": Bad request
+                  "@messages":
+                  - bad request
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '404':
           description: The leaveplan was not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E03x/leaveplans/1/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - employee not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '409':
           description: A leaveplan with the same name already exists
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E03x/leaveplans/1/"
+                "@error":
+                  "@message": Conflict
+                  "@messages":
+                  - leave id exist
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '415':
           description: Wrong media type was used
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E03x/leaveplans/1/"
+                "@error":
+                  "@message": unsupported media type
+                  "@messages":
+                  - unsupported media type
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
     delete:
       tags: 
         - leaveplans
@@ -1133,5 +2297,27 @@ paths:
           description: The leaveplan was successfully deleted
         '404':
           description: The leaveplan was not found
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E03x/leaveplans/1/"
+                "@error":
+                  "@message": Not found
+                  "@messages":
+                  - employee not found
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
         '400':
           description: Unable to find corrosponding leaveplan
+          content:
+            application/vnd.mason+json:
+              example:
+                resource_url: "/api/employees/E03x/leaveplans/1/"
+                "@error":
+                  "@message": bad request
+                  "@messages":
+                  - Unable to find corrosponding leaveplan
+                "@controls":
+                  profile:
+                    href: "/profiles/error/"
