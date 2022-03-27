@@ -10,6 +10,7 @@ pyvenv.cfg
 pip-selfcheck.json
 **/__pycache__/
 cache
+instance
 hrcode.db
 .coverage
 var

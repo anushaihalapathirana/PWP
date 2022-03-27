@@ -31,6 +31,9 @@ class EmployeeByRlationCollection(Resource):
     """
 
     def page_key(self, *args, **kwargs):
+        """
+        method to cache
+        """
         return str(request.path)
 
     @require_admin
@@ -70,16 +73,18 @@ class EmployeeByRlationCollection(Resource):
                 Employee.organization == organization,
                 Employee.role == role,
                 Employee.department == department)
-            body.add_control('self', url_for("api.employeebyrlationcollection", organization=organization,
-                                             department=department, role=role
-                                             ))
+            body.add_control('self', url_for("api.employeebyrlationcollection",
+                                            organization=organization,
+                                            department=department, role=role
+                                            ))
             body.add_control_add_employee(
                 role=role, department=department, organization=organization)
             body.add_control_organization(organization=organization)
             body.add_control_department(department=department)
             body.add_control_role(role=role)
             body.add_control("up", url_for(
-                "api.employeebyrlationcollection", organization=None, department=None, role=None))
+                "api.employeebyrlationcollection", organization=None,
+                department=None, role=None))
 
         elif organization is not None and department is not None:
             employees = Employee.query.join(
@@ -87,40 +92,47 @@ class EmployeeByRlationCollection(Resource):
                 Employee.department).filter(
                 Employee.organization == organization,
                 Employee.department == department)
-            body.add_control('self', url_for("api.employeebyrlationcollection", organization=organization,
+            body.add_control('self', url_for("api.employeebyrlationcollection",
+                                             organization=organization,
                                              department=department, role=None
                                              ))
             body.add_control_organization(organization=organization)
             body.add_control_department(department=department)
             body.add_control("up", url_for(
-                "api.employeebyrlationcollection", organization=None, department=None, role=None))
+                "api.employeebyrlationcollection", organization=None,
+                department=None, role=None))
 
         elif organization is not None and role is not None:
             employees = Employee.query.join(
                 Employee.organization).join(
                 Employee.role).filter(
                 Employee.organization == organization, Employee.role == role)
-            body.add_control('self', url_for("api.employeebyrlationcollection", organization=organization,
+            body.add_control('self', url_for("api.employeebyrlationcollection",
+                                             organization=organization,
                                              department=None, role=role
                                              ))
             body.add_control_organization(organization=organization)
             body.add_control_role(role=role)
             body.add_control("up", url_for(
-                "api.employeebyrlationcollection", organization=None, department=None, role=None))
+                "api.employeebyrlationcollection", organization=None,
+                department=None, role=None))
 
         elif organization is not None:
             employees = Employee.query.join(Employee.organization).filter(
                 Employee.organization == organization
             )
-            body.add_control('self', url_for("api.employeebyrlationcollection", organization=organization,
+            body.add_control('self', url_for("api.employeebyrlationcollection",
+                                             organization=organization,
                                              department=None, role=None
                                              ))
             body.add_control_organization(organization=organization)
             body.add_control("up", url_for(
-                "api.employeebyrlationcollection", organization=None, department=None, role=None))
+                "api.employeebyrlationcollection", organization=None,
+                department=None, role=None))
         else:
             employees = Employee.query.all()
-            body.add_control('self', url_for("api.employeebyrlationcollection", organization=organization,
+            body.add_control('self', url_for("api.employeebyrlationcollection",
+                                             organization=organization,
                                              department=None, role=None
                                              ))
         for employee in employees:
@@ -139,7 +151,7 @@ class EmployeeByRlationCollection(Resource):
 class EmployeeCollection(Resource):
     """
     This class contains the POST method implementations for employee
-        - Add employees to the system by providing organization, 
+        - Add employees to the system by providing organization,
           department and role
 
     - Note - Only method to add employees to the system is by giving organization,

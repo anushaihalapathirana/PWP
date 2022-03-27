@@ -98,8 +98,7 @@ class LeavePlanByEmployeellection(Resource):
             db.session.commit()
             location = url_for("api.leaveplanitem",
                                leaveplan=leaveplan, employee=employee)
-        except Exception as e:
-            print(e)
+        except Exception:
             return create_error_message(
                 500, "Internal server Error",
                 "Error while adding the leave"
@@ -178,7 +177,7 @@ class LeavePlanItem(Resource):
             )
         leave = LeavePlan.query.filter_by(id=leaveplan.id).first()
 
-        if (leave.employee_id != employee.id):
+        if leave.employee_id != employee.id:
             return create_error_message(
                 400, "Bad request",
                 "Unable to find corrosponding leaveplan"
@@ -210,7 +209,7 @@ class LeavePlanItem(Resource):
                     description: The leaveplan was not found
         """
         leave = LeavePlan.query.filter_by(id=leaveplan.id).first()
-        if (leave.employee_id != employee.id):
+        if leave.employee_id != employee.id:
             return create_error_message(
                 400, "Bad request",
                 "Unable to find corrosponding leaveplan"
