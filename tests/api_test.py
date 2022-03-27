@@ -191,30 +191,33 @@ def _get_leave_json_put():
     """
     return {"id": 1, "leave_type": "CASUAL", "reason": "sick", "leave_date": "2018-11-13T20:20:39+00:00"}
 
+
 def _check_namespace(client, response):
     """
     Checks that the "hrsys" namespace is found from the response body, and
     that its "name" attribute is a URL that can be accessed.
     """
-    
+
     ns_href = response["@namespaces"]["hrsys"]["name"]
     resp = client.get(ns_href)
     assert resp.status_code == 200
+
 
 def _check_control_get_method(ctrl, client, obj, obj_type=None):
     """
     Checks a GET type control from a JSON object be it root document or an item
     in a collection. Also checks that the URL of the control can be accessed.
     """
-    
+
     href = obj["@controls"][ctrl]["href"]
-    if obj_type=='leave':
+    if obj_type == 'leave':
         resp = client.get(href)
     else:
         resp = client.get(href, headers={
-                "HRSystem-Api-Key": 'testtoken'
-            })
+            "HRSystem-Api-Key": 'testtoken'
+        })
     assert resp.status_code == 200
+
 
 def _check_control_delete_method(ctrl, client, obj, obj_type=None):
     """
@@ -222,17 +225,18 @@ def _check_control_delete_method(ctrl, client, obj, obj_type=None):
     item in a collection. Checks the contrl's method in addition to its "href".
     Also checks that using the control results in the correct status code of 204.
     """
-    
+
     href = obj["@controls"][ctrl]["href"]
     method = obj["@controls"][ctrl]["method"].lower()
     assert method == "delete"
-    if obj_type=='leave':
+    if obj_type == 'leave':
         resp = client.delete(href)
     else:
         resp = client.delete(href, headers={
-                "HRSystem-Api-Key": 'testtoken'
-            })
+            "HRSystem-Api-Key": 'testtoken'
+        })
     assert resp.status_code == 204
+
 
 def _check_control_put_method(ctrl, client, obj, obj_type):
     """
@@ -243,7 +247,7 @@ def _check_control_put_method(ctrl, client, obj, obj_type):
     they match. Finally checks that using the control results in the correct
     status code of 204.
     """
-    
+
     ctrl_obj = obj["@controls"][ctrl]
     href = ctrl_obj["href"]
     method = ctrl_obj["method"].lower()
@@ -263,16 +267,19 @@ def _check_control_put_method(ctrl, client, obj, obj_type):
     elif obj_type == 'leave':
         body = _get_leave_json_put()
 
-    body["name"] = obj["name"]
+    print("OBJECT", obj)
+
+    # body["name"] = obj["name"]
     validate(body, schema)
-    
+
     if obj_type == 'leave':
         resp = client.put(href, json=body)
     else:
         resp = client.put(href, json=body, headers={
-                "HRSystem-Api-Key": 'testtoken'
-            })
+            "HRSystem-Api-Key": 'testtoken'
+        })
     assert resp.status_code == 204
+
 
 def _check_control_post_method(ctrl, client, obj, obj_type):
     """
@@ -283,7 +290,7 @@ def _check_control_post_method(ctrl, client, obj, obj_type):
     they match. Finally checks that using the control results in the correct
     status code of 201.
     """
-    
+
     ctrl_obj = obj["@controls"][ctrl]
     href = ctrl_obj["href"]
     method = ctrl_obj["method"].lower()
@@ -302,14 +309,14 @@ def _check_control_post_method(ctrl, client, obj, obj_type):
         body = _get_employee_json()
     elif obj_type == 'leave':
         body = _get_leave_json()
-        
+
     validate(body, schema)
     if obj_type == 'leave':
         resp = client.post(href, json=body)
     else:
         resp = client.post(href, json=body, headers={
-                "HRSystem-Api-Key": 'testtoken'
-            })
+            "HRSystem-Api-Key": 'testtoken'
+        })
     assert resp.status_code == 201
 
 
@@ -337,7 +344,6 @@ class TestRoleCollection(object):
         for item in body["items"]:
             _check_control_get_method("self", client, item)
             _check_control_get_method("profile", client, item)
-
 
     def test_post(self, client):
         """
@@ -484,7 +490,8 @@ class TestOrganizationCollection(object):
         assert resp.status_code == 200
         body = json.loads(resp.data)
         _check_namespace(client, body)
-        _check_control_post_method("hrsys:add-organization", client, body, 'org')
+        _check_control_post_method(
+            "hrsys:add-organization", client, body, 'org')
         assert len(body["items"]) == 3
         for item in body["items"]:
             _check_control_get_method("self", client, item)
@@ -614,6 +621,7 @@ class TestOranizationItem(object):
             "HRSystem-Api-Key": token
         })
         assert resp.status_code == 404
+
 
 class TestDepartmentCollection(object):
     """
@@ -783,9 +791,19 @@ class TestEmployeeByRlationCollection(object):
         """
         resp = client.get(self.RESOURCE_URL, headers={
                           "HRSystem-Api-Key": self.token})
-        assert resp.status_code == 200
+
         body = json.loads(resp.data)
-        assert len(body) == 3
+        _check_control_get_method("profile", client, body)
+        _check_control_get_method("self", client, body)
+
+        assert resp.status_code == 200
+
+        for item in body["items"]:
+            _check_control_get_method("profile", client, item)
+            _check_control_get_method("self", client, item)
+
+        body = json.loads(resp.data)
+        assert len(body["items"]) == 3
 
     def test_get_by_role(self, client):
         """
@@ -795,6 +813,17 @@ class TestEmployeeByRlationCollection(object):
                           "HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
+
+        _check_control_get_method("hrsys:organization", client, body)
+        _check_control_get_method("hrsys:role", client, body)
+        _check_control_get_method("profile", client, body)
+        _check_control_get_method("self", client, body)
+        _check_control_get_method("up", client, body)
+
+        for item in body["items"]:
+            _check_control_get_method("profile", client, item)
+            _check_control_get_method("self", client, item)
+
         assert len(body) == 3
 
     def test_get_by_org(self, client):
@@ -804,6 +833,17 @@ class TestEmployeeByRlationCollection(object):
         resp = client.get(self.RESOURCE_URL_2, headers={
                           "HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
+        body = json.loads(resp.data)
+
+        _check_control_get_method("hrsys:organization", client, body)
+        _check_control_get_method("profile", client, body)
+        _check_control_get_method("self", client, body)
+        _check_control_get_method("up", client, body)
+
+        for item in body["items"]:
+            _check_control_get_method("profile", client, item)
+            _check_control_get_method("self", client, item)
+
         body = json.loads(resp.data)
         assert len(body) == 3
 
@@ -815,6 +855,16 @@ class TestEmployeeByRlationCollection(object):
                           "HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
+
+        _check_control_get_method("hrsys:organization", client, body)
+        _check_control_get_method("hrsys:department", client, body)
+        _check_control_get_method("profile", client, body)
+        _check_control_get_method("self", client, body)
+        _check_control_get_method("up", client, body)
+
+        for item in body["items"]:
+            _check_control_get_method("profile", client, item)
+            _check_control_get_method("self", client, item)
         assert len(body) == 3
 
     def test_get_by_all(self, client):
@@ -825,6 +875,20 @@ class TestEmployeeByRlationCollection(object):
                           "HRSystem-Api-Key": self.token})
         assert resp.status_code == 200
         body = json.loads(resp.data)
+
+        _check_control_get_method("hrsys:organization", client, body)
+        _check_control_get_method("hrsys:department", client, body)
+        _check_control_get_method("hrsys:role", client, body)
+        _check_control_get_method("profile", client, body)
+        _check_control_get_method("self", client, body)
+        _check_control_get_method("up", client, body)
+
+        _check_control_post_method("hrsys:add-employee", client, body, 'emp')
+
+        for item in body["items"]:
+            _check_control_get_method("profile", client, item)
+            _check_control_get_method("self", client, item)
+
         assert len(body) == 3
 
     def test_get_err(self, client):
@@ -930,6 +994,23 @@ class TestEmployeeItem(object):
                           "HRSystem-Api-Key": "testtokenemployee1"})
         assert resp.status_code == 200
         body = json.loads(resp.data)
+
+        _check_control_get_method("collection", client, body)
+        _check_control_get_method("profile", client, body)
+        _check_control_get_method("self", client, body)
+        _check_control_get_method("hrsys:by-org", client, body)
+        _check_control_get_method("hrsys:by-org-dept", client, body)
+        _check_control_get_method("hrsys:by-org-dept-role", client, body)
+        _check_control_get_method("hrsys:by-org-role", client, body)
+        _check_control_get_method("hrsys:department", client, body)
+        _check_control_get_method("hrsys:leaves", client, body)
+        _check_control_get_method("hrsys:organization", client, body)
+        _check_control_get_method("hrsys:role", client, body)
+
+        _check_control_post_method("hrsys:add-leave", client, body, "leave")
+        _check_control_put_method("edit", client, body, "emp")
+        _check_control_delete_method("hrsys:delete-employee", client, body)
+
         resp = client.get(self.INVALID_URL)
         assert resp.status_code == 404
 
@@ -1057,7 +1138,6 @@ class TestLeavePlanItem(object):
     RESOURCE_URL = "/api/employees/001/leaveplans/1/"
     INVALID_URL = "/api/employees/001/leaveplans/new/"
 
-
     def test_get(self, client):
         """
         Test to get one leave
@@ -1111,4 +1191,3 @@ class TestLeavePlanItem(object):
         assert resp.status_code == 404
         resp = client.delete(self.INVALID_URL)
         assert resp.status_code == 404
-        

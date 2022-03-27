@@ -59,6 +59,7 @@ class EmployeeByRlationCollection(Resource):
 
         body = HRSystemBuilder()
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
+        body.add_control("profile", HRSYSTEM_PROFILE)
         body["items"] = []
 
         if organization is not None and department is not None and role is not None:
@@ -308,6 +309,7 @@ class EmployeeItem(Resource):
         body = HRSystemBuilder(response)
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
 
+        body.add_control("profile", HRSYSTEM_PROFILE)
         body.add_control("self", url_for(
             "api.employeeitem", employee=employee))
         body.add_control("collection", url_for(
