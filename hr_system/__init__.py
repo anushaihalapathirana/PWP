@@ -19,7 +19,7 @@ def create_app(test_config=None):
     - Note reference to this method - course materials
         https://github.com/enkwolf/pwp-course-sensorhub-api-example/blob/master
     """
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=True, static_folder='static', static_url_path='')
     app.config.from_mapping(
         SECRET_KEY="dev",
         SQLALCHEMY_DATABASE_URI="sqlite:///" +
@@ -75,10 +75,34 @@ def create_app(test_config=None):
 
     @app.route("/profiles/<profile>/")
     def send_profile(profile):
-        return "you requests {} profile".format(profile)
+        # return "you requests {} profile".format(profile)
+        if profile == 'role_item':
+            return app.send_static_file("roleitem.html")
+        elif profile == 'role_collection':
+            return app.send_static_file("rolecollection.html")
+        elif profile == 'organization_item':
+            return app.send_static_file("organizationitem.html")
+        elif profile == 'organization_collection':
+            return app.send_static_file("organizationcollection.html")
+        elif profile == 'department_item':
+            return app.send_static_file("departmentitem.html")
+        elif profile == 'department_collection':
+            return app.send_static_file("departmentcollection.html")
+        elif profile == 'employee':
+            return app.send_static_file("employee.html")
+        elif profile == 'employee_by_relation_collection':
+            return app.send_static_file("employeecollection.html")
+        elif profile == 'leave_item':
+            return app.send_static_file("leaveitem.html")
+        elif profile == 'leave_collection':
+            return app.send_static_file("leavecollection.html")
+        elif profile == 'error':
+            return app.send_static_file("error.html")
+        else:
+            return "Not available"
 
     @app.route("/admin/")
     def admin_site():
-        return app.send_static_file("html/admin.html")
+        return app.send_static_file("admin.html")
 
     return app

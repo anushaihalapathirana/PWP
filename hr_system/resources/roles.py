@@ -44,7 +44,7 @@ class RoleCollection(Resource):
                 role.serialize()
             )
             item.add_control("self", url_for("api.roleitem", role=role))
-            item.add_control("profile", HRSYSTEM_PROFILE)
+            item.add_control("profile", ROLE_COLLECTION_PROFILE)
             body["items"].append(item)
         return Response(json.dumps(body), 200, mimetype=MASON)
 
@@ -133,7 +133,7 @@ class RoleItem(Resource):
         )
         body.add_namespace("hrsys", LINK_RELATIONS_URL)
         body.add_control("self", url_for("api.roleitem", role=role))
-        body.add_control("profile", HRSYSTEM_PROFILE)
+        body.add_control("profile", ROLE_ITEM_PROFILE)
         body.add_control("collection", url_for("api.rolecollection"))
         body.add_control_delete_role(role)
         body.add_control_modify_role(role)

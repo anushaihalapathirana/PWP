@@ -44,7 +44,7 @@ class DepartmentCollection(Resource):
             item = HRSystemBuilder(dept.serialize())
             item.add_control("self", url_for(
                 "api.departmentitem", department=dept))
-            item.add_control("profile", HRSYSTEM_PROFILE)
+            item.add_control("profile", DEPARTMENT_COLLECTION_PROFILE)
             body["items"].append(item)
 
         return Response(json.dumps(body), 200, mimetype=MASON)
@@ -137,7 +137,7 @@ class DepartmentItem(Resource):
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
         body.add_control('self', url_for(
             "api.departmentitem", department=department))
-        body.add_control("profile", HRSYSTEM_PROFILE)
+        body.add_control("profile", DEPARTMENT_ITEM_PROFILE)
         body.add_control("collection", url_for("api.departmentcollection"))
         body.add_control_delete_department(department)
         body.add_control_modify_department(department)

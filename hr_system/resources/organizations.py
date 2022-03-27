@@ -45,7 +45,7 @@ class OrganizationCollection(Resource):
             )
             item.add_control("self", url_for(
                 "api.organizationitem", organization=org))
-            item.add_control("profile", HRSYSTEM_PROFILE)
+            item.add_control("profile", ORGANIZATION_COLLECTION_PROFILE)
             body["items"].append(item)
         return Response(json.dumps(body), 200, mimetype=MASON)
 
@@ -136,7 +136,7 @@ class OrganizationItem(Resource):
         body.add_namespace("hrsys", LINK_RELATIONS_URL)
         body.add_control("self", url_for(
             "api.organizationitem", organization=organization))
-        body.add_control("profile", HRSYSTEM_PROFILE)
+        body.add_control("profile", ORGANIZATION_ITEM_PROFILE)
         body.add_control("collection", url_for("api.organizationcollection"))
         body.add_control_delete_organization(organization)
         body.add_control_modify_organization(organization)

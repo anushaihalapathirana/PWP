@@ -259,7 +259,7 @@ paths:
                     self:
                       href: "/api/roles/TL/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/role_collection/"
                 - name: Manager
                   code: MAN
                   description: Role manager
@@ -267,7 +267,7 @@ paths:
                     self:
                       href: "/api/roles/MAN/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/role_collection/"
                 - name: Associate team lead
                   code: ATL
                   description:
@@ -275,7 +275,7 @@ paths:
                     self:
                       href: "/api/roles/ATL/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/role_collection/"
                 - name: Receptionnist
                   code: RES
                   description: Role reception
@@ -283,7 +283,7 @@ paths:
                     self:
                       href: "/api/roles/RES/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/role_collection/"
                 - name: Developer
                   code: DEV
                   description:
@@ -291,7 +291,7 @@ paths:
                     self:
                       href: "/api/roles/DEV/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/role_collection/"
                 - name: Quality analysis
                   code: QA
                   description:
@@ -299,7 +299,7 @@ paths:
                     self:
                       href: "/api/roles/QA/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/role_collection/"
 
         '403':
           description: Authentication error
@@ -415,7 +415,7 @@ paths:
                   self:
                     href: "/api/roles/MAN/"
                   profile:
-                    href: "/profiles/hrsystem/"
+                    href: "/profiles/role_item/"
                   collection:
                     href: "/api/roles/"
                   hrsys:delete-role:
@@ -643,7 +643,7 @@ paths:
                     self:
                       href: "/api/organizations/O02/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/organization_collection/"
                 - organization_id: O01
                   name: Org11
                   location: oulu
@@ -651,7 +651,7 @@ paths:
                     self:
                       href: "/api/organizations/O01/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/organization_collection/"
 
 
     post:
@@ -753,7 +753,7 @@ paths:
                   self:
                     href: "/api/organizations/O01/"
                   profile:
-                    href: "/profiles/hrsystem/"
+                    href: "/profiles/organization_item/"
                   collection:
                     href: "/api/organizations/"
                   hrsys:delete-organization:
@@ -961,7 +961,7 @@ paths:
                     self:
                       href: "/api/departments/D03/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/department_collection/"
                 - department_id: D01
                   name: dept34
                   description: department number one
@@ -969,7 +969,7 @@ paths:
                     self:
                       href: "/api/departments/D01/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/department_collection/"
                 - department_id: D02
                   name: dept44
                   description: department number two
@@ -977,7 +977,7 @@ paths:
                     self:
                       href: "/api/departments/D02/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/department_collection/"
                 - department_id: D07
                   name: test department
                   description: department to test
@@ -985,7 +985,7 @@ paths:
                     self:
                       href: "/api/departments/D07/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/department_collection/"
 
     post:
       tags: 
@@ -1089,7 +1089,7 @@ paths:
                   self:
                     href: "/api/departments/D01/"
                   profile:
-                    href: "/profiles/hrsystem/"
+                    href: "/profiles/department_item/"
                   collection:
                     href: "/api/departments/"
                   hrsys:delete-dept:
@@ -1265,7 +1265,7 @@ paths:
                     self:
                       href: "/api/employees/E02/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/employee_by_relation_collection/"
                 - employee_id: E01
                   first_name: anusha
                   last_name: pathirana
@@ -1287,7 +1287,7 @@ paths:
                     self:
                       href: "/api/employees/E01/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/employee_by_relation_collection/"
                 "@controls":
                   self:
                     href: "/api/employees/"
@@ -1334,7 +1334,7 @@ paths:
                     self:
                       href: "/api/employees/E01/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/employee_by_relation_collection/"
                 "@controls":
                   self:
                     href: "/api/organizations/O01/roles/MAN/employees/"
@@ -1390,7 +1390,7 @@ paths:
                     self:
                       href: "/api/employees/E04/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/employee_by_relation_collection/"
                 - employee_id: E01
                   first_name: anusha
                   last_name: pathirana
@@ -1412,7 +1412,7 @@ paths:
                     self:
                       href: "/api/employees/E01/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/employee_by_relation_collection/"
                 "@controls":
                   self:
                     href: "/api/organizations/O01/employees/"
@@ -1465,7 +1465,7 @@ paths:
                     self:
                       href: "/api/employees/E01/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/employee_by_relation_collection/"
                 "@controls":
                   self:
                     href: "/api/organizations/O01/departments/D02/employees/"
@@ -1523,7 +1523,7 @@ paths:
                     self:
                       href: "/api/employees/E01/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/employee_by_relation_collection/"
                 "@controls":
                   self:
                     href: "/api/organizations/O01/departments/D02/roles/MAN/employees/"
@@ -2115,7 +2115,7 @@ paths:
                     self:
                       href: "/api/employees/E03/leaveplans/1/"
                     profile:
-                      href: "/profiles/hrsystem/"
+                      href: "/profiles/leaveplan_collection/"
 
     post:
       tags: 
@@ -2217,7 +2217,7 @@ paths:
                   self:
                     href: "/api/employees/E03/leaveplans/1/"
                   profile:
-                    href: "/profiles/hrsystem/"
+                    href: "/profiles/leaveplan_item/"
                   collection:
                     href: "/api/employees/E03/leaveplans/"
                   edit:

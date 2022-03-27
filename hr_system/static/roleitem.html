@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Role Item resource</title>
+  </head>
+  <style>
+    table, th, td {
+      border:1px black;
+    }
+  </style>
+  <body>
+    <h1>Role Item resource</h1>
+    <h2>Link relations associated with the resource</h2>
+    <ul>
+        <li>hrsys:role - To go to the role list</li>
+        <li>hrsys:delete-role - To delete a role</li>
+        <li>edit - To edit a role</li>
+
+    </ul>
+
+    <h2>Response</h2>
+    <code>
+        {
+            "code": "MAN",
+            "description": "Role manager",
+            "name": "Manager"
+        }
+    </code>
+
+    <h2>Resource properties</h2>
+    <table style="border: 1px;">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Required</th>
+        </tr>
+        <tr>
+            <td>code</td>
+            <td>unique code of role</td>
+            <td>string</td>
+            <th>yes</th>
+        </tr>
+        <tr>
+            <td>description</td>
+            <td>description of role</td>
+            <td>string or null</td>
+            <th>no</th>
+        </tr>
+        <tr>
+            <td>name</td>
+            <td>Role's unique name</td>
+            <td> string</td>
+            <th>yes</th>
+          </tr>
+      </table>
+  </body>
+</html>
+

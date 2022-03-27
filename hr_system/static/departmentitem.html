@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="/static/css/admin.css">
+    <title>HR system admin site</title>
+    <script type="text/javascript" src="/static/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/static/scripts/admin_ivan.js"></script>
+</head>
+
+<body> 
+    <h1>Department Item resource</h1>
+    <h2>Link relations associated with the resource</h2>
+    <ul>
+        <li>hrsys:department - To go to the department list</li>
+        <li>hrsys:delete-department - To delete a department</li>
+        <li>edit - To edit a department</li>
+
+    </ul>
+
+    <h2>Response</h2>
+    <code>
+        {
+            "description": "Department number 1",
+            "name": "Dept 1",
+            "department_id": "D01"
+        }
+    </code>
+
+    <h2>Resource properties</h2>
+    <table style="border: 1px;">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Required</th>
+
+        </tr>
+        <tr>
+            <td>name</td>
+            <td>unique name of department</td>
+            <td>string</td>
+            <td>Yes</td>
+
+        </tr>
+        <tr>
+            <td>description</td>
+            <td>description of the department</td>
+            <td>string</td>
+            <td>No</td>
+
+        </tr>
+        <tr>
+            <td>department_id</td>
+            <td>Department's unique id</td>
+            <td>string</td>
+            <td>Yes</td>
+
+          </tr>
+      </table>
+</body>
+
+

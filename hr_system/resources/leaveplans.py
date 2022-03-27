@@ -50,7 +50,7 @@ class LeavePlanByEmployeellection(Resource):
             )
             item.add_control("self", url_for(
                 "api.leaveplanitem", employee=employee, leaveplan=leave))
-            item.add_control("profile", HRSYSTEM_PROFILE)
+            item.add_control("profile", LEAVEPLAN_COLLECTION_PROFILE)
             body["items"].append(item)
 
         return Response(json.dumps(body), 200, mimetype=MASON)
@@ -137,7 +137,7 @@ class LeavePlanItem(Resource):
         body.add_namespace("hrsys", LINK_RELATIONS_URL)
         body.add_control("self", url_for("api.leaveplanitem",
                          leaveplan=leaveplan, employee=employee))
-        body.add_control("profile", HRSYSTEM_PROFILE)
+        body.add_control("profile", LEAVEPLAN_ITEM_PROFILE)
         body.add_control("collection", url_for(
             "api.leaveplanbyemployeellection", employee=employee))
         body.add_control_modify_leave(emp=employee, leave=leaveplan)
