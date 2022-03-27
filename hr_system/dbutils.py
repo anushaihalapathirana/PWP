@@ -218,6 +218,6 @@ def generate_test_data():
     print("EMP2 TOKEN", token1)
     print("EMP1 TOKEN", token2)
 
-# ADMIN TOKEN HSWIouJioATKxVbu0MDGhhYSzeUIgTNUzFQnoJDjJeY
-# EMP2 TOKEN 5NTb-arH7DEZrIjnEIC1XGffjJtP-qbKswTwW8anohA
-# EMP1 TOKEN 84BWovWBq3klV95Q_i2YOP49eiT-QNeMT1iYKohqNY8
+# ADMIN TOKEN rbj8q_FY2IlWrX9S5Ls8qf5hdoYdVjAbT5g8ahbGBNU
+# EMP2 TOKEN 0sLADEwCBo3x4NSRxoXQdgdX1zZfnAGpejt6Yahkl2g
+# EMP1 TOKEN dY1i93firFcF8OjsjO-tcQjpZ1E3oNAZN6cCXuuLKw0

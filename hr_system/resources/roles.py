@@ -105,7 +105,7 @@ class RoleCollection(Resource):
             )
         return Response(response={}, status=201, headers={
             "Location": location
-        })
+        }, mimetype=MASON)
 
 
 class RoleItem(Resource):
@@ -153,7 +153,7 @@ class RoleItem(Resource):
         db.session.delete(role)
         db.session.commit()
 
-        return Response(status=204)
+        return Response(status=204, mimetype=MASON)
 
     @require_admin
     def put(self, role):
@@ -201,4 +201,4 @@ class RoleItem(Resource):
                 "Error while updating the role"
             )
 
-        return Response(status=204)
+        return Response(status=204, mimetype=MASON)
