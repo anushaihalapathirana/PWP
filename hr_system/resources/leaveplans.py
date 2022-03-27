@@ -141,6 +141,7 @@ class LeavePlanItem(Resource):
             "api.leaveplanbyemployeellection", employee=employee))
         body.add_control_modify_leave(emp=employee, leave=leaveplan)
         body.add_control_delete_leave(emp=employee, leave=leaveplan)
+        body.add_control_get_employee(employee=employee)
         return Response(json.dumps(body), 200, mimetype=MASON)
 
     def put(self, employee, leaveplan):

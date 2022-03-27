@@ -34,6 +34,7 @@ class RoleCollection(Resource):
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
         body.add_control('self', url_for("api.rolecollection"))
         body.add_control_add_role()
+        body.add_control_get_employee_all()
         body["items"] = []
 
         roles = Role.query.all()

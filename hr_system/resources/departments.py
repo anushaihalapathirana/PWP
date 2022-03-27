@@ -35,6 +35,7 @@ class DepartmentCollection(Resource):
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
         body.add_control('self', url_for("api.departmentcollection"))
         body.add_control_add_department()
+        body.add_control_get_employee_all()
         body["items"] = []
 
         depts = Department.query.all()

@@ -34,6 +34,7 @@ class OrganizationCollection(Resource):
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
         body.add_control('self', url_for("api.organizationcollection"))
         body.add_control_add_organization()
+        body.add_control_get_employee_all()
         body["items"] = []
 
         orgs = Organization.query.all()

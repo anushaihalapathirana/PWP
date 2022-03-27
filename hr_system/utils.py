@@ -77,6 +77,9 @@ class HRSystemBuilder(MasonBuilder):
     # role
 
     def add_control_get_roles(self):
+        """
+        custom relation method to add control to get roles
+        """
         uri = url_for("api.rolecollection")
         self.add_control(
             "hrsys:roles",
@@ -85,6 +88,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_delete_role(self, role):
+        """
+        custom relation method to add control to delete roles
+        """
         self.add_control(
             "hrsys:delete-role",
             url_for("api.roleitem", role=role),
@@ -93,6 +99,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_add_role(self):
+        """
+        custom relation method to add control to add roles
+        """
         self.add_control(
             "hrsys:add-role",
             url_for("api.rolecollection"),
@@ -103,6 +112,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_modify_role(self, role):
+        """
+        custom relation method to add control to modify roles
+        """
         self.add_control(
             "edit",
             url_for("api.roleitem", role=role),
@@ -115,6 +127,9 @@ class HRSystemBuilder(MasonBuilder):
     # organization
 
     def add_control_get_organization(self):
+        """
+        custom relation method to add control to get org
+        """
         uri = url_for("api.organizationcollection")
         self.add_control(
             "hrsys:organizations",
@@ -123,6 +138,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_delete_organization(self, organization):
+        """
+        custom relation method to add control to delete org
+        """
         self.add_control(
             "hrsys:delete-organization",
             url_for("api.organizationitem", organization=organization),
@@ -131,6 +149,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_add_organization(self):
+        """
+        custom relation method to add control to add org
+        """
         self.add_control(
             "hrsys:add-organization",
             url_for("api.organizationcollection"),
@@ -141,6 +162,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_modify_organization(self, organization):
+        """
+        custom relation method to add control to modify org
+        """
         self.add_control(
             "edit",
             url_for("api.organizationitem", organization=organization),
@@ -150,18 +174,10 @@ class HRSystemBuilder(MasonBuilder):
             schema=Organization.get_schema()
         )
 
-    # department
-    def add_control_add_department(self):
-        self.add_control(
-            "hrsys:add-dept",
-            url_for("api.departmentcollection"),
-            method="POST",
-            encoding="json",
-            title="Add a new department",
-            schema=Department.get_schema()
-        )
-
     def add_control_add_employee(self, role, department, organization):
+        """
+        custom relation method to add control to add employee
+        """
         self.add_control(
             "hrsys:add-employee",
             url_for("api.employeecollection", organization=organization,
@@ -173,6 +189,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_modify_employee(self, employee):
+        """
+        custom relation method to add control to modify employee
+        """
         self.add_control(
             "edit",
             url_for("api.employeeitem", employee=employee),
@@ -182,7 +201,21 @@ class HRSystemBuilder(MasonBuilder):
             schema=Employee.get_schema()
         )
 
+    def add_control_get_employee(self, employee):
+        """
+        custom relation method to add control to get employee
+        """
+        self.add_control(
+            "hrsys: employee",
+            url_for("api.employeeitem", employee=employee),
+            method="GET",
+            title="Edit this employee",
+        )
+
     def add_control_delete_employee(self, employee):
+        """
+        custom relation method to add control to delete employee
+        """
         self.add_control(
             "hrsys:delete-employee",
             url_for("api.employeeitem", employee=employee),
@@ -191,6 +224,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_organization(self, organization):
+        """
+        custom relation method to add control to get one org
+        """
         self.add_control(
             "hrsys:organization",
             url_for("api.organizationitem", organization=organization),
@@ -199,6 +235,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_department(self, department):
+        """
+        custom relation method to add control to get one dept
+        """
         self.add_control(
             "hrsys:department",
             url_for("api.departmentitem", department=department),
@@ -207,6 +246,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_role(self, role):
+        """
+        custom relation method to add control to get one role
+        """
         self.add_control(
             "hrsys:role",
             url_for("api.roleitem", role=role),
@@ -215,6 +257,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_employee_by_org(self, organization):
+        """
+        custom relation method to add control to get employees by org
+        """
         self.add_control(
             "hrsys:by-org",
             url_for("api.employeebyrlationcollection",
@@ -224,6 +269,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_employee_by_org_dept(self, organization, department):
+        """
+        custom relation method to add control to get employees by org and dept
+        """
         self.add_control(
             "hrsys:by-org-dept",
             url_for("api.employeebyrlationcollection",
@@ -233,6 +281,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_employee_by_org_role(self, organization, role):
+        """
+        custom relation method to add control to get employees by org and role
+        """
         self.add_control(
             "hrsys:by-org-role",
             url_for("api.employeebyrlationcollection",
@@ -242,6 +293,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_employee_by_org_dept_role(self, organization, department, role):
+        """
+        custom relation method to add control to get employees by org, dept and role
+        """
         self.add_control(
             "hrsys:by-org-dept-role",
             url_for("api.employeebyrlationcollection",
@@ -249,8 +303,37 @@ class HRSystemBuilder(MasonBuilder):
             method="GET",
             title="get employees by organization,department and role"
         )
+    
+    def add_control_get_employee_all(self):
+        """
+        custom relation method to add control to get emp collection
+        """
+        self.add_control(
+            "hrsys:employee-all",
+            url_for("api.employeebyrlationcollection",
+                    organization=None, role=None, department=None),
+            method="GET",
+            title="get employees"
+        )
+
+    # department
+    def add_control_add_department(self):
+        """
+        custom relation method to add control to add department
+        """
+        self.add_control(
+            "hrsys:add-dept",
+            url_for("api.departmentcollection"),
+            method="POST",
+            encoding="json",
+            title="Add a new department",
+            schema=Department.get_schema()
+        )
 
     def add_control_get_department(self):
+        """
+        custom relation method to add control to get departments
+        """
         uri = url_for("api.departmentcollection")
         self.add_control(
             "hrsys:departments",
@@ -259,6 +342,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_delete_department(self, department):
+        """
+        custom relation method to add control to delete dept
+        """
         self.add_control(
             "hrsys:delete-dept",
             url_for("api.departmentitem", department=department),
@@ -267,6 +353,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_modify_department(self, department):
+        """
+        custom relation method to add control to edit dept
+        """
         self.add_control(
             "edit",
             url_for("api.departmentitem", department=department),
@@ -278,6 +367,9 @@ class HRSystemBuilder(MasonBuilder):
 
     # leaveplan
     def add_control_add_leave(self, emp):
+        """
+        custom relation method to add control to add leave
+        """
         self.add_control(
             "hrsys:add-leave",
             url_for("api.leaveplanbyemployeellection", employee=emp),
@@ -288,6 +380,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_get_leave(self, emp):
+        """
+        custom relation method to add control to get leave
+        """
         uri = url_for("api.leaveplanbyemployeellection", employee=emp)
         self.add_control(
             "hrsys:leaves",
@@ -297,6 +392,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_delete_leave(self, emp, leave):
+        """
+        custom relation method to add control to delete leave
+        """
         self.add_control(
             "hrsys:delete-leave",
             url_for("api.leaveplanitem", employee=emp, leaveplan=leave),
@@ -305,6 +403,9 @@ class HRSystemBuilder(MasonBuilder):
         )
 
     def add_control_modify_leave(self, emp, leave):
+        """
+        custom relation method to add control to edit leave
+        """
         self.add_control(
             "edit",
             url_for("api.leaveplanitem", employee=emp, leaveplan=leave),

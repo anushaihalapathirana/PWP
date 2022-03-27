@@ -247,6 +247,10 @@ paths:
                           - string
                           - 'null'
                     href: "/api/roles/"
+                  hrsys:employee-all:
+                    method: GET
+                    title: get employees
+                    href: "/api/employees/"
                 items:
                 - name: Team Lead
                   code: TL
@@ -264,6 +268,39 @@ paths:
                       href: "/api/roles/MAN/"
                     profile:
                       href: "/profiles/hrsystem/"
+                - name: Associate team lead
+                  code: ATL
+                  description:
+                  "@controls":
+                    self:
+                      href: "/api/roles/ATL/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                - name: Receptionnist
+                  code: RES
+                  description: Role reception
+                  "@controls":
+                    self:
+                      href: "/api/roles/RES/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                - name: Developer
+                  code: DEV
+                  description:
+                  "@controls":
+                    self:
+                      href: "/api/roles/DEV/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                - name: Quality analysis
+                  code: QA
+                  description:
+                  "@controls":
+                    self:
+                      href: "/api/roles/QA/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+
         '403':
           description: Authentication error
           content:
@@ -594,6 +631,10 @@ paths:
                           description: organization location
                           type: string
                     href: "/api/organizations/"
+                  hrsys:employee-all:
+                    method: GET
+                    title: get employees
+                    href: "/api/employees/"
                 items:
                 - organization_id: O02
                   name: Org21
@@ -611,6 +652,7 @@ paths:
                       href: "/api/organizations/O01/"
                     profile:
                       href: "/profiles/hrsystem/"
+
 
     post:
       tags: 
@@ -907,6 +949,10 @@ paths:
                           - string
                           - 'null'
                     href: "/api/departments/"
+                  hrsys:employee-all:
+                    method: GET
+                    title: get employees
+                    href: "/api/employees/"
                 items:
                 - department_id: D03
                   name: dept55
@@ -916,12 +962,28 @@ paths:
                       href: "/api/departments/D03/"
                     profile:
                       href: "/profiles/hrsystem/"
+                - department_id: D01
+                  name: dept34
+                  description: department number one
+                  "@controls":
+                    self:
+                      href: "/api/departments/D01/"
+                    profile:
+                      href: "/profiles/hrsystem/"
                 - department_id: D02
                   name: dept44
-                  description: null
+                  description: department number two
                   "@controls":
                     self:
                       href: "/api/departments/D02/"
+                    profile:
+                      href: "/profiles/hrsystem/"
+                - department_id: D07
+                  name: test department
+                  description: department to test
+                  "@controls":
+                    self:
+                      href: "/api/departments/D07/"
                     profile:
                       href: "/profiles/hrsystem/"
 
@@ -2192,6 +2254,11 @@ paths:
                     method: DELETE
                     title: Delete this leave
                     href: "/api/employees/E03/leaveplans/1/"
+                  'hrsys: employee':
+                    method: GET
+                    title: Edit this employee
+                    href: "/api/employees/E03/"
+
 
         '404':
           description: Employee or leave not found
