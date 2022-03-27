@@ -4,7 +4,7 @@
 import json
 from copy import copy
 from flask_restful import Resource
-from jsonschema import validate, ValidationError
+from jsonschema import validate, ValidationError, draft7_format_checker
 from flask import Response, request, url_for
 from werkzeug.exceptions import HTTPException
 from hr_system import db
@@ -214,7 +214,8 @@ class EmployeeCollection(Resource):
                 "JSON format is not valid"
             )
         try:
-            validate(request.json, Employee.get_schema())
+            validate(request.json, Employee.get_schema(),
+                     format_checker=draft7_format_checker)
         except ValidationError:
             return create_error_message(
                 400, "Unsupported media type",

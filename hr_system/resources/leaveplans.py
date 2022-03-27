@@ -4,7 +4,7 @@
 import json
 from copy import copy
 from flask_restful import Resource
-from jsonschema import validate, ValidationError
+from jsonschema import validate, ValidationError, draft7_format_checker
 from flask import Response, request, url_for
 from hr_system import db
 from hr_system.utils import create_error_message, HRSystemBuilder
@@ -80,7 +80,8 @@ class LeavePlanByEmployeellection(Resource):
                 "JSON format is not valid"
             )
         try:
-            validate(request.json, LeavePlan.get_schema())
+            validate(request.json, LeavePlan.get_schema(),
+                     format_checker=draft7_format_checker)
         except ValidationError:
             return create_error_message(
                 400, "Unsupported media type",
@@ -95,7 +96,8 @@ class LeavePlanByEmployeellection(Resource):
 
             db.session.add(leaveplan)
             db.session.commit()
-            location = url_for("api.leaveplanitem", leaveplan=leaveplan, employee = employee)
+            location = url_for("api.leaveplanitem",
+                               leaveplan=leaveplan, employee=employee)
         except Exception as e:
             print(e)
             return create_error_message(
