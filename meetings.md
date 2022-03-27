@@ -2,7 +2,7 @@
 
 ## Meeting 1.
 * **DATE:** 2022-02-02
-* **ASSISTANTS:**
+* **ASSISTANTS:** Mika Oja
 
 ### Minutes
 *Summary of what was discussed during the meeting*
@@ -17,15 +17,17 @@
 
 ## Meeting 2.
 * **DATE:** 2022-02-14
-* **ASSISTANTS:**
+* **ASSISTANTS:** Mika Oja
 
 ### Minutes
 *Summary of what was discussed during the meeting*
+
 Leave span indicated as multiple rows in table
 
 
 ### Action points
 *List here the actions points discussed with assistants*
+
 Explicitly define the ON_DELETE behavior for foreign keys / relationships
 
 ### Comments from staff
@@ -33,10 +35,11 @@ Explicitly define the ON_DELETE behavior for foreign keys / relationships
 
 ## Meeting 3.
 * **DATE:** 2022-03-15
-* **ASSISTANTS:**
+* **ASSISTANTS:** Mika Oja
 
 ### Minutes
 *Summary of what was discussed during the meeting*
+
 Demo of the working API
 
 splitting EmployeeByRlationCollection into multiple resources in the WIKI page table and consider having person as part of the leaveplan uri
@@ -49,6 +52,7 @@ alternatives for using copy in delete
 
 ### Action points
 *List here the actions points discussed with assistants*
+
 * person as part of the leaveplan uri
 * Change module name to snake case
 * Add location headers to post responses
