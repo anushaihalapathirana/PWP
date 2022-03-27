@@ -71,7 +71,7 @@ def create_app(test_config=None):
 
     @app.route(LINK_RELATIONS_URL)
     def send_link_relations():
-        return "link relations"
+        return app.send_static_file("linkrelation.html")
 
     @app.route("/profiles/<profile>/")
     def send_profile(profile):
@@ -88,13 +88,13 @@ def create_app(test_config=None):
             return app.send_static_file("departmentitem.html")
         elif profile == 'department_collection':
             return app.send_static_file("departmentcollection.html")
-        elif profile == 'employee':
+        elif profile == 'employee_item':
             return app.send_static_file("employee.html")
         elif profile == 'employee_by_relation_collection':
             return app.send_static_file("employeecollection.html")
-        elif profile == 'leave_item':
+        elif profile == 'leaveplan_item':
             return app.send_static_file("leaveitem.html")
-        elif profile == 'leave_collection':
+        elif profile == 'leaveplan_collection':
             return app.send_static_file("leavecollection.html")
         elif profile == 'error':
             return app.send_static_file("error.html")
