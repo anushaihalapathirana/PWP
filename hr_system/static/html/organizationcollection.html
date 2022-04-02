@@ -7,24 +7,26 @@
     <script type="text/javascript" src="/static/scripts/jquery.js"></script>
     <script type="text/javascript" src="/static/scripts/admin_ivan.js"></script>
 </head>
-
+<style>
+    td {
+        border: solid 2px lightgrey;
+    }
+</style>
 <body> 
-    <h1>Organization Item resource</h1>
-    <h2>Link relations associated with the resource</h2>
-    <ul>
-        <li>hrsys:organization - To go to the organization list</li>
-        <li>hrsys:delete-organization - To delete a organization</li>
-        <li>edit - To edit a organization</li>
-
-    </ul>
+    <h1>Organization Collection resource</h1>
 
     <h2>Response</h2>
     <code>
-        {
+        [{
             "location": "oulu",
             "name": "Org11",
             "organization_id": "O01"
-        }
+        }, 
+        {
+            "location": "Helsonki",
+            "name": "Org2",
+            "organization_id": "O02"
+        }]
     </code>
 
     <h2>Resource properties</h2>

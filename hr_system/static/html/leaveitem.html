@@ -7,28 +7,22 @@
     <script type="text/javascript" src="/static/scripts/jquery.js"></script>
     <script type="text/javascript" src="/static/scripts/admin_ivan.js"></script>
 </head>
-
+<style>
+    td {
+        border: solid 2px lightgrey;
+    }
+</style>
 <body> 
-    <h1>Leaveplan Collection resource</h1>
-    <h2>Link relations associated with the resource</h2>
-    <ul>
-        <li>hrsys:add-leave - To add a leaveplan</li>
-        <li>hrsys:leaves - Toget employee leaveplans</li>
-
-    </ul>
+    <h1>Leaveplan Item resource</h1>
+    
 
     <h2>Response</h2>
     <code>
-        [{
+        {
             "leave_date": "2018-12-01T11:20:30",
             "leave_type": "CASUAL",
             "reason": null
-        },
-        {
-            "leave_date": "2019-01-01T11:20:30",
-            "leave_type": "MEDICAL",
-            "reason": "fever"
-        }]
+        }
     </code>
 
     <h2>Resource properties</h2>

@@ -77,27 +77,27 @@ def create_app(test_config=None):
     def send_profile(profile):
         # return "you requests {} profile".format(profile)
         if profile == 'role_item':
-            return app.send_static_file("roleitem.html")
+            return app.send_static_file("html/roleitem.html")
         elif profile == 'role_collection':
-            return app.send_static_file("rolecollection.html")
+            return app.send_static_file("html/rolecollection.html")
         elif profile == 'organization_item':
-            return app.send_static_file("organizationitem.html")
+            return app.send_static_file("html/organizationitem.html")
         elif profile == 'organization_collection':
-            return app.send_static_file("organizationcollection.html")
+            return app.send_static_file("html/organizationcollection.html")
         elif profile == 'department_item':
-            return app.send_static_file("departmentitem.html")
+            return app.send_static_file("html/departmentitem.html")
         elif profile == 'department_collection':
-            return app.send_static_file("departmentcollection.html")
+            return app.send_static_file("html/departmentcollection.html")
         elif profile == 'employee_item':
-            return app.send_static_file("employee.html")
+            return app.send_static_file("html/employee.html")
         elif profile == 'employee_by_relation_collection':
-            return app.send_static_file("employeecollection.html")
+            return app.send_static_file("html/employeecollection.html")
         elif profile == 'leaveplan_item':
-            return app.send_static_file("leaveitem.html")
+            return app.send_static_file("html/leaveitem.html")
         elif profile == 'leaveplan_collection':
-            return app.send_static_file("leavecollection.html")
+            return app.send_static_file("html/leavecollection.html")
         elif profile == 'error':
-            return app.send_static_file("error.html")
+            return app.send_static_file("html/error.html")
         else:
             return "Not available"
 

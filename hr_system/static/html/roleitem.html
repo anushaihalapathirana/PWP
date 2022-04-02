@@ -4,19 +4,12 @@
     <title>Role Item resource</title>
   </head>
   <style>
-    table, th, td {
-      border:1px black;
+    td {
+        border: solid 2px lightgrey;
     }
   </style>
   <body>
     <h1>Role Item resource</h1>
-    <h2>Link relations associated with the resource</h2>
-    <ul>
-        <li>hrsys:role - To go to the role list</li>
-        <li>hrsys:delete-role - To delete a role</li>
-        <li>edit - To edit a role</li>
-
-    </ul>
 
     <h2>Response</h2>
     <code>
@@ -39,19 +32,19 @@
             <td>code</td>
             <td>unique code of role</td>
             <td>string</td>
-            <th>yes</th>
+            <td>yes</td>
         </tr>
         <tr>
             <td>description</td>
             <td>description of role</td>
             <td>string or null</td>
-            <th>no</th>
+            <td>no</td>
         </tr>
         <tr>
             <td>name</td>
             <td>Role's unique name</td>
             <td> string</td>
-            <th>yes</th>
+            <td>yes</td>
           </tr>
       </table>
   </body>

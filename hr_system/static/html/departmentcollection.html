@@ -7,26 +7,27 @@
     <script type="text/javascript" src="/static/scripts/jquery.js"></script>
     <script type="text/javascript" src="/static/scripts/admin_ivan.js"></script>
 </head>
+<style>
+    td {
+        border: solid 2px lightgrey;
+    }
+</style>
 
 <body> 
-    <h1>Organization Collection resource</h1>
-    <h2>Link relations associated with the resource</h2>
-    <ul>
-        <li>hrsys:add-organization - To add organization</li>
-
-    </ul>
+    <h1>Department Collection resource</h1>
+    
 
     <h2>Response</h2>
     <code>
         [{
-            "location": "oulu",
-            "name": "Org11",
-            "organization_id": "O01"
+            "description": "Department number 1",
+            "name": "Dept 1",
+            "department_id": "D01"
         }, 
         {
-            "location": "Helsonki",
-            "name": "Org2",
-            "organization_id": "O02"
+            "description": "Department number 2",
+            "name": "Dept 2",
+            "department_id": "D02"
         }]
     </code>
 
@@ -41,21 +42,21 @@
         </tr>
         <tr>
             <td>name</td>
-            <td>unique name of organization</td>
+            <td>unique name of department</td>
             <td>string</td>
             <td>Yes</td>
 
         </tr>
         <tr>
-            <td>location</td>
-            <td>location of the organization</td>
+            <td>description</td>
+            <td>description of the department</td>
             <td>string</td>
-            <td>Yes</td>
+            <td>No</td>
 
         </tr>
         <tr>
-            <td>organization_id</td>
-            <td>Organization's unique id</td>
+            <td>department_id</td>
+            <td>Department's unique id</td>
             <td>string</td>
             <td>Yes</td>
 
