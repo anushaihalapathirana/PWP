@@ -19,7 +19,7 @@ class RoleCollection(Resource):
         Returns:
         Endpoint: /api/roles/
     """
-    # @require_admin
+    @require_admin
     def get(self):
         """ GET list of roles
             Arguments:
@@ -48,7 +48,7 @@ class RoleCollection(Resource):
             body["items"].append(item)
         return Response(json.dumps(body), 200, mimetype=MASON)
 
-    # @require_admin
+    @require_admin
     def post(self):
         """ Create a new Role
         Arguments:
@@ -115,7 +115,7 @@ class RoleItem(Resource):
         Returns:
         Endpoint - /api/roles/<role>
     """
-    # @require_admin
+    @require_admin
     def get(self, role):
         """ get details of one role
         Arguments:
@@ -139,7 +139,7 @@ class RoleItem(Resource):
         body.add_control_modify_role(role)
         return Response(json.dumps(body), 200, mimetype=MASON)
 
-    # @require_admin
+    @require_admin
     def delete(self, role):
         """ Delete the selected role
         Arguments:
@@ -156,7 +156,7 @@ class RoleItem(Resource):
 
         return Response(status=204, mimetype=MASON)
 
-    # @require_admin
+    @require_admin
     def put(self, role):
         """ Replace role's basic data with new values
         Arguments:

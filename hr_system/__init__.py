@@ -19,7 +19,8 @@ def create_app(test_config=None):
     - Note reference to this method - course materials
         https://github.com/enkwolf/pwp-course-sensorhub-api-example/blob/master
     """
-    app = Flask(__name__, instance_relative_config=True, static_folder='static', static_url_path='')
+    app = Flask(__name__, instance_relative_config=True,
+                static_folder='static', static_url_path='')
     app.config.from_mapping(
         SECRET_KEY="dev",
         SQLALCHEMY_DATABASE_URI="sqlite:///" +
@@ -50,10 +51,10 @@ def create_app(test_config=None):
     cache.init_app(app)
 
     from hr_system.converters import (RoleConverter,
-                                    DepartmentConverter,
-                                    OrganizationConverter,
-                                    LeavePlanConverter,
-                                    EmployeeConverter)
+                                      DepartmentConverter,
+                                      OrganizationConverter,
+                                      LeavePlanConverter,
+                                      EmployeeConverter)
 
     # Add converters
     app.url_map.converters["Role"] = RoleConverter
@@ -71,7 +72,7 @@ def create_app(test_config=None):
 
     @app.route(LINK_RELATIONS_URL)
     def send_link_relations():
-        return app.send_static_file("linkrelation.html")
+        return app.send_static_file("html/linkrelation.html")
 
     @app.route("/profiles/<profile>/")
     def send_profile(profile):
