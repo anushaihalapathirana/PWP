@@ -1250,8 +1250,8 @@ paths:
                   middle_name:
                   address: raksila
                   gender: M
-                  date_of_birth: '1998-08-25T11:20:30'
-                  appointment_date: '2018-11-21T11:20:30'
+                  date_of_birth: '2018-11-13T20:20:39+00:00'
+                  appointment_date: '2018-11-13T20:20:39+00:00'
                   active_emp: true
                   prefix_title: MR
                   marritial_status: SINGLE
@@ -1272,8 +1272,8 @@ paths:
                   middle_name:
                   address: oulu
                   gender: F
-                  date_of_birth: '1995-10-21T11:20:30'
-                  appointment_date: '2018-11-21T11:20:30'
+                  date_of_birth: '2018-11-13T20:20:39+00:00'
+                  appointment_date: '2018-11-13T20:20:39+00:00'
                   active_emp: true
                   prefix_title: MISS
                   marritial_status: SINGLE
@@ -1319,8 +1319,8 @@ paths:
                   middle_name:
                   address: oulu
                   gender: F
-                  date_of_birth: '1995-10-21T11:20:30'
-                  appointment_date: '2018-11-21T11:20:30'
+                  date_of_birth: '2018-11-13T20:20:39+00:00'
+                  appointment_date: '2018-11-13T20:20:39+00:00'
                   active_emp: true
                   prefix_title: MISS
                   marritial_status: SINGLE
@@ -1375,8 +1375,8 @@ paths:
                   middle_name:
                   address: helsinki
                   gender: M
-                  date_of_birth: '1998-12-01T11:20:30'
-                  appointment_date: '2018-11-21T11:20:30'
+                  date_of_birth: '2018-11-13T20:20:39+00:00'
+                  appointment_date: '2018-11-13T20:20:39+00:00'
                   active_emp: true
                   prefix_title: MR
                   marritial_status: SINGLE
@@ -1397,8 +1397,8 @@ paths:
                   middle_name:
                   address: oulu
                   gender: F
-                  date_of_birth: '1995-10-21T11:20:30'
-                  appointment_date: '2018-11-21T11:20:30'
+                  date_of_birth: '2018-11-13T20:20:39+00:00'
+                  appointment_date: '2018-11-13T20:20:39+00:00'
                   active_emp: true
                   prefix_title: MISS
                   marritial_status: SINGLE
@@ -1450,8 +1450,8 @@ paths:
                   middle_name:
                   address: oulu
                   gender: F
-                  date_of_birth: '1995-10-21T11:20:30'
-                  appointment_date: '2018-11-21T11:20:30'
+                  date_of_birth: '2018-11-13T20:20:39+00:00'
+                  appointment_date: '2018-11-13T20:20:39+00:00'
                   active_emp: true
                   prefix_title: MISS
                   marritial_status: SINGLE
@@ -1508,8 +1508,8 @@ paths:
                   middle_name:
                   address: oulu
                   gender: F
-                  date_of_birth: '1995-10-21T11:20:30'
-                  appointment_date: '2018-11-21T11:20:30'
+                  date_of_birth: '2018-11-13T20:20:39+00:00'
+                  appointment_date: '2018-11-13T20:20:39+00:00'
                   active_emp: true
                   prefix_title: MISS
                   marritial_status: SINGLE
@@ -1644,8 +1644,8 @@ paths:
               last_name: last name test
               address: test address
               gender: M
-              date_of_birth: "1998-08-25T11:20:30"
-              appointment_date: "2005-08-25T11:20:30"
+              date_of_birth: "2018-11-13T20:20:39+00:00"
+              appointment_date: "2018-11-13T20:20:39+00:00"
               active_emp: 1
               prefix_title: MR
               marritial_status: SINGLE
@@ -1734,8 +1734,8 @@ paths:
                 middle_name:
                 address: oulu
                 gender: F
-                date_of_birth: '1995-10-21T11:20:30'
-                appointment_date: '2018-11-21T11:20:30'
+                date_of_birth: '2018-11-13T20:20:39+00:00'
+                appointment_date: '2018-11-13T20:20:39+00:00'
                 active_emp: true
                 prefix_title: MISS
                 marritial_status: SINGLE
@@ -1945,8 +1945,8 @@ paths:
               last_name: last name edit
               address: address edit
               gender: M
-              date_of_birth: "1998-08-25T11:20:30"
-              appointment_date: "2005-08-25T11:20:30"
+              date_of_birth: "2018-11-13T20:20:39+00:00"
+              appointment_date: "2018-11-13T20:20:39+00:00"
               active_emp: 1
               prefix_title: MR
               marritial_status: SINGLE
@@ -2130,7 +2130,7 @@ paths:
             example:
               leave_type: CASUAL
               reason: fever
-              leave_date: "1998-08-25T11:20:30"
+              leave_date: "2018-11-13T20:20:39+00:00"
       responses:
         '201':
           description: The leave was created successfully
@@ -2209,7 +2209,7 @@ paths:
                 id: 1
                 leave_type: CASUAL
                 reason:
-                leave_date: '2018-12-01T11:20:30'
+                leave_date: '2018-11-13T20:20:39+00:00'
                 "@namespaces":
                   hrsys:
                     name: "/hr_system/link-relations/"
@@ -2299,7 +2299,7 @@ paths:
             example:
               leave_type: MEDICAL
               reason: fever
-              leave_date: "1998-08-25T11:20:30"
+              leave_date: "2018-11-13T20:20:39+00:00"
       responses:
         '204':
           description: The leaveplan's attributes were updated successfully
