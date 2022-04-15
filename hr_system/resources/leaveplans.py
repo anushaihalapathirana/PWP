@@ -82,7 +82,8 @@ class LeavePlanByEmployeellection(Resource):
         try:
             validate(request.json, LeavePlan.get_schema(),
                      format_checker=draft7_format_checker)
-        except ValidationError:
+        except ValidationError as e:
+            print(e)
             return create_error_message(
                 400, "Unsupported media type",
                 "Payload format is in an unsupported format"

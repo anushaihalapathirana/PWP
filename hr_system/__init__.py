@@ -104,7 +104,7 @@ def create_app(test_config=None):
 
     @app.route("/admin/")
     def admin_site():
-        return app.send_static_file("html/admin.html")
+        return app.send_static_file("index.html")
 
     @app.route("/hr_system/")
     def hr_system_site():
