@@ -4,7 +4,7 @@
 [Ll]ib
 [Ll]ib64
 [Ll]ocal
-[S]cripts
+Scripts
 pyvenv.cfg
 .venv
 pip-selfcheck.json
@@ -13,4 +13,6 @@ cache
 instance
 hrcode.db
 .coverage
+static
+static_old
 var
