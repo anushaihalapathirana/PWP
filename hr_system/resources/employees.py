@@ -36,7 +36,7 @@ class EmployeeByRlationCollection(Resource):
         """
         return str(request.path)
 
-    @require_admin
+    # @require_admin
     # @cache.cached(make_cache_key=page_key)
     def get(self, organization=None, department=None, role=None):
         """ GET list of employees
@@ -187,7 +187,7 @@ class EmployeeCollection(Resource):
                     department=None,
                     role=None)])
 
-    @require_admin
+    # @require_admin
     def post(self, organization, department, role):
         """ Create a new employee
         Arguments:
@@ -396,7 +396,7 @@ class EmployeeItem(Resource):
 
         return Response(status=204, mimetype=MASON)
 
-    @require_admin
+    # @require_adminin
     def delete(self, employee):
         """ Delete the selected employee
         Arguments:

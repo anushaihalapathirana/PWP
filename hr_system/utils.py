@@ -311,7 +311,7 @@ class HRSystemBuilder(MasonBuilder):
         """
         self.add_control(
             "hrsys:by-org-dept-role-url-param",
-            "/organizations/{organization}/departments/{department}/roles/{role}/employees/",
+            "/api/organizations/{organization}/departments/{department}/roles/{role}/employees/",
             isHrefTemplate= True,
             method="GET",
             title="get employees by organization,department and role",

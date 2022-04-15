@@ -21,7 +21,7 @@ class DepartmentCollection(Resource):
         Returns:
         Endpoint: /api/departments/
     """
-    @require_admin
+    # @require_admin
     def get(self):
         """ GET list of departments
             Arguments:
@@ -49,7 +49,7 @@ class DepartmentCollection(Resource):
 
         return Response(json.dumps(body), 200, mimetype=MASON)
 
-    @require_admin
+    # @require_admin
     def post(self):
         """ Create a new department
         Arguments:
@@ -121,7 +121,7 @@ class DepartmentItem(Resource):
         Returns:
         Endpoint: /api/departments/<Department:department>/
     """
-    @require_admin
+    # @require_admin
     def get(self, department):
         """ get details of one department
         Arguments:
@@ -143,7 +143,7 @@ class DepartmentItem(Resource):
         body.add_control_modify_department(department)
         return Response(json.dumps(body), status=200, mimetype=MASON)
 
-    @require_admin
+    # @require_admin
     def delete(self, department):
         """ Delete the selected department
         Arguments:
@@ -160,7 +160,7 @@ class DepartmentItem(Resource):
 
         return Response(status=204, mimetype=MASON)
 
-    @require_admin
+    # @require_admin
     def put(self, department):
         """ Replace department's basic data with new values
         Arguments:
