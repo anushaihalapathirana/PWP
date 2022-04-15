@@ -223,6 +223,17 @@ class HRSystemBuilder(MasonBuilder):
             title="get department",
         )
 
+    def add_control_department_list(self):
+        """
+        custom relation method to add control to get depts
+        """
+        self.add_control(
+            "hrsys:departments-all",
+            url_for("api.departmentcollection"),
+            method="GET",
+            title="get departments",
+        )
+
     def add_control_role(self, role):
         """
         custom relation method to add control to get one role
@@ -232,6 +243,17 @@ class HRSystemBuilder(MasonBuilder):
             url_for("api.roleitem", role=role),
             method="GET",
             title="get role"
+        )
+    
+    def add_control_role_list(self):
+        """
+        custom relation method to add control to roles
+        """
+        self.add_control(
+            "hrsys:roles-all",
+            url_for("api.rolecollection"),
+            method="GET",
+            title="get roles"
         )
 
     def add_control_employee_by_org(self, organization):
@@ -280,6 +302,21 @@ class HRSystemBuilder(MasonBuilder):
                     organization=organization, role=role, department=department),
             method="GET",
             title="get employees by organization,department and role"
+        )
+    
+    def add_control_employee_by_org_dept_role_hrf(self):
+        """
+        custom relation method to add control to get employees by org, dept and role 
+        using url parameters
+        """
+        self.add_control(
+            "hrsys:by-org-dept-role-url-param",
+            "/organizations/{organization}/departments/{department}/roles/{role}/employees/",
+            isHrefTemplate= True,
+            method="GET",
+            title="get employees by organization,department and role",
+            schema=self._org_dept_role_schema()
+            
         )
     
     def add_control_get_employee_all(self):
@@ -396,6 +433,31 @@ class HRSystemBuilder(MasonBuilder):
             "default": "0"
         }
         return schema
+
+    @staticmethod
+    def _org_dept_role_schema():
+        schema = {
+            "type": "object",
+            "required": []
+        }
+        props = schema["properties"] = {}
+        props["organization"] = {
+            "description": "department id",
+            "type": "string",
+            "default": "O01"
+        }
+        props["department"] = {
+            "description": "get emploees by dept",
+            "type": "string",
+            "default": "D01"
+        }
+        props["role"] = {
+            "description": "get emploees by role",
+            "type": "string",
+            "default": "MAN",
+        }
+        return schema
+    
 
 
 def create_error_message(status_code, error, message=None):
