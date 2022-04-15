@@ -1,0 +1,7 @@
+const UI_LOADING_STATES = {
+  INIT: "INIT",
+  LOADING: "LOADING",
+  ERROR: "ERROR",
+};
+
+export { UI_LOADING_STATES };

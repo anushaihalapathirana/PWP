@@ -1,16 +1,11 @@
 import "./App.css";
+import { Home } from "./components/Home";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <button
-          onClick={() => {
-            fetch("/api/roles/");
-          }}
-        >
-          Click me
-        </button>
+        <Home />
       </header>
     </div>
   );
