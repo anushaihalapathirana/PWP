@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, 
-  TableHead, 
-  TableRow, 
-  Paper,
-  TableCell,
-  TableBody,
-  TableContainer,
-  Table
-} from '@material-ui/core';
+import { Button} from '@material-ui/core';
 import { Alert } from '@mui/material';
 import Dropdown from 'react-dropdown';
 import './home.css'
-import {EmployeeForm} from './EmployeeForm'
+import {EmployeeForm} from './EmployeeForm';
+import {EmployeeTable} from './EmploteeTable';
 import 'react-dropdown/style.css';
 import { getResource } from "../../services/hrservice";
 import { UI_LOADING_STATES } from "../../util/constants";
@@ -29,9 +22,13 @@ const Home = () => {
 
   const [employeebyOrgDeptRoleURL, setEmployeebyOrgDeptRoleURL ] = useState([]);
   const [employeebyOrgDeptRoleList, setemployeebyOrgDeptRoleList ] = useState([]);
+  const [employeeAllList, setEmployeeAllList ] = useState([]);
+
 
   const [employeeAllURL, setEmployeeAllURL ] = useState([]);
   const [isAddEmp, setisAddEmp ] = useState(false);
+
+  const [isShowAllRoles, setIsShowAllRoles] = useState(false);
 
 
   useEffect(() => {
@@ -73,24 +70,32 @@ const Home = () => {
     url = url.replace("{role}", role);
     return url
   }
+
+  // employee list by org dept and role
   const getEmployeesList = async () => {
     setisAddEmp(false)
     let url = replaceTemplateVals(employeebyOrgDeptRoleURL)
     let empBody = await getResource(url);
+    setEmployeeAllList([])
     setemployeebyOrgDeptRoleList(empBody['items']);
 
   };
 
+  //  all employee list
   const getAllEmployees = async () => {
     setisAddEmp(false)
     let empBody = await getResource(employeeAllURL)
-    setemployeebyOrgDeptRoleList(empBody['items'])
+    setemployeebyOrgDeptRoleList([])
+    setEmployeeAllList(empBody['items'])
+  }
+
+  const getAllRoles = () => {
+    setIsShowAllRoles(true)
   }
 
   const addEmployee = () => {
     setisAddEmp(true)
   }
-
 
   let orgItems = orgs.map((item) =>
       <option key={item.organization_id}>{item.name}</option>
@@ -154,59 +159,75 @@ const Home = () => {
             Add Employee
           </Button>
 
+          
+            <Button className='btn-get-data'
+            color="primary"
+            variant="contained"
+            onClick={getAllEmployees}
+            >
+              Get All Employees
+            </Button>
 
-          <Button className='btn-get-data'
-           color="primary"
-           variant="contained"
-           onClick={getAllEmployees}
-          >
-            Get all employees
-          </Button>
+            <Button className='btn-get-data'
+            color="primary"
+            variant="contained"
+            onClick={getAllRoles}
+            >
+              Get All Roles
+            </Button>
+
+            <Button className='btn-get-data'
+            color="primary"
+            variant="contained"
+            onClick={getAllEmployees}
+            >
+              Get All Departments
+            </Button>
+
+            <Button className='btn-get-data'
+            color="primary"
+            variant="contained"
+            onClick={getAllEmployees}
+            >
+              Get All Organizations
+            </Button>
+
         </div>
 
       </div>
 
       <div className='table-data'>
-        {organization != 'Select' && department != 'Select' && role != 'Select' && isAddEmp ? <EmployeeForm/> : 
-        <div>
-          <Alert severity="info">Plese select organization, department and role to add an employee</Alert>
-        </div>}
-        
-        { employeebyOrgDeptRoleList.length > 0 ? 
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table" stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell>First Name</TableCell>
-                <TableCell align="right">Last Name</TableCell>
-                <TableCell align="right">Address</TableCell>
-                <TableCell align="right">Gender</TableCell>
-                <TableCell align="right">Date of birth</TableCell>
-                <TableCell align="right">Date of appointment</TableCell>
-                <TableCell align="right">Active</TableCell>
-                <TableCell align="right">Mobile No</TableCell>
-
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {employeebyOrgDeptRoleList.map((row) => (
-                <TableRow key={row.employee_id}>
-                  <TableCell component="th" scope="row">
-                    {row.first_name}
-                  </TableCell>
-                  <TableCell align="right">{row.last_name}</TableCell>
-                  <TableCell align="right">{row.address}</TableCell>
-                  <TableCell align="right">{row.gender}</TableCell>
-                  <TableCell align="right">{row.date_of_birth}</TableCell>
-                  <TableCell align="right">{row.appointment_date}</TableCell>
-                  <TableCell align="right">{row.active_emp}</TableCell>
-                  <TableCell align="right">{row.mobile_no}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer> : <div></div>
-        }
+        {(() => {
+          if (organization !== 'Select' && department !== 'Select' && role !== 'Select' && isAddEmp) {
+            return (
+              <EmployeeForm/>
+            )
+          } if (organization === 'Select' || department === 'Select' || role === 'Select') {
+            return (
+              <Alert severity="info">Plese select organization, department and role to add an employee</Alert>
+            )
+          } if ( employeeAllList.length > 0  && !isAddEmp){
+            return (
+              <div>
+                <EmployeeTable employeeList={employeeAllList}
+                />
+              </div>
+            )
+          }
+          if (employeebyOrgDeptRoleList.length > 0 && !isAddEmp){
+            return (
+              <div>
+                <EmployeeTable employeeList = {employeebyOrgDeptRoleList}
+                />
+              </div>
+            )
+          }
+          else {
+            return (<div></div>)
+          }
+        })()}
+     
+      
       </div>
     </div>
   );
