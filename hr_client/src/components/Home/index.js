@@ -23,12 +23,15 @@ import { EmployeeForm } from "./EmployeeForm";
 import { EmployeeTable } from "./EmploteeTable";
 import "react-dropdown/style.css";
 import { getResource } from "../../services/hrservice";
-import { UI_LOADING_STATES } from "../../util/constants";
+import { APP_PATH, UI_LOADING_STATES } from "../../util/constants";
 import { RoleTable } from "./RoleTable";
 import { DepartmentTable } from "./DepartmentTable";
 import { OrganizationTable } from "./OrganizationTable";
-
+import { EmployeeHome } from "../Employee";
+import { RoleHome } from "../Role";
 const Home = () => {
+  const [appPath, setAppPath] = useState(APP_PATH.EMPLOYEE_HOME);
+
   const [orgState, setOrgState] = useState(UI_LOADING_STATES.INIT);
   const [orgs, setOrgs] = useState([]);
   const [organization, setOrganization] = useState("Select");
@@ -99,10 +102,16 @@ const Home = () => {
     setRole(event.value.key);
   };
 
-  const replaceTemplateVals = (url) => {
-    url = url.replace("{organization}", organization);
-    url = url.replace("{department}", department);
-    url = url.replace("{role}", role);
+  const replaceTemplateVals = (url, organization, department, role) => {
+    if (organization) {
+      url = url.replace("{organization}", organization);
+    }
+    if (department) {
+      url = url.replace("{department}", department);
+    }
+    if (url) {
+      url = url.replace("{role}", role);
+    }
     return url;
   };
 
@@ -119,8 +128,20 @@ const Home = () => {
     setIsShowAllEmps(false);
   };
 
+  const getEmployees = async (org, dept, role) => {
+    let url = employeeAllURL;
+
+    if (org != "Select" && dept != "Select" && role != "Select") {
+      url = employeebyOrgDeptRoleURL;
+    }
+    url = replaceTemplateVals(url, org, dept, role);
+    let empBody = await getResource(url);
+    setEmployeeAllList(empBody["items"]);
+  };
+
   //  all employee list
   const getAllEmployees = async () => {
+    setAppPath(APP_PATH.EMPLOYEE_HOME);
     setisAddEmp(false);
     setIsShowAllEmps(true);
     let empBody = await getResource(employeeAllURL);
@@ -132,6 +153,7 @@ const Home = () => {
   };
 
   const getAllRoles = () => {
+    setAppPath(APP_PATH.ROLE_HOME);
     setIsShowAllRoles(true);
     setIsShowAllDepts(false);
     setIsShowAllOrgs(false);
@@ -194,6 +216,33 @@ const Home = () => {
   ));
   let drawerWidth = 240;
 
+  const getRenderRoute = (path) => {
+    console.log(orgItems);
+    switch (path) {
+      case APP_PATH.EMPLOYEE_HOME:
+        return (
+          <EmployeeHome
+            orgList={{
+              items: orgs,
+            }}
+            deptList={{
+              items: depts,
+            }}
+            roleList={{
+              items: roles,
+            }}
+            employeeList={{
+              items: employeeAllList,
+              get: getEmployees,
+              add: addEmployee,
+            }}
+          ></EmployeeHome>
+        );
+      default:
+        return <RoleHome></RoleHome>;
+    }
+  };
+
   return (
     <div>
       <Box style={{ display: "flex" }}>
@@ -246,7 +295,9 @@ const Home = () => {
         </Drawer>
       </Box>
 
-      <div className="menu-bar"></div>
+      {getRenderRoute(appPath)}
+
+      {/* <div className="menu-bar"></div>
 
       <div
         style={{
@@ -367,8 +418,8 @@ const Home = () => {
           } else {
             return <div></div>;
           }
-        })()}
-      </div>
+        })()} */}
+      {/* </div> */}
     </div>
   );
 };
