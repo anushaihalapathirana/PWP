@@ -4,13 +4,9 @@ import Dropdown from 'react-dropdown';
 import './home.css'
 import 'react-dropdown/style.css';
 import { getResource, deleteResource, addResource } from "../../services/hrservice";
-import { RoleTable } from "./RoleTable";
-import {DepartmentTable} from "./DepartmentTable";
-import {OrganizationTable} from "./OrganizationTable";
 import {AddForm} from "./AddForm";
 
 import "./home.css";
-
 import "react-dropdown/style.css";
 import {
   AppBar,
@@ -25,11 +21,12 @@ import {
   Typography,
 } from "@material-ui/core";
 import "./home.css";
-import { EmployeeForm } from "./EmployeeForm";
-import { EmployeeTable } from "./EmploteeTable";
 import { APP_PATH, UI_LOADING_STATES } from "../../util/constants";
 import { EmployeeHome } from "../Employee";
 import { RoleHome } from "../Role";
+import { OrgHome } from "../Org";
+import { DeptHome } from "../Dept";
+
 const Home = () => {
   const [appPath, setAppPath] = useState(APP_PATH.EMPLOYEE_HOME);
 
@@ -162,6 +159,7 @@ const Home = () => {
   }
 
   const getAllDepts = () => {
+    setAppPath(APP_PATH.DEPT_HOME);
     setIsShowAllRoles(false)
     setIsShowAllDepts(true)
     setIsShowAllOrgs(false)
@@ -173,6 +171,7 @@ const Home = () => {
   }
 
   const getAllOrgs = () => {
+    setAppPath(APP_PATH.ORG_HOME);
     setIsShowAllRoles(false)
     setIsShowAllDepts(false)
     setIsShowAllOrgs(true)
@@ -207,7 +206,7 @@ const Home = () => {
     setIsDisplayAddForm(false)
   }
 
-  const handleCellClickDelete = async(data) => {
+  const onDeleteRole = async(data) => {
     let del = await deleteResource(data);
     let rolesBody = await getResource(roleAllURL);
     setRoles(rolesBody["items"]);
@@ -255,10 +254,25 @@ const Home = () => {
     }
   };
 
-  const onClickEditRole = async(data) => {
+  const onEditRole = async(data) => {
     console.log(data)
   }
 
+  const onEditOrg = async(data) => {
+    console.log(data)
+  }
+
+  const onEditDept = async(data) => {
+    console.log(data)
+  }
+
+  const onAddOrg = async(data) => {
+    console.log(data)
+  }
+
+  const onAddDept = async(data) => {
+    console.log(data)
+  }
 
   let orgItems = orgs.map((item) => (
     <option key={item.organization_id}>{item.name}</option>
@@ -295,6 +309,39 @@ const Home = () => {
             }}
           ></EmployeeHome>
         );
+        case APP_PATH.ROLE_HOME:
+          return (
+            <RoleHome
+              roleList={{
+                items: roles,
+                edit: onEditRole,
+                delete: onDeleteRole,
+                add: onClickAddRole
+              }}
+            ></RoleHome>
+          );
+        case APP_PATH.ORG_HOME:
+          return (
+            <OrgHome
+              orgList={{
+                items: orgs,
+                delete: onDeleteOrg,
+                get: onEditOrg,
+                add: onAddOrg
+              }}
+            ></OrgHome>
+          );
+          case APP_PATH.DEPT_HOME:
+            return (
+              <DeptHome
+                deptList={{
+                  items: depts,
+                  delete: onDeleteDept,
+                  get: onEditDept,
+                  add: onAddDept
+                }}
+              ></DeptHome>
+            );
       default:
         return <RoleHome></RoleHome>;
     }
@@ -312,7 +359,7 @@ const Home = () => {
         >
           <Toolbar>
             <Typography variant="h6" noWrap component="div">
-              Anusha's HR System
+              HR System
             </Typography>
           </Toolbar>
         </AppBar>
@@ -353,130 +400,6 @@ const Home = () => {
       </Box>
 
       {getRenderRoute(appPath)}
-
-      {/* <div className="menu-bar"></div>
-
-      <div
-        style={{
-          display: "flex",
-        }}
-      >
-        <div className="drop-down">
-          <Dropdown
-            className="org-drop"
-            placeholder="Search categories..."
-            label="Select organization"
-            options={orgItems}
-            value={organization}
-            onChange={handleOrganizationChange}
-          />
-        </div>
-
-        <div className="drop-down">
-          <Dropdown
-            className="dept-drop"
-            placeholder="Search categories..."
-            label="Select Departments"
-            options={deptItems}
-            value={department}
-            onChange={handleDepartmentChange}
-          />
-        </div>
-
-        <div className="drop-down">
-          <Dropdown
-            className="dept-drop"
-            placeholder="Search categories..."
-            label="Select Roles"
-            options={roleItems}
-            value={role}
-            onChange={handleRoleChange}
-          />
-        </div>
-
-        <div className="btn">
-          <Button
-            className="btn-get-data"
-            color="primary"
-            variant="contained"
-            onClick={getEmployeesList}
-          >
-            Filter
-          </Button>
-
-          <Button
-            className="btn-get-data"
-            color="primary"
-            variant="outlined"
-            onClick={addEmployee}
-          >
-            Add Employee
-          </Button>
-        </div>
-      </div>
-
-      <div className="table-data">
-        {(() => {
-          if (
-            organization !== "Select" &&
-            department !== "Select" &&
-            role !== "Select" &&
-            isAddEmp
-          ) {
-            return <EmployeeForm />;
-          }
-          if (
-            (organization === "Select" ||
-              department === "Select" ||
-              role === "Select") &&
-            isAddEmp
-          ) {
-            return (
-              <Alert severity="info">
-                Plese select organization, department and role to add an
-                employee
-              </Alert>
-            );
-          }
-          if (employeeAllList.length > 0 && isShowAllEmps) {
-            return (
-              <div>
-                <EmployeeTable employeeList={employeeAllList} />
-              </div>
-            );
-          }
-          if (employeebyOrgDeptRoleList.length > 0 && !isAddEmp) {
-            return (
-              <div>
-                <EmployeeTable employeeList={employeebyOrgDeptRoleList} />
-              </div>
-            );
-          }
-          if (isShowAllRoles && roles.length > 0) {
-            return (
-              <div>
-                <RoleTable data={roles} onClickDelete={handleCellClickDelete} />
-              </div>
-            );
-          }
-          if (isShowAllDepts && depts.length > 0) {
-            return (
-              <div>
-                <DepartmentTable data={depts} onClickDelete={onDeleteDept} />
-              </div>
-            );
-          }
-          if (isShowAllOrgs && orgs.length > 0) {
-            return (
-              <div>
-                <OrganizationTable data={orgs} onClickDelete={onDeleteOrg} />
-              </div>
-            );
-          } else {
-            return <div></div>;
-          }
-        })()} */}
-      {/* </div> */}
     </div>
   );
 };
