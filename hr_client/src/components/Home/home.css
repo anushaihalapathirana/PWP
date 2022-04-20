@@ -23,11 +23,7 @@
 }
 
 .menu-bar {
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    top: 0px;
-    position: absolute;
+    align-items: center;
     display: flex;
     flex-direction: row;
 }

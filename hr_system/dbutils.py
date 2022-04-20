@@ -38,19 +38,31 @@ def generate_test_data():
         organization_id="O02",
         name="Org21",
         location="helsinki")
+    org3 = Organization(organization_id="O03", name="Org13", location="alsijdais")
+    org4 = Organization(organization_id="O04", name="Org14", location="askjd")
+    org5 = Organization(organization_id="O05", name="Org15", location="ouajsdhlu")
+    
 
     depat = Department(
         department_id='D01',
-        name="dept34",
+        name="dept1",
         description="department number one")
     depat2 = Department(
         department_id='D02',
-        name="dept44",
+        name="dept2",
         description="department number two")
     depat3 = Department(
         department_id='D03',
-        name="dept55",
+        name="dept3",
         description="department number three")
+    depat4 = Department(
+        department_id='D04',
+        name="dept4",
+        description="department number 4")
+    depat5 = Department(
+        department_id='D05',
+        name="dept5",
+        description="department number 5")
 
     emp = Employee(
         employee_id='E01',
@@ -198,10 +210,16 @@ def generate_test_data():
     db.session.add(role6)
     db.session.add(org)
     db.session.add(org2)
+    db.session.add(org3)
+    db.session.add(org4)
+    db.session.add(org5)
 
     db.session.add(depat)
     db.session.add(depat2)
     db.session.add(depat3)
+    db.session.add(depat4)
+    db.session.add(depat5)
+
 
     db.session.add(emp)
     db.session.add(emp2)
