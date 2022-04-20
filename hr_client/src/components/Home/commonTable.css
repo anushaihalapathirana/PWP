@@ -7,3 +7,24 @@
     text-decoration: underline;     
     text-decoration-color: blue;
 }
+
+.add-btn-div{
+    float: right;
+    margin-top: 20px;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.add-form {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    margin: 10px;
+    padding: 80px;
+    border-radius: 10px;
+}
+
+.add-btn {
+    margin-top: 60px !important;
+}
+

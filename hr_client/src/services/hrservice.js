@@ -14,4 +14,23 @@ const deleteResource = async (href) => {
   throw new Error("Error while deleting resource");
 };
 
-export { getResource, deleteResource };
+const addResource = async (href, data) => {
+  const res = await fetch(href, 
+    {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    ).then(response => {
+      return response
+    })
+    .catch((error) => {
+      throw new Error("Error while adding resource");
+    });
+};
+
+
+
+export { getResource, deleteResource, addResource };

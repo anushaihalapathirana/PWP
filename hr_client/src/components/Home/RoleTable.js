@@ -14,13 +14,10 @@ import {
 
 const RoleTable = props => {
 
-  const handleCellClick = (data) => {
-    console.log(data)
-  }
-
   return (
     <div>
       <div>
+        
         <TableContainer component={Paper}>
             <Table aria-label="simple table" stickyHeader>
                 <TableHead>
@@ -40,15 +37,26 @@ const RoleTable = props => {
                           </TableCell>
                           <TableCell align="right">{row.name}</TableCell>
                           <TableCell align="right">{row.description}</TableCell>
-                          <TableCell className='viewcell' align="right" onClick={() => handleCellClick(row['@controls']['self']['href'])}>{'Edit'}</TableCell>
+                          <TableCell className='viewcell' align="right" onClick={() => props.onClickEdit(row['@controls']['self']['href'])}>{'Edit'}</TableCell>
                           <TableCell className='viewcell' align="right" 
                           onClick={() => props.onClickDelete(row['@controls']['self']['href'])}
                           >{'Delete'}</TableCell>
                         </TableRow>
                       ))}
                 </TableBody>
+
+                
             </Table>
         </TableContainer> 
+      </div>
+      <div className='add-btn-div'>
+        <Button className='btn-get-data'
+            color="primary"
+            variant="contained"
+            onClick={props.onClickAdd}
+            >
+              Add Role
+        </Button>
       </div>
     </div>
   );

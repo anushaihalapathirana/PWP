@@ -6,11 +6,12 @@ import './home.css'
 import {EmployeeForm} from './EmployeeForm';
 import {EmployeeTable} from './EmploteeTable';
 import 'react-dropdown/style.css';
-import { getResource, deleteResource } from "../../services/hrservice";
+import { getResource, deleteResource, addResource } from "../../services/hrservice";
 import { UI_LOADING_STATES } from "../../util/constants";
 import { RoleTable } from "./RoleTable";
 import {DepartmentTable} from "./DepartmentTable";
 import {OrganizationTable} from "./OrganizationTable";
+import {AddForm} from "./AddForm";
 
 const Home = () => {
   const [orgState, setOrgState] = useState(UI_LOADING_STATES.INIT);
@@ -29,8 +30,6 @@ const Home = () => {
   const [deptAllURL, setDeptAllURL ] = useState([]);
   const [orgAllURL, setOrgAllURL ] = useState([]);
 
-
-
   const [employeebyOrgDeptRoleList, setemployeebyOrgDeptRoleList ] = useState([]);
   const [employeeAllList, setEmployeeAllList ] = useState([]);
 
@@ -41,6 +40,9 @@ const Home = () => {
   const [isShowAllRoles, setIsShowAllRoles] = useState(false);
   const [isShowAllDepts, setIsShowAllDepts] = useState(false);
   const [isShowAllOrgs, setIsShowAllOrgs] = useState(false);
+  const [isDisplayAddForm, setIsDisplayAddForm] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(false);
+
 
   
 
@@ -99,6 +101,9 @@ const Home = () => {
     setIsShowAllDepts(false)
     setIsShowAllOrgs(false)
     setIsShowAllEmps(false)
+    setIsDisplayAddForm(false)
+    setErrorMsg('')
+
   };
 
   //  all employee list
@@ -111,6 +116,9 @@ const Home = () => {
     setIsShowAllRoles(false)
     setIsShowAllDepts(false)
     setIsShowAllOrgs(false)
+    setIsDisplayAddForm(false)
+    setErrorMsg('')
+
     
   }
 
@@ -120,6 +128,8 @@ const Home = () => {
     setIsShowAllOrgs(false)
     setisAddEmp(false)
     setIsShowAllEmps(false)
+    setIsDisplayAddForm(false)
+    setErrorMsg('')
 
   }
 
@@ -129,6 +139,8 @@ const Home = () => {
     setIsShowAllOrgs(false)
     setisAddEmp(false)
     setIsShowAllEmps(false)
+    setIsDisplayAddForm(false)
+    setErrorMsg('')
 
   }
 
@@ -138,15 +150,22 @@ const Home = () => {
     setIsShowAllOrgs(true)
     setisAddEmp(false)
     setIsShowAllEmps(false)
+    setIsDisplayAddForm(false)
+    setErrorMsg('')
 
   }
 
   const addEmployee = () => {
+    setErrorMsg('')
+    if((organization === 'Select' || department === 'Select' || role === 'Select') && isAddEmp) {
+      setErrorMsg('Please select organization, department and role to add employee')
+    }
     setisAddEmp(true)
     setIsShowAllRoles(false)
     setIsShowAllDepts(false)
     setIsShowAllOrgs(false)
     setIsShowAllEmps(false)
+    setIsDisplayAddForm(false)
   }
 
   const handleCellClickDelete = async(data) => {
@@ -166,6 +185,41 @@ const Home = () => {
     let deptBody = await getResource(deptAllURL);
     setDepts(deptBody['items']);
   }
+
+  const onClickAddRole = () => {
+    setIsDisplayAddForm(true)
+    setErrorMsg('')
+  }
+
+  const submitRole =  async(e) => {
+    e.preventDefault();
+    let code = e.target.id.value;
+    let name = e.target.name.value;
+    let desc = e.target.desc.value;
+
+    console.log(code, name, desc)
+    let body = {
+      code:code,
+      name:name,
+      description:desc
+    }
+    let res = await addResource(roleAllURL, body);
+    let roleBody = await getResource(roleAllURL);
+    setRoles(roleBody['items']);
+    if (res && res.ok) {
+      setIsShowAllRoles(true)
+      setIsDisplayAddForm(false)
+
+    } else if (res && !res.ok) {
+      let err = res.status +' '+res.statusText
+      setErrorMsg(err)
+    }
+  };
+
+  const onClickEditRole = async(data) => {
+    console.log(data)
+  }
+
 
   let orgItems = orgs.map((item) =>
       <option key={item.organization_id}>{item.name}</option>
@@ -268,15 +322,17 @@ const Home = () => {
 
       <div className='table-data'>
         {(() => {
+          if(errorMsg) {
+            return (
+              <Alert severity="error">{errorMsg}</Alert>
+            )
+          }
           if (organization !== 'Select' && department !== 'Select' && role !== 'Select' && isAddEmp) {
             return (
               <EmployeeForm/>
             )
-          } if ((organization === 'Select' || department === 'Select' || role === 'Select') && isAddEmp) {
-            return (
-              <Alert severity="info">Plese select organization, department and role to add an employee</Alert>
-            )
-          } if ( employeeAllList.length > 0  && isShowAllEmps){
+          } 
+          if ( employeeAllList.length > 0  && isShowAllEmps){
             return (
               <div>
                 <EmployeeTable employeeList={employeeAllList}
@@ -292,12 +348,31 @@ const Home = () => {
               </div>
             )
           }
+          if (isDisplayAddForm) {
+            return (
+              <div>
+                <AddForm
+                  title={'Add Role'}
+                  labelid={'Role Code'}
+                  nameid={'code'}
+                  label={'Role Name'}
+                  name={'name'}
+                  labeldesc={'Role Description'}
+                  namedesc={'description'}
+                  onSubmit = {submitRole}
+                />
+              </div>
+            )
+          }
           if (isShowAllRoles &&  roles.length >0) {
             return (
               <div>
                 <RoleTable 
                 data = {roles}
-                onClickDelete={handleCellClickDelete}/>
+                onClickDelete={handleCellClickDelete}
+                onClickEdit = {onClickEditRole}
+                onClickAdd = {onClickAddRole}
+                />
               </div>
             )
           }
@@ -317,6 +392,7 @@ const Home = () => {
               </div>
             )
           }
+          
           else {
             return (<div></div>)
           }
