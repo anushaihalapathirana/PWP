@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Button} from '@material-ui/core';
-import { Alert } from '@mui/material';
+import { Alert, fabClasses } from '@mui/material';
 import Dropdown from 'react-dropdown';
 import './home.css'
 import {EmployeeForm} from './EmployeeForm';
 import {EmployeeTable} from './EmploteeTable';
 import 'react-dropdown/style.css';
-import { getResource } from "../../services/hrservice";
+import { getResource, deleteResource } from "../../services/hrservice";
 import { UI_LOADING_STATES } from "../../util/constants";
+import { RoleTable } from "./RoleTable";
+import {DepartmentTable} from "./DepartmentTable";
+import {OrganizationTable} from "./OrganizationTable";
 
 const Home = () => {
   const [orgState, setOrgState] = useState(UI_LOADING_STATES.INIT);
@@ -21,15 +24,25 @@ const Home = () => {
   const [role, setRole] = useState('Select')
 
   const [employeebyOrgDeptRoleURL, setEmployeebyOrgDeptRoleURL ] = useState([]);
+  const [employeeAllURL, setEmployeeAllURL ] = useState([]);
+  const [roleAllURL, setRoleAllURL ] = useState([]);
+  const [deptAllURL, setDeptAllURL ] = useState([]);
+  const [orgAllURL, setOrgAllURL ] = useState([]);
+
+
+
   const [employeebyOrgDeptRoleList, setemployeebyOrgDeptRoleList ] = useState([]);
   const [employeeAllList, setEmployeeAllList ] = useState([]);
 
 
-  const [employeeAllURL, setEmployeeAllURL ] = useState([]);
   const [isAddEmp, setisAddEmp ] = useState(false);
 
+  const [isShowAllEmps, setIsShowAllEmps] = useState(false);
   const [isShowAllRoles, setIsShowAllRoles] = useState(false);
+  const [isShowAllDepts, setIsShowAllDepts] = useState(false);
+  const [isShowAllOrgs, setIsShowAllOrgs] = useState(false);
 
+  
 
   useEffect(() => {
     setOrgState(UI_LOADING_STATES.LOADING);
@@ -40,6 +53,10 @@ const Home = () => {
         let rolesBody = await getResource(orgBody['@controls']['hrsys:roles-all']['href']);
         setEmployeebyOrgDeptRoleURL(orgBody['@controls']['hrsys:by-org-dept-role-url-param']['href'])
         setEmployeeAllURL(orgBody['@controls']['hrsys:employee-all']['href'])
+        setRoleAllURL(orgBody['@controls']['hrsys:roles-all']['href'])
+        setDeptAllURL(orgBody['@controls']['hrsys:departments-all']['href'])
+        setOrgAllURL('/api/organizations/')
+
         setOrgs(orgBody['items']);
         setDepts(deptsBody['items']);
         setRoles(rolesBody['items']);
@@ -78,23 +95,76 @@ const Home = () => {
     let empBody = await getResource(url);
     setEmployeeAllList([])
     setemployeebyOrgDeptRoleList(empBody['items']);
-
+    setIsShowAllRoles(false)
+    setIsShowAllDepts(false)
+    setIsShowAllOrgs(false)
+    setIsShowAllEmps(false)
   };
 
   //  all employee list
   const getAllEmployees = async () => {
     setisAddEmp(false)
+    setIsShowAllEmps(true)
     let empBody = await getResource(employeeAllURL)
     setemployeebyOrgDeptRoleList([])
     setEmployeeAllList(empBody['items'])
+    setIsShowAllRoles(false)
+    setIsShowAllDepts(false)
+    setIsShowAllOrgs(false)
+    
   }
 
   const getAllRoles = () => {
     setIsShowAllRoles(true)
+    setIsShowAllDepts(false)
+    setIsShowAllOrgs(false)
+    setisAddEmp(false)
+    setIsShowAllEmps(false)
+
+  }
+
+  const getAllDepts = () => {
+    setIsShowAllRoles(false)
+    setIsShowAllDepts(true)
+    setIsShowAllOrgs(false)
+    setisAddEmp(false)
+    setIsShowAllEmps(false)
+
+  }
+
+  const getAllOrgs = () => {
+    setIsShowAllRoles(false)
+    setIsShowAllDepts(false)
+    setIsShowAllOrgs(true)
+    setisAddEmp(false)
+    setIsShowAllEmps(false)
+
   }
 
   const addEmployee = () => {
     setisAddEmp(true)
+    setIsShowAllRoles(false)
+    setIsShowAllDepts(false)
+    setIsShowAllOrgs(false)
+    setIsShowAllEmps(false)
+  }
+
+  const handleCellClickDelete = async(data) => {
+    let del = await deleteResource(data);
+    let rolesBody = await getResource(roleAllURL);
+    setRoles(rolesBody['items']);
+  }
+
+  const onDeleteOrg = async(data) => {
+    let del = await deleteResource(data);
+    let orgBody = await getResource(orgAllURL);
+    setOrgs(orgBody['items']);
+  }
+
+  const onDeleteDept = async(data) => {
+    let del = await deleteResource(data);
+    let deptBody = await getResource(deptAllURL);
+    setDepts(deptBody['items']);
   }
 
   let orgItems = orgs.map((item) =>
@@ -179,7 +249,7 @@ const Home = () => {
             <Button className='btn-get-data'
             color="primary"
             variant="contained"
-            onClick={getAllEmployees}
+            onClick={getAllDepts}
             >
               Get All Departments
             </Button>
@@ -187,7 +257,7 @@ const Home = () => {
             <Button className='btn-get-data'
             color="primary"
             variant="contained"
-            onClick={getAllEmployees}
+            onClick={getAllOrgs}
             >
               Get All Organizations
             </Button>
@@ -202,11 +272,11 @@ const Home = () => {
             return (
               <EmployeeForm/>
             )
-          } if (organization === 'Select' || department === 'Select' || role === 'Select') {
+          } if ((organization === 'Select' || department === 'Select' || role === 'Select') && isAddEmp) {
             return (
               <Alert severity="info">Plese select organization, department and role to add an employee</Alert>
             )
-          } if ( employeeAllList.length > 0  && !isAddEmp){
+          } if ( employeeAllList.length > 0  && isShowAllEmps){
             return (
               <div>
                 <EmployeeTable employeeList={employeeAllList}
@@ -219,6 +289,31 @@ const Home = () => {
               <div>
                 <EmployeeTable employeeList = {employeebyOrgDeptRoleList}
                 />
+              </div>
+            )
+          }
+          if (isShowAllRoles &&  roles.length >0) {
+            return (
+              <div>
+                <RoleTable 
+                data = {roles}
+                onClickDelete={handleCellClickDelete}/>
+              </div>
+            )
+          }
+          if (isShowAllDepts &&  depts.length >0) {
+            return (
+              <div>
+                <DepartmentTable data = {depts}
+                onClickDelete={onDeleteDept}/>
+              </div>
+            )
+          }
+          if (isShowAllOrgs &&  orgs.length >0) {
+            return (
+              <div>
+                <OrganizationTable data = {orgs}
+                onClickDelete={onDeleteOrg}/>
               </div>
             )
           }

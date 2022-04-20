@@ -1,0 +1,9 @@
+.viewcell:hover {
+    background-color: #C0C0C0;
+}
+
+.viewcell {
+    color: blue;
+    text-decoration: underline;     
+    text-decoration-color: blue;
+}
