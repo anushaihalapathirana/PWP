@@ -122,6 +122,13 @@ const ViewEmployee = ({ employee, editEmployee, deleteEmployee }) => {
     }
   }
 
+  const handleDelete = () => {
+    deleteEmployee(
+      employeeData["@controls"]["hrsys:delete-employee"]["href"],
+      employeeData["@controls"]["hrsys:delete-employee"]["method"]
+    );
+  }
+
   return (
     <div style={{ display: "flex" }}>
       <form
@@ -169,6 +176,7 @@ const ViewEmployee = ({ employee, editEmployee, deleteEmployee }) => {
         {formContent}
 
         <Button type="submit">SUBMIT</Button>
+        <Button onClick={handleDelete}>DELETE</Button>
       </form>
     </div>
   );

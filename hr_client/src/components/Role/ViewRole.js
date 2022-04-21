@@ -110,6 +110,13 @@ import {
         }
       }
     }
+
+    const handleDelete = () => {
+      deleteRole(
+        roleData["@controls"]["hrsys:delete-role"]["href"],
+        roleData["@controls"]["hrsys:delete-role"]["method"]
+      );
+    }
   
     return (
       <div style={{ display: "flex" }}>
@@ -156,6 +163,8 @@ import {
           {formContent}
   
           <Button type="submit">SUBMIT</Button>
+
+          <Button onClick={handleDelete}>DELETE</Button>
         </form>
       </div>
     );

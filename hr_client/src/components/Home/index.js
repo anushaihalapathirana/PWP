@@ -223,6 +223,38 @@ const Home = () => {
     }
   };
 
+  const handleDeleteRole = async (url, method) => {
+    let res = await deleteResource(url, method);
+    if (res) {
+      setAppPath(APP_PATH.ROLE_HOME);
+      getAllRoles();
+    }
+  };
+
+  const handleDeleteOrg = async (url, method) => {
+    let res = await deleteResource(url, method);
+    if (res) {
+      setAppPath(APP_PATH.ORG_HOME);
+      getAllOrgs();
+    }
+  };
+
+  const handleDeleteDept = async (url, method) => {
+    let res = await deleteResource(url, method);
+    if (res) {
+      setAppPath(APP_PATH.DEPT_HOME);
+      getAllDepts();
+    }
+  };
+
+  const handleDeleteEmployee = async (url, method) => {
+    let res = await deleteResource(url, method);
+    if (res) {
+      setAppPath(APP_PATH.EMPLOYEE_HOME);
+      getAllEmployees();
+    }
+  };
+
   const handleEditOrg = async (url, body) => {
     let res = await addResource(url, body, "PUT");
     if (res) {
@@ -295,6 +327,7 @@ const Home = () => {
           <ViewEmployee
             employee={currentEmployee}
             editEmployee={handleEditEmployee}
+            deleteEmployee={handleDeleteEmployee}
           ></ViewEmployee>
         );
       case APP_PATH.ROLE_HOME:
@@ -320,6 +353,7 @@ const Home = () => {
           <ViewRole
             role={currentRole}
             editRole={handleEditRole}
+            deleteRole={handleDeleteRole}
           ></ViewRole>
           );
       case APP_PATH.ORG_HOME:
@@ -345,6 +379,7 @@ const Home = () => {
           <ViewOrg
             org={currentOrg}
             editOrg={handleEditOrg}
+            deleteOrg={handleDeleteOrg}
           ></ViewOrg>
           );
       case APP_PATH.DEPT_HOME:
@@ -370,6 +405,7 @@ const Home = () => {
           <ViewDept
             dept={currentDept}
             editDept={handleEditDept}
+            deleteDept={handleDeleteDept}
           ></ViewDept>
           );
       default:

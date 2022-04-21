@@ -111,6 +111,13 @@ import {
       }
     }
   
+    const handleDelete = () => {
+      deleteDept(
+        deptData["@controls"]["hrsys:delete-dept"]["href"],
+        deptData["@controls"]["hrsys:delete-dept"]["method"]
+      );
+    }
+
     return (
       <div style={{ display: "flex" }}>
         <form
@@ -156,6 +163,7 @@ import {
           {formContent}
   
           <Button type="submit">SUBMIT</Button>
+          <Button onClick={handleDelete}>DELETE</Button>
         </form>
       </div>
     );
