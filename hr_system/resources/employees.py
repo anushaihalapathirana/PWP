@@ -74,9 +74,9 @@ class EmployeeByRlationCollection(Resource):
                 Employee.role == role,
                 Employee.department == department)
             body.add_control('self', url_for("api.employeebyrlationcollection",
-                                            organization=organization,
-                                            department=department, role=role
-                                            ))
+                                             organization=organization,
+                                             department=department, role=role
+                                             ))
             body.add_control_add_employee(
                 role=role, department=department, organization=organization)
             body.add_control_organization(organization=organization)
@@ -141,7 +141,8 @@ class EmployeeByRlationCollection(Resource):
             )
             item.add_control("self", url_for(
                 "api.employeeitem", employee=employee))
-            item.add_control("profile", EMPLOYEE_BY_RELATION_COLLECTION_PROFILE)
+            item.add_control(
+                "profile", EMPLOYEE_BY_RELATION_COLLECTION_PROFILE)
 
             body["items"].append(item)
 
@@ -228,7 +229,8 @@ class EmployeeCollection(Resource):
         try:
             validate(request.json, Employee.get_schema(),
                      format_checker=draft7_format_checker)
-        except ValidationError:
+        except ValidationError as e:
+            print(e)
             return create_error_message(
                 400, "Unsupported media type",
                 "Payload format is in an unsupported format"
@@ -256,6 +258,7 @@ class EmployeeCollection(Resource):
             self._clear_cache(department=department,
                               organnization=organization, role=role)
         except Exception as error:
+            print(error)
             if isinstance(error, HTTPException):
                 return create_error_message(
                     409, "Already Exist",
@@ -305,7 +308,7 @@ class EmployeeItem(Resource):
     def page_key(*args, **kwargs):
         return str(request.path)
 
-    @require_employee_key
+    # @require_employee_key
     # @cache.cached(make_cache_key=page_key)
     def get(self, employee):
         """ get details of one employee
@@ -345,7 +348,7 @@ class EmployeeItem(Resource):
         body.add_control_add_leave(emp=employee)
         return Response(json.dumps(body), status=200, mimetype=MASON)
 
-    @require_employee_key
+    # @require_employee_key
     def put(self, employee):
         """ Replace employee's basic data with new values
         Arguments:

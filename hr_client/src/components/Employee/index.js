@@ -4,7 +4,14 @@ import { Button } from "@material-ui/core";
 import Dropdown from "react-dropdown";
 import { EmployeeTable } from "../Home/EmploteeTable";
 
-const EmployeeHome = ({ orgList, deptList, roleList, employeeList }) => {
+const EmployeeHome = ({
+  orgList,
+  deptList,
+  roleList,
+  employeeList,
+  employeeControl,
+  viewEmployee,
+}) => {
   const [organization, setOrganization] = useState("Select");
   const [department, setDepartment] = useState("Select");
   const [currentRole, setRole] = useState("Select");
@@ -22,7 +29,7 @@ const EmployeeHome = ({ orgList, deptList, roleList, employeeList }) => {
   ));
 
   const handleOrganizationChange = (event) => {
-    console.log(event);
+    // console.log(event);
     setOrganization(event.value.key);
   };
 
@@ -109,15 +116,26 @@ const EmployeeHome = ({ orgList, deptList, roleList, employeeList }) => {
           <Button
             className="btn-get-data"
             color="primary"
-            variant="outlined"
-            onClick={employeeList.add}
+            variant="contained"
+            disabled={
+              !(employeeControl && employeeControl["hrsys:add-employee"])
+            }
+            onClick={() => {
+              // console.log(employeeControl);
+              if (employeeControl["hrsys:add-employee"]) {
+                employeeList.add();
+              }
+            }}
           >
             Add Employee
           </Button>
         </div>
       </div>
       <div className="table-data">
-        <EmployeeTable employeeList={employeeList.items} />
+        <EmployeeTable
+          employeeList={employeeList.items}
+          viewEmployee={viewEmployee}
+        />
       </div>
     </div>
   );

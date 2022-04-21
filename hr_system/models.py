@@ -110,7 +110,7 @@ class Employee(db.Model):
             request.json['date_of_birth'])
         self.appointment_date = datetime.fromisoformat(
             request.json['appointment_date'])
-        self.active_emp = request.json['active_emp']
+        self.active_emp = True
         self.prefix_title = request.json.get(
             'prefix_title', None) and TitleEnum[request.json['prefix_title']]
         self.marritial_status = request.json.get(
@@ -132,7 +132,6 @@ class Employee(db.Model):
                 "address",
                 "gender",
                 "appointment_date",
-                "active_emp",
                 "mobile_no",
                 "basic_salary",
                 "account_number"]}
