@@ -123,3 +123,18 @@ pip install pyyaml
 ```
 
 Run the application using ``` flask run ``` command and you can access swagger in http://127.0.0.1:5000/apidocs/
+
+# Run client
+
+Client written in React JS
+
+use below commands to run client
+
+```
+cd hr_client
+npm install
+npm start
+```
+
+client will up and run in http://localhost:3000/
+
