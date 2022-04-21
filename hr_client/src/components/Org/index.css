@@ -10,7 +10,7 @@
 
 .add-btn-div{
     float: right;
-    margin-top: 20px;
+    margin-bottom: 20px;
     margin-right: 0px;
     margin-left: 0px;
 }
@@ -27,4 +27,3 @@
 .add-btn {
     margin-top: 60px !important;
 }
-

@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { Alert, fabClasses } from "@mui/material";
+import Dropdown from "react-dropdown";
+import "./home.css";
+import "react-dropdown/style.css";
+import {
+  getResource,
+  deleteResource,
+  addResource,
+} from "../../services/hrservice";
+import { AddForm } from "./AddForm";
 
 import "./home.css";
-
 import "react-dropdown/style.css";
-import { deleteResource } from "../../services/hrservice";
 import {
   AppBar,
   Box,
@@ -16,21 +24,18 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import { Alert } from "@mui/material";
-import Dropdown from "react-dropdown";
 import "./home.css";
 import { EmployeeForm } from "./EmployeeForm";
 import { EmployeeTable } from "./EmploteeTable";
 import "react-dropdown/style.css";
-import { getResource, addResource } from "../../services/hrservice";
 import { APP_PATH, UI_LOADING_STATES } from "../../util/constants";
-import { RoleTable } from "./RoleTable";
-import { DepartmentTable } from "./DepartmentTable";
-import { OrganizationTable } from "./OrganizationTable";
 import { EmployeeHome } from "../Employee";
 import { RoleHome } from "../Role";
 import { AddEmployee } from "../Employee/AddEmployee";
 import { ViewEmployee } from "../Employee/ViewEmployee";
+import { OrgHome } from "../Org";
+import { DeptHome } from "../Dept";
+
 const Home = () => {
   const [appPath, setAppPath] = useState(APP_PATH.EMPLOYEE_HOME);
 
@@ -44,6 +49,7 @@ const Home = () => {
   const [roles, setRoles] = useState([]);
   const [role, setRole] = useState("Select");
 
+  const [isAddEmp, setisAddEmp] = useState(false);
   const [employeebyOrgDeptRoleList, setemployeebyOrgDeptRoleList] = useState(
     []
   );
@@ -55,12 +61,12 @@ const Home = () => {
   const [deptAllURL, setDeptAllURL] = useState([]);
   const [orgAllURL, setOrgAllURL] = useState([]);
 
-  const [isAddEmp, setisAddEmp] = useState(false);
-
   const [isShowAllEmps, setIsShowAllEmps] = useState(false);
   const [isShowAllRoles, setIsShowAllRoles] = useState(false);
   const [isShowAllDepts, setIsShowAllDepts] = useState(false);
   const [isShowAllOrgs, setIsShowAllOrgs] = useState(false);
+  const [isDisplayAddForm, setIsDisplayAddForm] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(false);
 
   const [employeeControl, setEmployeeControl] = useState();
 
@@ -133,6 +139,20 @@ const Home = () => {
     console.log(empBody);
     setEmployeeControl(empBody["@controls"]);
   };
+  // employee list by org dept and role
+  const getEmployeesList = async () => {
+    setisAddEmp(false);
+    let url = replaceTemplateVals(employeebyOrgDeptRoleURL);
+    let empBody = await getResource(url);
+    setEmployeeAllList([]);
+    setemployeebyOrgDeptRoleList(empBody["items"]);
+    setIsShowAllRoles(false);
+    setIsShowAllDepts(false);
+    setIsShowAllOrgs(false);
+    setIsShowAllEmps(false);
+    setIsDisplayAddForm(false);
+    setErrorMsg("");
+  };
 
   //  all employee list
   const getAllEmployees = async () => {
@@ -145,6 +165,8 @@ const Home = () => {
     setIsShowAllRoles(false);
     setIsShowAllDepts(false);
     setIsShowAllOrgs(false);
+    setIsDisplayAddForm(false);
+    setErrorMsg("");
   };
 
   const getAllRoles = () => {
@@ -154,22 +176,30 @@ const Home = () => {
     setIsShowAllOrgs(false);
     setisAddEmp(false);
     setIsShowAllEmps(false);
+    setIsDisplayAddForm(false);
+    setErrorMsg("");
   };
 
   const getAllDepts = () => {
+    setAppPath(APP_PATH.DEPT_HOME);
     setIsShowAllRoles(false);
     setIsShowAllDepts(true);
     setIsShowAllOrgs(false);
     setisAddEmp(false);
     setIsShowAllEmps(false);
+    setIsDisplayAddForm(false);
+    setErrorMsg("");
   };
 
   const getAllOrgs = () => {
+    setAppPath(APP_PATH.ORG_HOME);
     setIsShowAllRoles(false);
     setIsShowAllDepts(false);
     setIsShowAllOrgs(true);
     setisAddEmp(false);
     setIsShowAllEmps(false);
+    setIsDisplayAddForm(false);
+    setErrorMsg("");
   };
 
   const addEmployee = () => {
@@ -184,6 +214,42 @@ const Home = () => {
     }
   };
 
+  // const getEmployees = async (org, dept, role) => {
+  //   let url = employeeAllURL;
+
+  //   if (org != "Select" && dept != "Select" && role != "Select") {
+  //     url = employeebyOrgDeptRoleURL;
+  //   }
+  //   url = replaceTemplateVals(url, org, dept, role);
+  //   let empBody = await getResource(url);
+  //   setEmployeeAllList(empBody["items"]);
+  // };
+
+  // const addEmployee = () => {
+  //   setErrorMsg('')
+  //   if((organization === 'Select' || department === 'Select' || role === 'Select') && isAddEmp) {
+  //     setErrorMsg('Please select organization, department and role to add employee')
+  //   }
+  //   setisAddEmp(true)
+  //   setIsShowAllRoles(false)
+  //   setIsShowAllDepts(false)
+  //   setIsShowAllOrgs(false)
+  //   setIsShowAllEmps(false)
+  //   setIsDisplayAddForm(false)
+  // }
+
+  const onDeleteRole = async (data) => {
+    let del = await deleteResource(data);
+    let rolesBody = await getResource(roleAllURL);
+    setRoles(rolesBody["items"]);
+  };
+
+  const onDeleteOrg = async (data) => {
+    let del = await deleteResource(data);
+    let orgBody = await getResource(orgAllURL);
+    setOrgs(orgBody["items"]);
+  };
+
   const handleEditEmployee = async (url, body) => {
     let res = await addResource(url, body, "PUT");
     if (res) {
@@ -195,6 +261,61 @@ const Home = () => {
   const viewEmployee = (employee) => {
     setCurrentEmployee(employee);
     setAppPath(APP_PATH.VIEW_EMPLOYEE);
+  };
+
+  const onDeleteDept = async (data) => {
+    let del = await deleteResource(data);
+    let deptBody = await getResource(deptAllURL);
+    setDepts(deptBody["items"]);
+  };
+
+  const onClickAddRole = () => {
+    setIsDisplayAddForm(true);
+    setErrorMsg("");
+  };
+
+  const submitRole = async (e) => {
+    e.preventDefault();
+    let code = e.target.id.value;
+    let name = e.target.name.value;
+    let desc = e.target.desc.value;
+
+    console.log(code, name, desc);
+    let body = {
+      code: code,
+      name: name,
+      description: desc,
+    };
+    let res = await addResource(roleAllURL, body);
+    let roleBody = await getResource(roleAllURL);
+    setRoles(roleBody["items"]);
+    if (res && res.ok) {
+      setIsShowAllRoles(true);
+      setIsDisplayAddForm(false);
+    } else if (res && !res.ok) {
+      let err = res.status + " " + res.statusText;
+      setErrorMsg(err);
+    }
+  };
+
+  const onEditRole = async (data) => {
+    console.log(data);
+  };
+
+  const onEditOrg = async (data) => {
+    console.log(data);
+  };
+
+  const onEditDept = async (data) => {
+    console.log(data);
+  };
+
+  const onAddOrg = async (data) => {
+    console.log(data);
+  };
+
+  const onAddDept = async (data) => {
+    console.log(data);
   };
 
   let orgItems = orgs.map((item) => (
@@ -248,6 +369,39 @@ const Home = () => {
             editEmployee={handleEditEmployee}
           ></ViewEmployee>
         );
+      case APP_PATH.ROLE_HOME:
+        return (
+          <RoleHome
+            roleList={{
+              items: roles,
+              edit: onEditRole,
+              delete: onDeleteRole,
+              add: onClickAddRole,
+            }}
+          ></RoleHome>
+        );
+      case APP_PATH.ORG_HOME:
+        return (
+          <OrgHome
+            orgList={{
+              items: orgs,
+              delete: onDeleteOrg,
+              get: onEditOrg,
+              add: onAddOrg,
+            }}
+          ></OrgHome>
+        );
+      case APP_PATH.DEPT_HOME:
+        return (
+          <DeptHome
+            deptList={{
+              items: depts,
+              delete: onDeleteDept,
+              get: onEditDept,
+              add: onAddDept,
+            }}
+          ></DeptHome>
+        );
       default:
         return <RoleHome></RoleHome>;
     }
@@ -265,7 +419,7 @@ const Home = () => {
         >
           <Toolbar>
             <Typography variant="h6" noWrap component="div">
-              Anusha's HR System
+              HR System
             </Typography>
           </Toolbar>
         </AppBar>
@@ -305,6 +459,8 @@ const Home = () => {
         </Drawer>
         {getRenderRoute(appPath)}
       </Box>
+
+      {/* {getRenderRoute(appPath)} */}
     </div>
   );
 };
