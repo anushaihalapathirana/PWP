@@ -8,7 +8,7 @@ import {
   deleteResource,
   addResource,
 } from "../../services/hrservice";
-import { AddForm } from "./AddForm";
+
 
 import "./home.css";
 import "react-dropdown/style.css";
@@ -25,8 +25,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import "./home.css";
-import { EmployeeForm } from "./EmployeeForm";
-import { EmployeeTable } from "./EmploteeTable";
 import "react-dropdown/style.css";
 import { APP_PATH, UI_LOADING_STATES } from "../../util/constants";
 import { EmployeeHome } from "../Employee";
@@ -35,24 +33,17 @@ import { AddEmployee } from "../Employee/AddEmployee";
 import { ViewEmployee } from "../Employee/ViewEmployee";
 import { OrgHome } from "../Org";
 import { DeptHome } from "../Dept";
+import { ViewRole } from "../Role/ViewRole";
+import { AddRole } from "../Role/AddRole";
 
 const Home = () => {
   const [appPath, setAppPath] = useState(APP_PATH.EMPLOYEE_HOME);
 
   const [orgState, setOrgState] = useState(UI_LOADING_STATES.INIT);
   const [orgs, setOrgs] = useState([]);
-  const [organization, setOrganization] = useState("Select");
-
   const [depts, setDepts] = useState([]);
-  const [department, setDepartment] = useState("Select");
-
   const [roles, setRoles] = useState([]);
-  const [role, setRole] = useState("Select");
 
-  const [isAddEmp, setisAddEmp] = useState(false);
-  const [employeebyOrgDeptRoleList, setemployeebyOrgDeptRoleList] = useState(
-    []
-  );
   const [employeeAllList, setEmployeeAllList] = useState([]);
 
   const [employeebyOrgDeptRoleURL, setEmployeebyOrgDeptRoleURL] = useState([]);
@@ -61,16 +52,14 @@ const Home = () => {
   const [deptAllURL, setDeptAllURL] = useState([]);
   const [orgAllURL, setOrgAllURL] = useState([]);
 
-  const [isShowAllEmps, setIsShowAllEmps] = useState(false);
-  const [isShowAllRoles, setIsShowAllRoles] = useState(false);
-  const [isShowAllDepts, setIsShowAllDepts] = useState(false);
-  const [isShowAllOrgs, setIsShowAllOrgs] = useState(false);
-  const [isDisplayAddForm, setIsDisplayAddForm] = useState(false);
   const [errorMsg, setErrorMsg] = useState(false);
 
   const [employeeControl, setEmployeeControl] = useState();
+  const [roleControl, setRoleControl] = useState();
 
   const [currentEmployee, setCurrentEmployee] = useState();
+  const [currentRole, setCurrentRole] = useState();
+
 
   useEffect(() => {
     setOrgState(UI_LOADING_STATES.LOADING);
@@ -83,6 +72,7 @@ const Home = () => {
         let rolesBody = await getResource(
           orgBody["@controls"]["hrsys:roles-all"]["href"]
         );
+
         setEmployeebyOrgDeptRoleURL(
           orgBody["@controls"]["hrsys:by-org-dept-role-url-param"]["href"]
         );
@@ -94,25 +84,14 @@ const Home = () => {
         setOrgs(orgBody["items"]);
         setDepts(deptsBody["items"]);
         setRoles(rolesBody["items"]);
+        setRoleControl(rolesBody["@controls"]);
+
       } catch (error) {
         setOrgState(UI_LOADING_STATES.ERROR);
       }
     }
     callResource();
   }, []);
-
-  const handleOrganizationChange = (event) => {
-    console.log(event);
-    setOrganization(event.value.key);
-  };
-
-  const handleDepartmentChange = (event) => {
-    setDepartment(event.value.key);
-  };
-
-  const handleRoleChange = (event) => {
-    setRole(event.value.key);
-  };
 
   const replaceTemplateVals = (url, organization, department, role) => {
     if (organization) {
@@ -139,71 +118,38 @@ const Home = () => {
     console.log(empBody);
     setEmployeeControl(empBody["@controls"]);
   };
-  // employee list by org dept and role
-  const getEmployeesList = async () => {
-    setisAddEmp(false);
-    let url = replaceTemplateVals(employeebyOrgDeptRoleURL);
-    let empBody = await getResource(url);
-    setEmployeeAllList([]);
-    setemployeebyOrgDeptRoleList(empBody["items"]);
-    setIsShowAllRoles(false);
-    setIsShowAllDepts(false);
-    setIsShowAllOrgs(false);
-    setIsShowAllEmps(false);
-    setIsDisplayAddForm(false);
-    setErrorMsg("");
-  };
 
   //  all employee list
   const getAllEmployees = async () => {
     setAppPath(APP_PATH.EMPLOYEE_HOME);
-    setisAddEmp(false);
-    setIsShowAllEmps(true);
     let empBody = await getResource(employeeAllURL);
-    setemployeebyOrgDeptRoleList([]);
     setEmployeeAllList(empBody["items"]);
-    setIsShowAllRoles(false);
-    setIsShowAllDepts(false);
-    setIsShowAllOrgs(false);
-    setIsDisplayAddForm(false);
     setErrorMsg("");
   };
 
-  const getAllRoles = () => {
+  const getAllRoles = async () => {
     setAppPath(APP_PATH.ROLE_HOME);
-    setIsShowAllRoles(true);
-    setIsShowAllDepts(false);
-    setIsShowAllOrgs(false);
-    setisAddEmp(false);
-    setIsShowAllEmps(false);
-    setIsDisplayAddForm(false);
+    let roleBody = await getResource(roleAllURL);
+    setRoles(roleBody["items"]);
     setErrorMsg("");
   };
 
   const getAllDepts = () => {
     setAppPath(APP_PATH.DEPT_HOME);
-    setIsShowAllRoles(false);
-    setIsShowAllDepts(true);
-    setIsShowAllOrgs(false);
-    setisAddEmp(false);
-    setIsShowAllEmps(false);
-    setIsDisplayAddForm(false);
     setErrorMsg("");
   };
 
   const getAllOrgs = () => {
     setAppPath(APP_PATH.ORG_HOME);
-    setIsShowAllRoles(false);
-    setIsShowAllDepts(false);
-    setIsShowAllOrgs(true);
-    setisAddEmp(false);
-    setIsShowAllEmps(false);
-    setIsDisplayAddForm(false);
     setErrorMsg("");
   };
 
   const addEmployee = () => {
     setAppPath(APP_PATH.ADD_EMPLOYEE);
+  };
+
+  const addRole = () => {
+    setAppPath(APP_PATH.ADD_ROLE);
   };
 
   const handleAddEmployee = async (url, body) => {
@@ -214,29 +160,13 @@ const Home = () => {
     }
   };
 
-  // const getEmployees = async (org, dept, role) => {
-  //   let url = employeeAllURL;
-
-  //   if (org != "Select" && dept != "Select" && role != "Select") {
-  //     url = employeebyOrgDeptRoleURL;
-  //   }
-  //   url = replaceTemplateVals(url, org, dept, role);
-  //   let empBody = await getResource(url);
-  //   setEmployeeAllList(empBody["items"]);
-  // };
-
-  // const addEmployee = () => {
-  //   setErrorMsg('')
-  //   if((organization === 'Select' || department === 'Select' || role === 'Select') && isAddEmp) {
-  //     setErrorMsg('Please select organization, department and role to add employee')
-  //   }
-  //   setisAddEmp(true)
-  //   setIsShowAllRoles(false)
-  //   setIsShowAllDepts(false)
-  //   setIsShowAllOrgs(false)
-  //   setIsShowAllEmps(false)
-  //   setIsDisplayAddForm(false)
-  // }
+  const handleAddRole = async (url, body) => {
+    let res = await addResource(url, body);
+    if (res) {
+      setAppPath(APP_PATH.ROLE_HOME);
+      getAllRoles();
+    }
+  };
 
   const onDeleteRole = async (data) => {
     let del = await deleteResource(data);
@@ -258,48 +188,28 @@ const Home = () => {
     }
   };
 
+  const handleEditRole = async (url, body) => {
+    let res = await addResource(url, body, "PUT");
+    if (res) {
+      setAppPath(APP_PATH.ROLE_HOME);
+      getAllRoles();
+    }
+  };
+
   const viewEmployee = (employee) => {
     setCurrentEmployee(employee);
     setAppPath(APP_PATH.VIEW_EMPLOYEE);
+  };
+
+  const viewRole = (role) => {
+    setCurrentRole(role);
+    setAppPath(APP_PATH.VIEW_ROLE);
   };
 
   const onDeleteDept = async (data) => {
     let del = await deleteResource(data);
     let deptBody = await getResource(deptAllURL);
     setDepts(deptBody["items"]);
-  };
-
-  const onClickAddRole = () => {
-    setIsDisplayAddForm(true);
-    setErrorMsg("");
-  };
-
-  const submitRole = async (e) => {
-    e.preventDefault();
-    let code = e.target.id.value;
-    let name = e.target.name.value;
-    let desc = e.target.desc.value;
-
-    console.log(code, name, desc);
-    let body = {
-      code: code,
-      name: name,
-      description: desc,
-    };
-    let res = await addResource(roleAllURL, body);
-    let roleBody = await getResource(roleAllURL);
-    setRoles(roleBody["items"]);
-    if (res && res.ok) {
-      setIsShowAllRoles(true);
-      setIsDisplayAddForm(false);
-    } else if (res && !res.ok) {
-      let err = res.status + " " + res.statusText;
-      setErrorMsg(err);
-    }
-  };
-
-  const onEditRole = async (data) => {
-    console.log(data);
   };
 
   const onEditOrg = async (data) => {
@@ -374,12 +284,26 @@ const Home = () => {
           <RoleHome
             roleList={{
               items: roles,
-              edit: onEditRole,
-              delete: onDeleteRole,
-              add: onClickAddRole,
+              add: addRole,
             }}
+            viewRole={viewRole}
+            roleControl={roleControl}
           ></RoleHome>
         );
+      case APP_PATH.ADD_ROLE:
+        return (
+          <AddRole
+            addRoleControl={roleControl["hrsys:add-role"]}
+            addRole={handleAddRole}
+          ></AddRole>
+        );
+      case APP_PATH.VIEW_ROLE:
+        return (
+          <ViewRole
+            role={currentRole}
+            editRole={handleEditRole}
+          ></ViewRole>
+          );
       case APP_PATH.ORG_HOME:
         return (
           <OrgHome

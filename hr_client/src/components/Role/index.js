@@ -12,17 +12,22 @@ import {
     Table
 } from '@material-ui/core';
 
-const RoleHome = ({ roleList }) => {
+const RoleHome = ({ roleList, viewRole, roleControl }) => {
   return (
     <div>
       <div className='add-btn-div'>
-        <Button className='btn-get-data'
+      <Button
+            className="btn-get-data"
             color="primary"
-            variant="outlined"
-            onClick={roleList.add}
-            >
-              Add Role
-        </Button>
+            variant="contained"
+            onClick={() => {
+              if (roleControl["hrsys:add-role"]) {
+                roleList.add();
+              }
+            }}
+          >
+            Add Role
+          </Button>
       </div>
       <div>
         <TableContainer component={Paper}>
@@ -32,8 +37,7 @@ const RoleHome = ({ roleList }) => {
                         <TableCell align="right">Code</TableCell>
                         <TableCell align="right">Name</TableCell>
                         <TableCell align="right">Description</TableCell>
-                        <TableCell align="right">Edit</TableCell>
-                        <TableCell align="right">Delete</TableCell>
+                        <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -44,10 +48,15 @@ const RoleHome = ({ roleList }) => {
                           </TableCell>
                           <TableCell align="right">{row.name}</TableCell>
                           <TableCell align="right">{row.description}</TableCell>
-                          <TableCell className='viewcell' align="right" onClick={() => roleList.edit(row['@controls']['self']['href'])}>{'Edit'}</TableCell>
-                          <TableCell className='viewcell' align="right" 
-                          onClick={() => roleList.delete(row['@controls']['self']['href'])}
-                          >{'Delete'}</TableCell>
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                              viewRole(row);
+                            }} 
+                          >
+                            View
+                          </Button>
                         </TableRow>
                       ))}
                 </TableBody>
