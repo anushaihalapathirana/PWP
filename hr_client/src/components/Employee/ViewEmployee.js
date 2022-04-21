@@ -12,7 +12,12 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { getResource } from "../../services/hrservice";
 
-const ViewEmployee = ({ employee, editEmployee, deleteEmployee }) => {
+const ViewEmployee = ({
+  employee,
+  editEmployee,
+  deleteEmployee,
+  viewLeaves,
+}) => {
   const [employeeData, setEmployeeData] = useState();
 
   const [empEdit, setEmpEdit] = useState({});
@@ -45,7 +50,12 @@ const ViewEmployee = ({ employee, editEmployee, deleteEmployee }) => {
       if (obj.enum) {
         console.log("DDDDDDD", empEdit[property]);
         formContent.push(
-          <FormControl>
+          <FormControl
+            style={{
+              width: "300px",
+              margin: "20px",
+            }}
+          >
             <InputLabel htmlFor={property}>{property}</InputLabel>
             <Select
               //   id={property}
@@ -84,6 +94,10 @@ const ViewEmployee = ({ employee, editEmployee, deleteEmployee }) => {
         console.log(moment(empEdit[property]).format("YYYY-DD-MM"));
         formContent.push(
           <TextField
+            style={{
+              width: "300px",
+              margin: "20px",
+            }}
             id={property}
             label={property}
             type="date"
@@ -102,7 +116,12 @@ const ViewEmployee = ({ employee, editEmployee, deleteEmployee }) => {
         );
       } else {
         formContent.push(
-          <FormControl>
+          <FormControl
+            style={{
+              width: "300px",
+              margin: "20px",
+            }}
+          >
             <InputLabel htmlFor={property}>{property}</InputLabel>
             <Input
               type={obj.type}
@@ -123,53 +142,68 @@ const ViewEmployee = ({ employee, editEmployee, deleteEmployee }) => {
   }
 
   return (
-    <div style={{ display: "flex" }}>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          let body = {};
-          for (const [property, obj] of Object.entries(
-            employeeData["@controls"]["edit"]["schema"]["properties"]
-          )) {
-            if (obj.type === "number") {
-              body[property] = parseInt(empEdit[property]);
-            } else if (obj.format === "date-time") {
-              body[property] = moment(empEdit[property]).toISOString(true);
-            } else {
-              body[property] = empEdit[property];
-            }
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        marginTop: "65px",
+        marginLeft: "240px",
+      }}
+    >
+      <div>
+        <Button onClick={viewLeaves}>View Leaves</Button>
+        <Button>Add Leave</Button>
+        {/* <Button>Employees in Same Organization</Button> */}
+      </div>
+      <div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            let body = {};
+            for (const [property, obj] of Object.entries(
+              employeeData["@controls"]["edit"]["schema"]["properties"]
+            )) {
+              if (obj.type === "number") {
+                body[property] = parseInt(empEdit[property]);
+              } else if (obj.format === "date-time") {
+                body[property] = moment(empEdit[property]).toISOString(true);
+              } else {
+                body[property] = empEdit[property];
+              }
 
-            if (
-              employeeData["@controls"]["edit"]["schema"]["required"].includes(
-                property
-              ) &&
-              !empEdit[property]
-            ) {
-              //   setError(true);
-              return;
+              if (
+                employeeData["@controls"]["edit"]["schema"][
+                  "required"
+                ].includes(property) &&
+                !empEdit[property]
+              ) {
+                //   setError(true);
+                return;
+              }
             }
-          }
-          //   addEmployee(addEmployeeControl["href"], body);
-          editEmployee(
-            employeeData["@controls"]["edit"]["href"],
-            body,
-            employeeData["@controls"]["edit"]["method"]
-          );
-          console.log("BODY", body);
-        }}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "end",
-          height: "90vh",
-          flexWrap: "wrap",
-          marginTop: "70px",
-        }}
-      >
-        {formContent}
-
-        <Button type="submit">SUBMIT</Button>
-      </form>
+            //   addEmployee(addEmployeeControl["href"], body);
+            editEmployee(
+              employeeData["@controls"]["edit"]["href"],
+              body,
+              employeeData["@controls"]["edit"]["method"]
+            );
+            console.log("BODY", body);
+          }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            // alignItems: "end",
+            height: "70vh",
+            flexWrap: "wrap",
+            marginTop: "70px",
+          }}
+        >
+          {formContent}
+          <Button variant="contained" color="primary" type="submit">
+            Update
+          </Button>
+        </form>
+      </div>
     </div>
   );
 };
