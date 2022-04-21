@@ -50,7 +50,6 @@ import {
                 label={property}
                 value={deptEdit[property] || ""}
                 onChange={(e) => {
-                  let f = property;
                   setDeptEdit({
                     ...deptEdit,
                     [property]: e.target.value,

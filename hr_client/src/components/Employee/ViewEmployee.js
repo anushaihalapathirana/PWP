@@ -48,17 +48,9 @@ const ViewEmployee = ({ employee, editEmployee, deleteEmployee }) => {
           <FormControl>
             <InputLabel htmlFor={property}>{property}</InputLabel>
             <Select
-              //   id={property}
-              //   name={property}
               label={property}
               value={empEdit[property] || ""}
-              //   defaultValue={empEdit[property]}
               onChange={(e) => {
-                let f = property;
-                // setFormSelectState({
-                //   ...formSelectState,
-                //   f: e.target.value,
-                // });
                 setEmpEdit({
                   ...empEdit,
                   [property]: e.target.value,

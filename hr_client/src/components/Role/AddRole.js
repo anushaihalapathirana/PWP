@@ -1,5 +1,4 @@
 import {
-    AppBar,
     Button,
     FormControl,
     FormHelperText,
@@ -30,7 +29,6 @@ import {
               value={formSelectState[property] && obj.enum[0]}
               label={property}
               onChange={(e) => {
-                let f = property;
                 setFormSelectState({
                   ...formSelectState,
                   f: e.target.value,

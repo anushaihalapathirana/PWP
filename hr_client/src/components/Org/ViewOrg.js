@@ -50,7 +50,6 @@ import {
                 label={property}
                 value={orgEdit[property] || ""}
                 onChange={(e) => {
-                  let f = property;
                   setOrgEdit({
                     ...orgEdit,
                     [property]: e.target.value,

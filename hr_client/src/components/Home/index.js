@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Alert, fabClasses } from "@mui/material";
-import Dropdown from "react-dropdown";
 import "./home.css";
 import "react-dropdown/style.css";
 import {
@@ -8,14 +6,11 @@ import {
   deleteResource,
   addResource,
 } from "../../services/hrservice";
-
-
 import "./home.css";
 import "react-dropdown/style.css";
 import {
   AppBar,
   Box,
-  Button,
   Divider,
   Drawer,
   List,
@@ -120,7 +115,7 @@ const Home = () => {
   const getEmployees = async (org, dept, role) => {
     let url = employeeAllURL;
 
-    if (org != "Select" && dept != "Select" && role != "Select") {
+    if (org !== "Select" && dept !== "Select" && role !== "Select") {
       url = employeebyOrgDeptRoleURL;
     }
     url = replaceTemplateVals(url, org, dept, role);
