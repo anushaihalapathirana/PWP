@@ -46,14 +46,17 @@ const EmployeeHome = ({
       style={{
         display: "flex",
         flexDirection: "column",
+        marginTop: "65px",
+        marginLeft: "240px",
       }}
     >
 
       <div
         style={{
+          position: "relative",
           display: "flex",
           flexDirection: "row",
-          alignItems: "center",
+          // alignItems: "center",
         }}
       >
         <div className="drop-down">

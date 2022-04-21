@@ -10,7 +10,6 @@ import "./home.css";
 import "react-dropdown/style.css";
 import {
   AppBar,
-  Box,
   Divider,
   Drawer,
   List,
@@ -30,6 +29,7 @@ import { OrgHome } from "../Org";
 import { DeptHome } from "../Dept";
 import { ViewRole } from "../Role/ViewRole";
 import { AddRole } from "../Role/AddRole";
+import { ViewLeave } from "../Leave/ViewLeave";
 import { AddOrg } from "../Org/AddOrg";
 import { ViewOrg } from "../Org/ViewOrg";
 import { AddDept } from "../Dept/AddDept";
@@ -58,12 +58,10 @@ const Home = () => {
   const [orgControl, setOrgControl] = useState();
   const [deptControl, setDeptControl] = useState();
 
-
   const [currentEmployee, setCurrentEmployee] = useState();
   const [currentRole, setCurrentRole] = useState();
   const [currentOrg, setCurrentOrg] = useState();
   const [currentDept, setCurrentDept] = useState();
-
 
   useEffect(() => {
     setOrgState(UI_LOADING_STATES.LOADING);
@@ -91,7 +89,6 @@ const Home = () => {
         setRoleControl(rolesBody["@controls"]);
         setOrgControl(orgBody["@controls"]);
         setDeptControl(deptsBody["@controls"]);
-
       } catch (error) {
         setOrgState(UI_LOADING_STATES.ERROR);
       }
@@ -147,7 +144,7 @@ const Home = () => {
     setErrorMsg("");
   };
 
-  const getAllOrgs = async() => {
+  const getAllOrgs = async () => {
     setAppPath(APP_PATH.ORG_HOME);
     let orgBody = await getResource(orgAllURL);
     setOrgs(orgBody["items"]);
@@ -232,6 +229,16 @@ const Home = () => {
       setAppPath(APP_PATH.ORG_HOME);
       getAllOrgs();
     }
+  };
+
+  const viewEmployeeLeaves = (employee) => {
+    setAppPath(APP_PATH.VIEW_LEAVE);
+  };
+
+  const onDeleteDept = async (data) => {
+    let del = await deleteResource(data);
+    let deptBody = await getResource(deptAllURL);
+    setDepts(deptBody["items"]);
   };
 
   const handleDeleteDept = async (url, method) => {
@@ -322,6 +329,7 @@ const Home = () => {
           <ViewEmployee
             employee={currentEmployee}
             editEmployee={handleEditEmployee}
+            viewLeaves={viewEmployeeLeaves}
             deleteEmployee={handleDeleteEmployee}
           ></ViewEmployee>
         );
@@ -350,7 +358,7 @@ const Home = () => {
             editRole={handleEditRole}
             deleteRole={handleDeleteRole}
           ></ViewRole>
-          );
+        );
       case APP_PATH.ORG_HOME:
         return (
           <OrgHome
@@ -376,7 +384,7 @@ const Home = () => {
             editOrg={handleEditOrg}
             deleteOrg={handleDeleteOrg}
           ></ViewOrg>
-          );
+        );
       case APP_PATH.DEPT_HOME:
         return (
           <DeptHome
@@ -388,6 +396,8 @@ const Home = () => {
             deptControl={deptControl}
           ></DeptHome>
         );
+      case APP_PATH.VIEW_LEAVE:
+        return <ViewLeave employee={currentEmployee}></ViewLeave>;
       case APP_PATH.ADD_DEPT:
         return (
           <AddDept
@@ -402,7 +412,7 @@ const Home = () => {
             editDept={handleEditDept}
             deleteDept={handleDeleteDept}
           ></ViewDept>
-          );
+        );
       default:
         return <RoleHome></RoleHome>;
     }
@@ -410,56 +420,54 @@ const Home = () => {
 
   return (
     <div>
-      <Box style={{ display: "flex" }}>
-        <AppBar
-          position="fixed"
+      <AppBar
+        position="fixed"
+        style={{
+          width: `calc(100% - 240px)`,
+          marginLeft: `240px`,
+        }}
+      >
+        <Toolbar>
+          <Typography variant="h6" noWrap component="div">
+            HR System
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
+      <Drawer
+        sx={{
+          width: 240,
+        }}
+        variant="permanent"
+        anchor="left"
+      >
+        <div
           style={{
-            width: `calc(100% - 240px)`,
-            marginLeft: `240px`,
+            width: "240px",
           }}
         >
-          <Toolbar>
-            <Typography variant="h6" noWrap component="div">
-              HR System
-            </Typography>
-          </Toolbar>
-        </AppBar>
+          <Toolbar />
 
-        <Drawer
-          sx={{
-            width: 240,
-          }}
-          variant="permanent"
-          anchor="left"
-        >
-          <div
-            style={{
-              width: "240px",
-            }}
-          >
-            <Toolbar />
-
-            <List>
-              <ListItem button onClick={getAllEmployees}>
-                <ListItemText primary={"Employees"} />
-              </ListItem>
-              <Divider />
-              <ListItem button onClick={getAllRoles}>
-                <ListItemText primary={"Roles"} />
-              </ListItem>
-              <Divider />
-              <ListItem button onClick={getAllDepts}>
-                <ListItemText primary={"Departments"} />
-              </ListItem>
-              <Divider />
-              <ListItem button onClick={getAllOrgs}>
-                <ListItemText primary={"Organizations"} />
-              </ListItem>
-            </List>
-          </div>
-        </Drawer>
-        {getRenderRoute(appPath)}
-      </Box>
+          <List>
+            <ListItem button onClick={getAllEmployees}>
+              <ListItemText primary={"Employees"} />
+            </ListItem>
+            <Divider />
+            <ListItem button onClick={getAllRoles}>
+              <ListItemText primary={"Roles"} />
+            </ListItem>
+            <Divider />
+            <ListItem button onClick={getAllDepts}>
+              <ListItemText primary={"Departments"} />
+            </ListItem>
+            <Divider />
+            <ListItem button onClick={getAllOrgs}>
+              <ListItemText primary={"Organizations"} />
+            </ListItem>
+          </List>
+        </div>
+      </Drawer>
+      {getRenderRoute(appPath)}
 
       {/* {getRenderRoute(appPath)} */}
     </div>
