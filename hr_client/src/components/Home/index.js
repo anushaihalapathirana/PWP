@@ -228,19 +228,6 @@ const Home = () => {
     console.log(data);
   };
 
-  let orgItems = orgs.map((item) => (
-    <option key={item.organization_id}>{item.name}</option>
-  ));
-
-  let deptItems = depts.map((item) => (
-    <option key={item.department_id}>{item.name}</option>
-  ));
-
-  let roleItems = roles.map((item) => (
-    <option key={item.code}>{item.name}</option>
-  ));
-  let drawerWidth = 240;
-
   const getRenderRoute = (path) => {
     switch (path) {
       case APP_PATH.EMPLOYEE_HOME:
