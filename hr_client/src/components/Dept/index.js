@@ -12,18 +12,23 @@ import {
     Table
 } from '@material-ui/core';
 
-const DeptHome = ({ deptList }) => {
+const DeptHome = ({ deptList, viewDept, deptControl }) => {
 
   return (
     <div>
       <div className='add-btn-div'>
-        <Button className='btn-get-data'
+      <Button
+            className="btn-get-data"
             color="primary"
-            variant="outlined"
-            onClick={deptList.add}
-            >
-              Add Department
-        </Button>
+            variant="contained"
+            onClick={() => {
+              if (deptControl["hrsys:add-dept"]) {
+                deptList.add();
+              }
+            }}
+          >
+            Add Department
+          </Button>
       </div>
       <div>
         <TableContainer component={Paper}>
@@ -33,8 +38,7 @@ const DeptHome = ({ deptList }) => {
                         <TableCell align="right">ID</TableCell>
                         <TableCell align="right">Name</TableCell>
                         <TableCell align="right">Description</TableCell>
-                        <TableCell align="right">Edit</TableCell>
-                        <TableCell align="right">Delete</TableCell>
+                        <TableCell align="right"></TableCell>
 
                   </TableRow>
                 </TableHead>
@@ -46,10 +50,15 @@ const DeptHome = ({ deptList }) => {
                           </TableCell>
                           <TableCell align="right">{row.name}</TableCell>
                           <TableCell align="right">{row.description}</TableCell>
-                          <TableCell className='viewcell' align="right" onClick={() => deptList.edit(row['@controls']['self']['href'])}>{'Edit'}</TableCell>
-                          <TableCell className='viewcell' align="right" 
-                          onClick={() => deptList.delete(row['@controls']['self']['href'])}
-                          >{'Delete'}</TableCell>
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                              viewDept(row);
+                            }} 
+                          >
+                            View
+                          </Button>
                         </TableRow>
                       ))}
                 </TableBody>
