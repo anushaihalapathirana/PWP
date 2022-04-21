@@ -12,35 +12,35 @@ import {
   import React, { useEffect, useState } from "react";
   import { getResource } from "../../services/hrservice";
   
-  const ViewRole = ({ role, editRole, deleteRole }) => {
-    const [roleData, setRoleData] = useState();
+  const ViewDept = ({ dept, editDept, deleteDept }) => {
+    const [deptData, setDeptData] = useState();
   
-    const [roleEdit, setRoleEdit] = useState({});
+    const [deptEdit, setDeptEdit] = useState({});
     useEffect(() => {
-      async function getRole() {
-        let res = await getResource(role["@controls"]["self"]["href"]);
-        setRoleData(res);
+      async function getDept() {
+        let res = await getResource(dept["@controls"]["self"]["href"]);
+        setDeptData(res);
       }
-      getRole();
-    }, [role]);
+      getDept();
+    }, [dept]);
   
     useEffect(() => {
       let temp = {};
-      if (roleData) {
-        for (const [property, obj] of Object.entries(roleData)) {
+      if (deptData) {
+        for (const [property, obj] of Object.entries(deptData)) {
           if (!property.startsWith("@")) {
             temp[property] = obj;
           }
   
-          setRoleEdit(temp);
+          setDeptEdit(temp);
         }
       }
-    }, [roleData]);
+    }, [deptData]);
   
     let formContent = [];
-    if (roleData) {
+    if (deptData) {
       for (const [property, obj] of Object.entries(
-        roleData["@controls"]["edit"]["schema"]["properties"]
+        deptData["@controls"]["edit"]["schema"]["properties"]
       )) {
         if (obj.enum) {
           formContent.push(
@@ -48,19 +48,19 @@ import {
               <InputLabel htmlFor={property}>{property}</InputLabel>
               <Select
                 label={property}
-                value={roleEdit[property] || ""}
+                value={deptEdit[property] || ""}
                 onChange={(e) => {
                   let f = property;
-                  setRoleEdit({
-                    ...roleEdit,
+                  setDeptEdit({
+                    ...deptEdit,
                     [property]: e.target.value,
                   });
                 }}
               >
                 {obj.enum.map((item) => {
-                  console.log(roleEdit[property] === item);
+                  console.log(deptEdit[property] === item);
                   return (
-                    <MenuItem selected={roleEdit[property] === item} value={item}>
+                    <MenuItem selected={deptEdit[property] === item} value={item}>
                       {item}
                     </MenuItem>
                   );
@@ -70,16 +70,16 @@ import {
             </FormControl>
           );
         } else if (obj.format === "date-time") {
-          console.log(moment(roleEdit[property]).format("YYYY-DD-MM"));
+          console.log(moment(deptEdit[property]).format("YYYY-DD-MM"));
           formContent.push(
             <TextField
               id={property}
               label={property}
               type="date"
-              value={moment(roleEdit[property]).format("YYYY-MM-DD")}
+              value={moment(deptEdit[property]).format("YYYY-MM-DD")}
               onChange={(e) => {
-                setRoleEdit({
-                  ...roleEdit,
+                setDeptEdit({
+                  ...deptEdit,
                   [property]: e.target.value,
                 });
               }}
@@ -96,10 +96,10 @@ import {
               <Input
                 type={obj.type}
                 id={property}
-                value={roleEdit[property]}
+                value={deptEdit[property]}
                 onChange={(e) => {
-                  setRoleEdit({
-                    ...roleEdit,
+                  setDeptEdit({
+                    ...deptEdit,
                     [property]: e.target.value,
                   });
                 }}
@@ -110,14 +110,14 @@ import {
         }
       }
     }
-
+  
     const handleDelete = () => {
-      deleteRole(
-        roleData["@controls"]["hrsys:delete-role"]["href"],
-        roleData["@controls"]["hrsys:delete-role"]["method"]
+      deleteDept(
+        deptData["@controls"]["hrsys:delete-dept"]["href"],
+        deptData["@controls"]["hrsys:delete-dept"]["method"]
       );
     }
-  
+
     return (
       <div style={{ display: "flex" }}>
         <form
@@ -125,29 +125,29 @@ import {
             e.preventDefault();
             let body = {};
             for (const [property, obj] of Object.entries(
-              roleData["@controls"]["edit"]["schema"]["properties"]
+              deptData["@controls"]["edit"]["schema"]["properties"]
             )) {
               if (obj.type === "number") {
-                body[property] = parseInt(roleEdit[property]);
+                body[property] = parseInt(deptEdit[property]);
               } else if (obj.format === "date-time") {
-                body[property] = moment(roleEdit[property]).toISOString(true);
+                body[property] = moment(deptEdit[property]).toISOString(true);
               } else {
-                body[property] = roleEdit[property];
+                body[property] = deptEdit[property];
               }
   
               if (
-                roleData["@controls"]["edit"]["schema"]["required"].includes(
+                deptData["@controls"]["edit"]["schema"]["required"].includes(
                   property
                 ) &&
-                !roleEdit[property]
+                !deptEdit[property]
               ) {
                 return;
               }
             }
-            editRole(
-              roleData["@controls"]["edit"]["href"],
+            editDept(
+              deptData["@controls"]["edit"]["href"],
               body,
-              roleData["@controls"]["edit"]["method"]
+              deptData["@controls"]["edit"]["method"]
             );
             console.log("BODY", body);
           }}
@@ -163,12 +163,11 @@ import {
           {formContent}
   
           <Button type="submit">SUBMIT</Button>
-
           <Button onClick={handleDelete}>DELETE</Button>
         </form>
       </div>
     );
   };
   
-  export { ViewRole };
+  export { ViewDept };
   

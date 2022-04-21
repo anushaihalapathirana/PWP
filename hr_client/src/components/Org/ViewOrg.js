@@ -12,35 +12,35 @@ import {
   import React, { useEffect, useState } from "react";
   import { getResource } from "../../services/hrservice";
   
-  const ViewRole = ({ role, editRole, deleteRole }) => {
-    const [roleData, setRoleData] = useState();
+  const ViewOrg = ({ org, editOrg, deleteOrg }) => {
+    const [orgData, setOrgData] = useState();
   
-    const [roleEdit, setRoleEdit] = useState({});
+    const [orgEdit, setOrgEdit] = useState({});
     useEffect(() => {
-      async function getRole() {
-        let res = await getResource(role["@controls"]["self"]["href"]);
-        setRoleData(res);
+      async function getOrg() {
+        let res = await getResource(org["@controls"]["self"]["href"]);
+        setOrgData(res);
       }
-      getRole();
-    }, [role]);
+      getOrg();
+    }, [org]);
   
     useEffect(() => {
       let temp = {};
-      if (roleData) {
-        for (const [property, obj] of Object.entries(roleData)) {
+      if (orgData) {
+        for (const [property, obj] of Object.entries(orgData)) {
           if (!property.startsWith("@")) {
             temp[property] = obj;
           }
   
-          setRoleEdit(temp);
+          setOrgEdit(temp);
         }
       }
-    }, [roleData]);
+    }, [orgData]);
   
     let formContent = [];
-    if (roleData) {
+    if (orgData) {
       for (const [property, obj] of Object.entries(
-        roleData["@controls"]["edit"]["schema"]["properties"]
+        orgData["@controls"]["edit"]["schema"]["properties"]
       )) {
         if (obj.enum) {
           formContent.push(
@@ -48,19 +48,19 @@ import {
               <InputLabel htmlFor={property}>{property}</InputLabel>
               <Select
                 label={property}
-                value={roleEdit[property] || ""}
+                value={orgEdit[property] || ""}
                 onChange={(e) => {
                   let f = property;
-                  setRoleEdit({
-                    ...roleEdit,
+                  setOrgEdit({
+                    ...orgEdit,
                     [property]: e.target.value,
                   });
                 }}
               >
                 {obj.enum.map((item) => {
-                  console.log(roleEdit[property] === item);
+                  console.log(orgEdit[property] === item);
                   return (
-                    <MenuItem selected={roleEdit[property] === item} value={item}>
+                    <MenuItem selected={orgEdit[property] === item} value={item}>
                       {item}
                     </MenuItem>
                   );
@@ -70,16 +70,16 @@ import {
             </FormControl>
           );
         } else if (obj.format === "date-time") {
-          console.log(moment(roleEdit[property]).format("YYYY-DD-MM"));
+          console.log(moment(orgEdit[property]).format("YYYY-DD-MM"));
           formContent.push(
             <TextField
               id={property}
               label={property}
               type="date"
-              value={moment(roleEdit[property]).format("YYYY-MM-DD")}
+              value={moment(orgEdit[property]).format("YYYY-MM-DD")}
               onChange={(e) => {
-                setRoleEdit({
-                  ...roleEdit,
+                setOrgEdit({
+                  ...orgEdit,
                   [property]: e.target.value,
                 });
               }}
@@ -96,10 +96,10 @@ import {
               <Input
                 type={obj.type}
                 id={property}
-                value={roleEdit[property]}
+                value={orgEdit[property]}
                 onChange={(e) => {
-                  setRoleEdit({
-                    ...roleEdit,
+                  setOrgEdit({
+                    ...orgEdit,
                     [property]: e.target.value,
                   });
                 }}
@@ -110,14 +110,14 @@ import {
         }
       }
     }
-
+  
     const handleDelete = () => {
-      deleteRole(
-        roleData["@controls"]["hrsys:delete-role"]["href"],
-        roleData["@controls"]["hrsys:delete-role"]["method"]
+      deleteOrg(
+        orgData["@controls"]["hrsys:delete-organization"]["href"],
+        orgData["@controls"]["hrsys:delete-organization"]["method"]
       );
     }
-  
+
     return (
       <div style={{ display: "flex" }}>
         <form
@@ -125,29 +125,29 @@ import {
             e.preventDefault();
             let body = {};
             for (const [property, obj] of Object.entries(
-              roleData["@controls"]["edit"]["schema"]["properties"]
+              orgData["@controls"]["edit"]["schema"]["properties"]
             )) {
               if (obj.type === "number") {
-                body[property] = parseInt(roleEdit[property]);
+                body[property] = parseInt(orgEdit[property]);
               } else if (obj.format === "date-time") {
-                body[property] = moment(roleEdit[property]).toISOString(true);
+                body[property] = moment(orgEdit[property]).toISOString(true);
               } else {
-                body[property] = roleEdit[property];
+                body[property] = orgEdit[property];
               }
   
               if (
-                roleData["@controls"]["edit"]["schema"]["required"].includes(
+                orgData["@controls"]["edit"]["schema"]["required"].includes(
                   property
                 ) &&
-                !roleEdit[property]
+                !orgEdit[property]
               ) {
                 return;
               }
             }
-            editRole(
-              roleData["@controls"]["edit"]["href"],
+            editOrg(
+              orgData["@controls"]["edit"]["href"],
               body,
-              roleData["@controls"]["edit"]["method"]
+              orgData["@controls"]["edit"]["method"]
             );
             console.log("BODY", body);
           }}
@@ -163,12 +163,11 @@ import {
           {formContent}
   
           <Button type="submit">SUBMIT</Button>
-
           <Button onClick={handleDelete}>DELETE</Button>
         </form>
       </div>
     );
   };
   
-  export { ViewRole };
+  export { ViewOrg };
   

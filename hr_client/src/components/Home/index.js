@@ -35,6 +35,10 @@ import { DeptHome } from "../Dept";
 import { ViewRole } from "../Role/ViewRole";
 import { AddRole } from "../Role/AddRole";
 import { ViewLeave } from "../Leave/ViewLeave";
+import { AddOrg } from "../Org/AddOrg";
+import { ViewOrg } from "../Org/ViewOrg";
+import { AddDept } from "../Dept/AddDept";
+import { ViewDept } from "../Dept/ViewDept";
 
 const Home = () => {
   const [appPath, setAppPath] = useState(APP_PATH.EMPLOYEE_HOME);
@@ -56,9 +60,13 @@ const Home = () => {
 
   const [employeeControl, setEmployeeControl] = useState();
   const [roleControl, setRoleControl] = useState();
+  const [orgControl, setOrgControl] = useState();
+  const [deptControl, setDeptControl] = useState();
 
   const [currentEmployee, setCurrentEmployee] = useState();
   const [currentRole, setCurrentRole] = useState();
+  const [currentOrg, setCurrentOrg] = useState();
+  const [currentDept, setCurrentDept] = useState();
 
   useEffect(() => {
     setOrgState(UI_LOADING_STATES.LOADING);
@@ -84,6 +92,8 @@ const Home = () => {
         setDepts(deptsBody["items"]);
         setRoles(rolesBody["items"]);
         setRoleControl(rolesBody["@controls"]);
+        setOrgControl(orgBody["@controls"]);
+        setDeptControl(deptsBody["@controls"]);
       } catch (error) {
         setOrgState(UI_LOADING_STATES.ERROR);
       }
@@ -132,13 +142,17 @@ const Home = () => {
     setErrorMsg("");
   };
 
-  const getAllDepts = () => {
+  const getAllDepts = async () => {
     setAppPath(APP_PATH.DEPT_HOME);
+    let deptBody = await getResource(deptAllURL);
+    setDepts(deptBody["items"]);
     setErrorMsg("");
   };
 
-  const getAllOrgs = () => {
+  const getAllOrgs = async () => {
     setAppPath(APP_PATH.ORG_HOME);
+    let orgBody = await getResource(orgAllURL);
+    setOrgs(orgBody["items"]);
     setErrorMsg("");
   };
 
@@ -148,6 +162,14 @@ const Home = () => {
 
   const addRole = () => {
     setAppPath(APP_PATH.ADD_ROLE);
+  };
+
+  const addOrg = () => {
+    setAppPath(APP_PATH.ADD_ORG);
+  };
+
+  const addDept = () => {
+    setAppPath(APP_PATH.ADD_DEPT);
   };
 
   const handleAddEmployee = async (url, body) => {
@@ -166,16 +188,20 @@ const Home = () => {
     }
   };
 
-  const onDeleteRole = async (data) => {
-    let del = await deleteResource(data);
-    let rolesBody = await getResource(roleAllURL);
-    setRoles(rolesBody["items"]);
+  const handleAddOrg = async (url, body) => {
+    let res = await addResource(url, body);
+    if (res) {
+      setAppPath(APP_PATH.ORG_HOME);
+      getAllOrgs();
+    }
   };
 
-  const onDeleteOrg = async (data) => {
-    let del = await deleteResource(data);
-    let orgBody = await getResource(orgAllURL);
-    setOrgs(orgBody["items"]);
+  const handleAddDept = async (url, body) => {
+    let res = await addResource(url, body);
+    if (res) {
+      setAppPath(APP_PATH.DEPT_HOME);
+      getAllDepts();
+    }
   };
 
   const handleEditEmployee = async (url, body) => {
@@ -194,14 +220,20 @@ const Home = () => {
     }
   };
 
-  const viewEmployee = (employee) => {
-    setCurrentEmployee(employee);
-    setAppPath(APP_PATH.VIEW_EMPLOYEE);
+  const handleDeleteRole = async (url, method) => {
+    let res = await deleteResource(url, method);
+    if (res) {
+      setAppPath(APP_PATH.ROLE_HOME);
+      getAllRoles();
+    }
   };
 
-  const viewRole = (role) => {
-    setCurrentRole(role);
-    setAppPath(APP_PATH.VIEW_ROLE);
+  const handleDeleteOrg = async (url, method) => {
+    let res = await deleteResource(url, method);
+    if (res) {
+      setAppPath(APP_PATH.ORG_HOME);
+      getAllOrgs();
+    }
   };
 
   const viewEmployeeLeaves = (employee) => {
@@ -214,20 +246,56 @@ const Home = () => {
     setDepts(deptBody["items"]);
   };
 
-  const onEditOrg = async (data) => {
-    console.log(data);
+  const handleDeleteDept = async (url, method) => {
+    let res = await deleteResource(url, method);
+    if (res) {
+      setAppPath(APP_PATH.DEPT_HOME);
+      getAllDepts();
+    }
   };
 
-  const onEditDept = async (data) => {
-    console.log(data);
+  const handleDeleteEmployee = async (url, method) => {
+    let res = await deleteResource(url, method);
+    if (res) {
+      setAppPath(APP_PATH.EMPLOYEE_HOME);
+      getAllEmployees();
+    }
   };
 
-  const onAddOrg = async (data) => {
-    console.log(data);
+  const handleEditOrg = async (url, body) => {
+    let res = await addResource(url, body, "PUT");
+    if (res) {
+      setAppPath(APP_PATH.ORG_HOME);
+      getAllOrgs();
+    }
   };
 
-  const onAddDept = async (data) => {
-    console.log(data);
+  const handleEditDept = async (url, body) => {
+    let res = await addResource(url, body, "PUT");
+    if (res) {
+      setAppPath(APP_PATH.DEPT_HOME);
+      getAllDepts();
+    }
+  };
+
+  const viewEmployee = (employee) => {
+    setCurrentEmployee(employee);
+    setAppPath(APP_PATH.VIEW_EMPLOYEE);
+  };
+
+  const viewRole = (role) => {
+    setCurrentRole(role);
+    setAppPath(APP_PATH.VIEW_ROLE);
+  };
+
+  const viewOrg = (org) => {
+    setCurrentOrg(org);
+    setAppPath(APP_PATH.VIEW_ORG);
+  };
+
+  const viewDept = (dept) => {
+    setCurrentDept(dept);
+    setAppPath(APP_PATH.VIEW_DEPT);
   };
 
   const getRenderRoute = (path) => {
@@ -267,6 +335,7 @@ const Home = () => {
             employee={currentEmployee}
             editEmployee={handleEditEmployee}
             viewLeaves={viewEmployeeLeaves}
+            deleteEmployee={handleDeleteEmployee}
           ></ViewEmployee>
         );
       case APP_PATH.ROLE_HOME:
@@ -289,32 +358,66 @@ const Home = () => {
         );
       case APP_PATH.VIEW_ROLE:
         return (
-          <ViewRole role={currentRole} editRole={handleEditRole}></ViewRole>
+          <ViewRole
+            role={currentRole}
+            editRole={handleEditRole}
+            deleteRole={handleDeleteRole}
+          ></ViewRole>
         );
       case APP_PATH.ORG_HOME:
         return (
           <OrgHome
             orgList={{
               items: orgs,
-              delete: onDeleteOrg,
-              get: onEditOrg,
-              add: onAddOrg,
+              add: addOrg,
             }}
+            viewOrg={viewOrg}
+            orgControl={orgControl}
           ></OrgHome>
+        );
+      case APP_PATH.ADD_ORG:
+        return (
+          <AddOrg
+            addOrgControl={orgControl["hrsys:add-organization"]}
+            addOrg={handleAddOrg}
+          ></AddOrg>
+        );
+      case APP_PATH.VIEW_ORG:
+        return (
+          <ViewOrg
+            org={currentOrg}
+            editOrg={handleEditOrg}
+            deleteOrg={handleDeleteOrg}
+          ></ViewOrg>
         );
       case APP_PATH.DEPT_HOME:
         return (
           <DeptHome
             deptList={{
               items: depts,
-              delete: onDeleteDept,
-              get: onEditDept,
-              add: onAddDept,
+              add: addDept,
             }}
+            viewDept={viewDept}
+            deptControl={deptControl}
           ></DeptHome>
         );
       case APP_PATH.VIEW_LEAVE:
         return <ViewLeave employee={currentEmployee}></ViewLeave>;
+      case APP_PATH.ADD_DEPT:
+        return (
+          <AddDept
+            addDeptControl={deptControl["hrsys:add-dept"]}
+            addDept={handleAddDept}
+          ></AddDept>
+        );
+      case APP_PATH.VIEW_DEPT:
+        return (
+          <ViewDept
+            dept={currentDept}
+            editDept={handleEditDept}
+            deleteDept={handleDeleteDept}
+          ></ViewDept>
+        );
       default:
         return <RoleHome></RoleHome>;
     }

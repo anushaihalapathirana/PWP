@@ -25,6 +25,10 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
         <FormControl>
           <InputLabel htmlFor={property}>{property}</InputLabel>
           <Select
+            style={{
+              width: "300px",
+              margin: "20px",
+            }}
             id={property}
             name={property}
             value={formSelectState[property] && obj.enum[0]}
@@ -50,6 +54,10 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
     } else if (obj.format === "date-time") {
       formContent.push(
         <TextField
+          style={{
+            width: "300px",
+            margin: "20px",
+          }}
           id={property}
           label={property}
           type="date"
@@ -61,7 +69,12 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
       );
     } else {
       formContent.push(
-        <FormControl>
+        <FormControl
+          style={{
+            width: "300px",
+            margin: "20px",
+          }}
+        >
           <InputLabel htmlFor={property}>{property}</InputLabel>
           <Input type={obj.type} id={property} />
           <FormHelperText>{obj.description}</FormHelperText>
@@ -70,7 +83,14 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
     }
   }
   return (
-    <div style={{ display: "flex" }}>
+    <div
+      style={{
+        display: "flex",
+        // flexDirection: "column",
+        marginTop: "65px",
+        marginLeft: "240px",
+      }}
+    >
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -103,7 +123,7 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
           alignItems: "end",
           height: "90vh",
           flexWrap: "wrap",
-          marginTop: "70px",
+          // marginTop: "70px",
         }}
       >
         {formContent}

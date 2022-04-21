@@ -13,18 +13,23 @@ import {
     Table
 } from '@material-ui/core';
 
-const OrgHome = ({ orgList }) => {
+const OrgHome = ({ orgList, viewOrg, orgControl }) => {
 
   return (
     <div>
       <div className='add-btn-div'>
-        <Button className='btn-get-data'
+      <Button
+            className="btn-get-data"
             color="primary"
-            variant="outlined"
-            onClick={orgList.add}
-            >
-              Add Organization
-        </Button>
+            variant="contained"
+            onClick={() => {
+              if (orgControl["hrsys:add-organization"]) {
+                orgList.add();
+              }
+            }}
+          >
+            Add Organization
+          </Button>
       </div>
       <div>
         <TableContainer component={Paper}>
@@ -34,9 +39,7 @@ const OrgHome = ({ orgList }) => {
                         <TableCell align="right">ID</TableCell>
                         <TableCell align="right">Name</TableCell>
                         <TableCell align="right">Location</TableCell>
-                        <TableCell align="right">Edit</TableCell>
-                        <TableCell align="right">Delete</TableCell>
-
+                        <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -47,10 +50,15 @@ const OrgHome = ({ orgList }) => {
                           </TableCell>
                           <TableCell align="right">{row.name}</TableCell>
                           <TableCell align="right">{row.location}</TableCell>
-                          <TableCell className='viewcell' align="right" onClick={() => orgList.get(row['@controls']['self']['href'])}>{'Edit'}</TableCell>
-                          <TableCell className='viewcell' align="right" 
-                          onClick={() => orgList.delete(row['@controls']['self']['href'])}
-                          >{'Delete'}</TableCell>
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                              viewOrg(row);
+                            }} 
+                          >
+                            View
+                          </Button>
                         </TableRow>
                       ))}
                 </TableBody>

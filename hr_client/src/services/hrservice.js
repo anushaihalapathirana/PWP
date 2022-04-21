@@ -6,8 +6,8 @@ const getResource = async (href) => {
   throw new Error("Error while getting resource");
 };
 
-const deleteResource = async (href) => {
-  const res = await fetch(href, { method: "DELETE" });
+const deleteResource = async (href, method) => {
+  const res = await fetch(href, { method: method });
   if (res.ok) {
     return res.ok;
   }
