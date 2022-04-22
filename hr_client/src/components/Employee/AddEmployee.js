@@ -72,6 +72,9 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
           InputLabelProps={{
             shrink: true,
           }}
+          inputProps={{
+            max: new Date().toISOString().slice(0, 10)
+          }}
         />
       );
     } else {
@@ -145,21 +148,7 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
         }}
       >
         {formContent}
-        <TextField
-        style={{
-          marginTop: "20px",
-          width: "300px",
-          marginLeft: "20px",
-        }}
-          id="date"
-          label="Birthday"
-          type="date"
-          defaultValue="2017-05-24"
-          sx={{ width: 220 }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
+        
         <Button
           style={{
             margin: "20px",

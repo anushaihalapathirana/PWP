@@ -14,8 +14,10 @@ import { getResource } from "../../services/hrservice";
 
 const ViewEmployee = ({
   employee,
+  setEmployeeControl,
   editEmployee,
   deleteEmployee,
+  addLeaves,
   viewLeaves,
 }) => {
   const [employeeData, setEmployeeData] = useState();
@@ -25,6 +27,7 @@ const ViewEmployee = ({
     async function getEmployee() {
       let res = await getResource(employee["@controls"]["self"]["href"]);
       setEmployeeData(res);
+      setEmployeeControl(res)
     }
     getEmployee();
   }, [employee]);
@@ -160,7 +163,7 @@ const ViewEmployee = ({
         marginRight: "200px"
       }}>Employee Details</h1>
       <Button onClick={viewLeaves}>View Leaves</Button>
-      <Button>Add Leave</Button>
+      <Button onClick={addLeaves}>Add Leave</Button>
       
         {/* <Button>Employees in Same Organization</Button> */}
       </div>

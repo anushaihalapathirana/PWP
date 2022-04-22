@@ -8,6 +8,8 @@ import {
 } from "../../services/hrservice";
 import "./home.css";
 import "react-dropdown/style.css";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import {
   AppBar,
   Divider,
@@ -34,6 +36,7 @@ import { AddOrg } from "../Org/AddOrg";
 import { ViewOrg } from "../Org/ViewOrg";
 import { AddDept } from "../Dept/AddDept";
 import { ViewDept } from "../Dept/ViewDept";
+import { AddLeave } from "../Leave/AddLeave";
 
 const Home = () => {
   const [appPath, setAppPath] = useState(APP_PATH.EMPLOYEE_HOME);
@@ -51,7 +54,9 @@ const Home = () => {
   const [deptAllURL, setDeptAllURL] = useState([]);
   const [orgAllURL, setOrgAllURL] = useState([]);
 
-  const [errorMsg, setErrorMsg] = useState(false);
+  const [errorMsg, setErrorMsg] = useState([]);
+  const [errorTitle, setErrorTitle] = useState([]);
+  const [isError, setIsError] = useState(false);
 
   const [employeeControl, setEmployeeControl] = useState();
   const [roleControl, setRoleControl] = useState();
@@ -118,173 +123,365 @@ const Home = () => {
     }
     url = replaceTemplateVals(url, org, dept, role);
     let empBody = await getResource(url);
-    setEmployeeAllList(empBody["items"]);
-    console.log(empBody);
-    setEmployeeControl(empBody["@controls"]);
+    if(empBody["items"]){
+      setEmployeeAllList(empBody["items"]);
+      setEmployeeControl(empBody["@controls"]);
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (empBody && empBody["@controls"] && empBody["@error"]) {
+      let err = empBody["@error"]["@messages"][0];
+      setErrorTitle(empBody["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
+    }
   };
 
   //  all employee list
   const getAllEmployees = async () => {
     setAppPath(APP_PATH.EMPLOYEE_HOME);
     let empBody = await getResource(employeeAllURL);
-    setEmployeeControl(empBody["@controls"]);
-    setEmployeeAllList(empBody["items"]);
-    setErrorMsg("");
+    if(empBody["items"]) {
+      setEmployeeControl(empBody["@controls"]);
+      setEmployeeAllList(empBody["items"]);
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (empBody && empBody["@controls"] && empBody["@error"]) {
+      let err = empBody["@error"]["@messages"][0];
+      setErrorTitle(empBody["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
+    }
   };
 
   const getAllRoles = async () => {
     setAppPath(APP_PATH.ROLE_HOME);
     let roleBody = await getResource(roleAllURL);
-    setRoles(roleBody["items"]);
-    setErrorMsg("");
+    if(roleBody["items"]) {
+      setRoles(roleBody["items"]);
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (roleBody && roleBody["@controls"] && roleBody["@error"]) {
+      let err = roleBody["@error"]["@messages"][0];
+      setErrorTitle(roleBody["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
+    }
   };
 
   const getAllDepts = async () => {
     setAppPath(APP_PATH.DEPT_HOME);
     let deptBody = await getResource(deptAllURL);
-    setDepts(deptBody["items"]);
-    setErrorMsg("");
+    if(deptBody["items"]) {
+      setDepts(deptBody["items"]);
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (deptBody && deptBody["@controls"] && deptBody["@error"]) {
+      let err = deptBody["@error"]["@messages"][0];
+      setErrorTitle(deptBody["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
+    }
+    
   };
 
   const getAllOrgs = async () => {
     setAppPath(APP_PATH.ORG_HOME);
     let orgBody = await getResource(orgAllURL);
-    setOrgs(orgBody["items"]);
-    setErrorMsg("");
+    if(orgBody["items"]) {
+      setOrgs(orgBody["items"]);
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (orgBody && orgBody["@controls"] && orgBody["@error"]) {
+      let err = orgBody["@error"]["@messages"][0];
+      setErrorTitle(orgBody["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
+    }
   };
 
   const addEmployee = () => {
+    setErrorTitle([]);
+    setErrorMsg([]);
+    setIsError(false);
     setAppPath(APP_PATH.ADD_EMPLOYEE);
   };
 
   const addRole = () => {
+    setErrorTitle([]);
+    setErrorMsg([]);
+    setIsError(false);
     setAppPath(APP_PATH.ADD_ROLE);
   };
 
   const addOrg = () => {
+    setErrorTitle([]);
+    setErrorMsg([]);
+    setIsError(false);
     setAppPath(APP_PATH.ADD_ORG);
   };
 
   const addDept = () => {
+    setErrorTitle([]);
+    setErrorMsg([]);
+    setIsError(false);
     setAppPath(APP_PATH.ADD_DEPT);
   };
 
+  const addLeave = () => {
+    setErrorTitle([]);
+    setErrorMsg([]);
+    setIsError(false);
+    setAppPath(APP_PATH.ADD_LEAVE);
+  };  
+
   const handleAddEmployee = async (url, body) => {
     let res = await addResource(url, body);
-    if (res) {
+    if (res === true) {
       setAppPath(APP_PATH.EMPLOYEE_HOME);
       getAllEmployees();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
     }
   };
 
   const handleAddRole = async (url, body) => {
     let res = await addResource(url, body);
-    if (res) {
+    if (res === true) {
       setAppPath(APP_PATH.ROLE_HOME);
       getAllRoles();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
     }
   };
 
   const handleAddOrg = async (url, body) => {
     let res = await addResource(url, body);
-    if (res) {
+    if (res === true) {
       setAppPath(APP_PATH.ORG_HOME);
       getAllOrgs();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
     }
   };
 
   const handleAddDept = async (url, body) => {
     let res = await addResource(url, body);
-    if (res) {
+    if (res === true) {
       setAppPath(APP_PATH.DEPT_HOME);
       getAllDepts();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
+    }
+  };
+
+  const handleAddLeave = async (url, body) => {
+    let res = await addResource(url, body);
+    if (res === true) {
+      setAppPath(APP_PATH.EMPLOYEE_HOME);
+      getAllEmployees();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
     }
   };
 
   const handleEditEmployee = async (url, body) => {
     let res = await addResource(url, body, "PUT");
-    if (res) {
+    if (res === true) {
       setAppPath(APP_PATH.EMPLOYEE_HOME);
       getAllEmployees();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
     }
   };
 
   const handleEditRole = async (url, body) => {
     let res = await addResource(url, body, "PUT");
-    if (res) {
+    if (res === true) {
       setAppPath(APP_PATH.ROLE_HOME);
       getAllRoles();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
     }
   };
 
   const handleDeleteRole = async (url, method) => {
     let res = await deleteResource(url, method);
-    if (res) {
+    if (res === true) {
       setAppPath(APP_PATH.ROLE_HOME);
       getAllRoles();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
     }
   };
 
   const handleDeleteOrg = async (url, method) => {
     let res = await deleteResource(url, method);
-    if (res) {
+    if (res === true) {
       setAppPath(APP_PATH.ORG_HOME);
       getAllOrgs();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
     }
   };
 
   const viewEmployeeLeaves = (employee) => {
+    setErrorTitle([]);
+    setErrorMsg([]);
+    setIsError(false)
     setAppPath(APP_PATH.VIEW_LEAVE);
   };
 
   const handleDeleteDept = async (url, method) => {
     let res = await deleteResource(url, method);
-    if (res) {
+    if (res === true) {
       setAppPath(APP_PATH.DEPT_HOME);
       getAllDepts();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
     }
   };
 
   const handleDeleteEmployee = async (url, method) => {
     let res = await deleteResource(url, method);
-    if (res) {
+    if (res === true) {
       setAppPath(APP_PATH.EMPLOYEE_HOME);
       getAllEmployees();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
     }
   };
 
   const handleEditOrg = async (url, body) => {
     let res = await addResource(url, body, "PUT");
-    if (res) {
+    if (res === true) {
       setAppPath(APP_PATH.ORG_HOME);
       getAllOrgs();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
     }
   };
 
   const handleEditDept = async (url, body) => {
     let res = await addResource(url, body, "PUT");
-    if (res) {
+    if (res === true) {
       setAppPath(APP_PATH.DEPT_HOME);
       getAllDepts();
+      setErrorTitle([]);
+      setErrorMsg([]);
+      setIsError(false)
+    } else if (res && res["@controls"] && res["@error"]) {
+      let err = res["@error"]["@messages"][0];
+      setErrorTitle(res["@error"]["@message"]);
+      setErrorMsg(err);
+      setIsError(true);
     }
   };
 
   const viewEmployee = (employee) => {
+    setErrorTitle([]);
+    setErrorMsg([]);
+    setIsError(false)
     setCurrentEmployee(employee);
     setAppPath(APP_PATH.VIEW_EMPLOYEE);
   };
 
   const viewRole = (role) => {
+    setErrorTitle([]);
+    setErrorMsg([]);
+    setIsError(false)
     setCurrentRole(role);
     setAppPath(APP_PATH.VIEW_ROLE);
   };
 
   const viewOrg = (org) => {
+    setErrorTitle([]);
+    setErrorMsg([]);
+    setIsError(false)
     setCurrentOrg(org);
     setAppPath(APP_PATH.VIEW_ORG);
   };
 
   const viewDept = (dept) => {
+    setErrorTitle([]);
+    setErrorMsg([]);
+    setIsError(false)
     setCurrentDept(dept);
     setAppPath(APP_PATH.VIEW_DEPT);
   };
@@ -324,8 +521,10 @@ const Home = () => {
         return (
           <ViewEmployee
             employee={currentEmployee}
+            setEmployeeControl={setEmployeeControl}
             editEmployee={handleEditEmployee}
             viewLeaves={viewEmployeeLeaves}
+            addLeaves = {addLeave}
             deleteEmployee={handleDeleteEmployee}
           ></ViewEmployee>
         );
@@ -394,9 +593,16 @@ const Home = () => {
         );
       case APP_PATH.VIEW_LEAVE:
         return <ViewLeave
-         employee={currentEmployee}
-         employeeControl={employeeControl}
+         employee={employeeControl}
          ></ViewLeave>;
+      case APP_PATH.ADD_LEAVE:
+        return (
+          <AddLeave
+           employee={employeeControl}
+           addLeave={handleAddLeave}
+          >
+          </AddLeave>
+        );
       case APP_PATH.ADD_DEPT:
         return (
           <AddDept
@@ -426,6 +632,13 @@ const Home = () => {
           marginLeft: `240px`,
         }}
       >
+        {
+          isError ? 
+          <Alert severity="error">
+            <AlertTitle style={{justifyContent:"left", display: "flex"}}>Error</AlertTitle>
+              {errorTitle} - <strong>{errorMsg}</strong>
+          </Alert> : <div></div>
+        }
         <Toolbar>
           <Typography variant="h6" noWrap component="div">
             HR System
