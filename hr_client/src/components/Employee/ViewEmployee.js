@@ -210,7 +210,9 @@ const ViewEmployee = ({
           {formContent}
           <Button
           style={{
-            marginTop: "10px"
+            marginTop: "10px",
+            width:"300px",
+
           }}
            variant="contained" color="primary" type="submit">
             Update
@@ -218,7 +220,9 @@ const ViewEmployee = ({
           <Button 
           style={{
             marginTop: "10px",
-            marginLeft: "10px"
+            marginLeft: "10px",
+            width:"300px",
+
           }}
            variant="contained"
            color="secondary" 

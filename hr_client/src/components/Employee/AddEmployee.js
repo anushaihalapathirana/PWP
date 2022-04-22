@@ -22,7 +22,12 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
     if (obj.enum) {
       formContent.push(
         <FormControl>
-          <InputLabel htmlFor={property}>{property}</InputLabel>
+          <InputLabel 
+          style={{
+            width: "150px",
+            marginLeft: "0px",
+          }}
+          htmlFor={property}>{property}</InputLabel>
           <Select
             style={{
               width: "300px",
@@ -46,7 +51,11 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
             {/* <MenuItem value={20}>Twenty</MenuItem>
           <MenuItem value={30}>Thirty</MenuItem> */}
           </Select>
-          <FormHelperText>{obj.description}</FormHelperText>
+          <FormHelperText 
+          style={{
+            width: "150px",
+            marginLeft: "20px",
+          }}>{obj.description}</FormHelperText>
         </FormControl>
       );
     } else if (obj.format === "date-time") {
@@ -84,11 +93,22 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
     <div
       style={{
         display: "flex",
-        // flexDirection: "column",
+        flexDirection: "column",
         marginTop: "65px",
         marginLeft: "240px",
       }}
     >
+      <div
+      style={{
+        justifyContent: "left",
+        display: "flex",
+        marginLeft: "20px",
+      }}>
+        <h1 style={{
+        marginRight: "200px"
+      }}>Add Employee</h1>
+      
+      </div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -119,13 +139,18 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
           display: "flex",
           flexDirection: "column",
           alignItems: "end",
-          height: "90vh",
+          height: "85vh",
           flexWrap: "wrap",
           // marginTop: "70px",
         }}
       >
         {formContent}
         <TextField
+        style={{
+          marginTop: "20px",
+          width: "300px",
+          marginLeft: "20px",
+        }}
           id="date"
           label="Birthday"
           type="date"
@@ -135,7 +160,13 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
             shrink: true,
           }}
         />
-        <Button type="submit">SUBMIT</Button>
+        <Button
+          style={{
+            margin: "20px",
+            width:"300px",
+            marginLeft: "20px !important"
+          }}
+          variant="contained" color="primary" type="submit">SUBMIT</Button>
       </form>
     </div>
   );

@@ -65,7 +65,19 @@ import {
       }
     }
     return (
-      <div style={{ display: "flex" }}>
+      <div>
+        <h1 style={{
+          justifyContent: "center",
+          display: "flex",
+          marginLeft: "20px",
+          marginTop: "80px"
+        }}>Add Organization</h1>
+      
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+        }}>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -98,13 +110,18 @@ import {
             alignItems: "end",
             height: "90vh",
             flexWrap: "wrap",
-            marginTop: "70px",
+            marginTop: "0px",
           }}
         >
           {formContent}
           
-          <Button type="submit">SUBMIT</Button>
+          <Button
+          style={{
+            marginTop: "30px"
+          }}
+          variant="contained" color="primary" type="submit">SUBMIT</Button>
         </form>
+      </div>
       </div>
     );
   };
