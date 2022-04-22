@@ -50,7 +50,11 @@ const EmployeeHome = ({
         marginLeft: "240px",
       }}
     >
-
+      <h1 style={{
+        justifyContent: "left",
+        display: "flex",
+        marginLeft: "20px",
+      }}>Employees</h1>
       <div
         style={{
           position: "relative",

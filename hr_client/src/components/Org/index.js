@@ -15,8 +15,29 @@ import {
 const OrgHome = ({ orgList, viewOrg, orgControl }) => {
 
   return (
-    <div>
-      <div className='add-btn-div'>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        marginTop: "65px",
+        marginLeft: "240px",
+      }}
+    >
+      <h1 style={{
+        justifyContent: "left",
+        display: "flex",
+        marginLeft: "20px",
+      }}>Organizations</h1>
+
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "row",
+          // alignItems: "center",
+        }}
+      >
+        <div className="drop-down">
       <Button
             className="btn-get-data"
             color="primary"
@@ -29,8 +50,9 @@ const OrgHome = ({ orgList, viewOrg, orgControl }) => {
           >
             Add Organization
           </Button>
+          </div>
       </div>
-      <div>
+      <div style={{margin: "20px"}}>
         <TableContainer component={Paper}>
             <Table aria-label="simple table" stickyHeader>
                 <TableHead>
@@ -49,6 +71,7 @@ const OrgHome = ({ orgList, viewOrg, orgControl }) => {
                           </TableCell>
                           <TableCell align="right">{row.name}</TableCell>
                           <TableCell align="right">{row.location}</TableCell>
+                          <TableCell align="right">
                           <Button
                             color="primary"
                             variant="contained"
@@ -58,6 +81,7 @@ const OrgHome = ({ orgList, viewOrg, orgControl }) => {
                           >
                             View
                           </Button>
+                          </TableCell>
                         </TableRow>
                       ))}
                 </TableBody>

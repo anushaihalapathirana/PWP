@@ -118,7 +118,19 @@ import {
     }
 
     return (
-      <div style={{ display: "flex" }}>
+      <div>
+        <h1 style={{
+          justifyContent: "center",
+          display: "flex",
+          marginLeft: "20px",
+          marginTop: "80px"
+        }}>Department Details</h1>
+      
+      <div style={{ 
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+       }}>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -154,16 +166,30 @@ import {
             display: "flex",
             flexDirection: "column",
             alignItems: "end",
-            height: "90vh",
+            // height: "90vh",
             flexWrap: "wrap",
-            marginTop: "70px",
+            marginTop: "20px",
           }}
         >
           {formContent}
   
-          <Button type="submit">SUBMIT</Button>
-          <Button onClick={handleDelete}>DELETE</Button>
+          <Button 
+          style={{
+            marginTop: "10px"
+          }}
+          variant="contained" color="primary" type="submit">
+            Update
+          </Button>
+          <Button 
+          style={{
+            marginTop: "10px",
+            marginLeft: "10px"
+          }}
+           variant="contained"
+           color="secondary" 
+          onClick={handleDelete}>DELETE</Button>
         </form>
+      </div>
       </div>
     );
   };

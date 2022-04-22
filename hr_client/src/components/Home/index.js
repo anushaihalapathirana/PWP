@@ -89,6 +89,7 @@ const Home = () => {
         setRoleControl(rolesBody["@controls"]);
         setOrgControl(orgBody["@controls"]);
         setDeptControl(deptsBody["@controls"]);
+        
       } catch (error) {
         setOrgState(UI_LOADING_STATES.ERROR);
       }
@@ -126,6 +127,7 @@ const Home = () => {
   const getAllEmployees = async () => {
     setAppPath(APP_PATH.EMPLOYEE_HOME);
     let empBody = await getResource(employeeAllURL);
+    setEmployeeControl(empBody["@controls"]);
     setEmployeeAllList(empBody["items"]);
     setErrorMsg("");
   };
@@ -233,12 +235,6 @@ const Home = () => {
 
   const viewEmployeeLeaves = (employee) => {
     setAppPath(APP_PATH.VIEW_LEAVE);
-  };
-
-  const onDeleteDept = async (data) => {
-    let del = await deleteResource(data);
-    let deptBody = await getResource(deptAllURL);
-    setDepts(deptBody["items"]);
   };
 
   const handleDeleteDept = async (url, method) => {
@@ -397,7 +393,10 @@ const Home = () => {
           ></DeptHome>
         );
       case APP_PATH.VIEW_LEAVE:
-        return <ViewLeave employee={currentEmployee}></ViewLeave>;
+        return <ViewLeave
+         employee={currentEmployee}
+         employeeControl={employeeControl}
+         ></ViewLeave>;
       case APP_PATH.ADD_DEPT:
         return (
           <AddDept

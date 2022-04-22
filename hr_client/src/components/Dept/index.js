@@ -14,8 +14,28 @@ import {
 const DeptHome = ({ deptList, viewDept, deptControl }) => {
 
   return (
-    <div>
-      <div className='add-btn-div'>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        marginTop: "65px",
+        marginLeft: "240px",
+      }}
+    >
+      <h1 style={{
+        justifyContent: "left",
+        display: "flex",
+        marginLeft: "20px",
+      }}>Departments</h1>
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "row",
+          // alignItems: "center",
+        }}
+      >
+        <div className="drop-down">
       <Button
             className="btn-get-data"
             color="primary"
@@ -28,8 +48,9 @@ const DeptHome = ({ deptList, viewDept, deptControl }) => {
           >
             Add Department
           </Button>
+        </div>
       </div>
-      <div>
+      <div style={{margin: "20px"}}>
         <TableContainer component={Paper}>
             <Table aria-label="simple table" stickyHeader>
                 <TableHead>
@@ -49,6 +70,7 @@ const DeptHome = ({ deptList, viewDept, deptControl }) => {
                           </TableCell>
                           <TableCell align="right">{row.name}</TableCell>
                           <TableCell align="right">{row.description}</TableCell>
+                          <TableCell align="right">
                           <Button
                             color="primary"
                             variant="contained"
@@ -58,6 +80,7 @@ const DeptHome = ({ deptList, viewDept, deptControl }) => {
                           >
                             View
                           </Button>
+                          </TableCell>
                         </TableRow>
                       ))}
                 </TableBody>

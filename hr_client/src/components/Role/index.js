@@ -13,8 +13,28 @@ import {
 
 const RoleHome = ({ roleList, viewRole, roleControl }) => {
   return (
-    <div>
-      <div className='add-btn-div'>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        marginTop: "65px",
+        marginLeft: "240px",
+      }}
+    >
+      <h1 style={{
+        justifyContent: "left",
+        display: "flex",
+        marginLeft: "20px",
+      }}>Roles</h1>
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "row",
+          // alignItems: "center",
+        }}
+      >
+      <div className="drop-down">
       <Button
             className="btn-get-data"
             color="primary"
@@ -27,8 +47,9 @@ const RoleHome = ({ roleList, viewRole, roleControl }) => {
           >
             Add Role
           </Button>
+          </div>
       </div>
-      <div>
+      <div style={{margin: "20px"}}>
         <TableContainer component={Paper}>
             <Table aria-label="simple table" stickyHeader>
                 <TableHead>
@@ -47,6 +68,7 @@ const RoleHome = ({ roleList, viewRole, roleControl }) => {
                           </TableCell>
                           <TableCell align="right">{row.name}</TableCell>
                           <TableCell align="right">{row.description}</TableCell>
+                          <TableCell align="right">
                           <Button
                             color="primary"
                             variant="contained"
@@ -56,6 +78,7 @@ const RoleHome = ({ roleList, viewRole, roleControl }) => {
                           >
                             View
                           </Button>
+                          </TableCell>
                         </TableRow>
                       ))}
                 </TableBody>

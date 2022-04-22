@@ -149,9 +149,19 @@ const ViewEmployee = ({
         marginLeft: "240px",
       }}
     >
-      <div>
-        <Button onClick={viewLeaves}>View Leaves</Button>
-        <Button>Add Leave</Button>
+      <div
+      style={{
+        justifyContent: "left",
+        display: "flex",
+        marginLeft: "20px",
+      }}>
+        
+      <h1 style={{
+        marginRight: "200px"
+      }}>Employee Details</h1>
+      <Button onClick={viewLeaves}>View Leaves</Button>
+      <Button>Add Leave</Button>
+      
         {/* <Button>Employees in Same Organization</Button> */}
       </div>
       <div>
@@ -194,14 +204,25 @@ const ViewEmployee = ({
             // alignItems: "end",
             height: "70vh",
             flexWrap: "wrap",
-            marginTop: "70px",
+            marginTop: "20px",
           }}
         >
           {formContent}
-          <Button variant="contained" color="primary" type="submit">
+          <Button
+          style={{
+            marginTop: "10px"
+          }}
+           variant="contained" color="primary" type="submit">
             Update
           </Button>
-          <Button onClick={handleDelete}>DELETE</Button>
+          <Button 
+          style={{
+            marginTop: "10px",
+            marginLeft: "10px"
+          }}
+           variant="contained"
+           color="secondary" 
+          onClick={handleDelete}>DELETE</Button>
         </form>
       </div>
     </div>
