@@ -74,7 +74,7 @@ Fix datetime type to string with datetime format in schemas
 ### Action points
 *List here the actions points discussed with assistants*
 
-Fix date-time format in swagger schema
+Fixed date-time format issue in swagger schema
 
 
 ### Comments from staff
