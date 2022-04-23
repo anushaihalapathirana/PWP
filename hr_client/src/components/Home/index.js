@@ -8,6 +8,7 @@ import {
 } from "../../services/hrservice";
 import "./home.css";
 import "react-dropdown/style.css";
+import convertArrayToCSV from 'convert-array-to-csv';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import {
@@ -37,6 +38,7 @@ import { ViewOrg } from "../Org/ViewOrg";
 import { AddDept } from "../Dept/AddDept";
 import { ViewDept } from "../Dept/ViewDept";
 import { AddLeave } from "../Leave/AddLeave";
+import { PayrollHome } from "../Payroll/index";
 
 const Home = () => {
   const [appPath, setAppPath] = useState(APP_PATH.EMPLOYEE_HOME);
@@ -67,6 +69,10 @@ const Home = () => {
   const [currentRole, setCurrentRole] = useState();
   const [currentOrg, setCurrentOrg] = useState();
   const [currentDept, setCurrentDept] = useState();
+ 
+  const [csvdata, setCSVData] = useState([])
+  const [isSuccess, setIsSuccess] = useState(false)
+
 
   useEffect(() => {
     setOrgState(UI_LOADING_STATES.LOADING);
@@ -128,12 +134,15 @@ const Home = () => {
       setEmployeeControl(empBody["@controls"]);
       setErrorTitle([]);
       setErrorMsg([]);
-      setIsError(false)
+      setIsError(false);
+      setIsSuccess(false);
+
     } else if (empBody && empBody["@controls"] && empBody["@error"]) {
       let err = empBody["@error"]["@messages"][0];
       setErrorTitle(empBody["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
     }
   };
 
@@ -146,12 +155,15 @@ const Home = () => {
       setEmployeeAllList(empBody["items"]);
       setErrorTitle([]);
       setErrorMsg([]);
+      setIsSuccess(false);
       setIsError(false)
     } else if (empBody && empBody["@controls"] && empBody["@error"]) {
       let err = empBody["@error"]["@messages"][0];
       setErrorTitle(empBody["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -163,11 +175,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (roleBody && roleBody["@controls"] && roleBody["@error"]) {
       let err = roleBody["@error"]["@messages"][0];
       setErrorTitle(roleBody["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -179,11 +195,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (deptBody && deptBody["@controls"] && deptBody["@error"]) {
       let err = deptBody["@error"]["@messages"][0];
       setErrorTitle(deptBody["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
     
   };
@@ -196,18 +216,33 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (orgBody && orgBody["@controls"] && orgBody["@error"]) {
       let err = orgBody["@error"]["@messages"][0];
       setErrorTitle(orgBody["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
+
+  const getPayroll = async () => {
+    setAppPath(APP_PATH.PAYROLL_HOME);
+    setErrorTitle([]);
+    setErrorMsg([]);
+    setIsError(false)
+    setIsSuccess(false);
+
+  };
+
 
   const addEmployee = () => {
     setErrorTitle([]);
     setErrorMsg([]);
     setIsError(false);
+    setIsSuccess(false);
     setAppPath(APP_PATH.ADD_EMPLOYEE);
   };
 
@@ -215,6 +250,7 @@ const Home = () => {
     setErrorTitle([]);
     setErrorMsg([]);
     setIsError(false);
+    setIsSuccess(false);
     setAppPath(APP_PATH.ADD_ROLE);
   };
 
@@ -222,6 +258,7 @@ const Home = () => {
     setErrorTitle([]);
     setErrorMsg([]);
     setIsError(false);
+    setIsSuccess(false);
     setAppPath(APP_PATH.ADD_ORG);
   };
 
@@ -229,6 +266,7 @@ const Home = () => {
     setErrorTitle([]);
     setErrorMsg([]);
     setIsError(false);
+    setIsSuccess(false);
     setAppPath(APP_PATH.ADD_DEPT);
   };
 
@@ -236,6 +274,7 @@ const Home = () => {
     setErrorTitle([]);
     setErrorMsg([]);
     setIsError(false);
+    setIsSuccess(false);
     setAppPath(APP_PATH.ADD_LEAVE);
   };  
 
@@ -246,12 +285,16 @@ const Home = () => {
       getAllEmployees();
       setErrorTitle([]);
       setErrorMsg([]);
-      setIsError(false)
+      setIsError(false);
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -263,11 +306,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -279,11 +326,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -295,11 +346,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -311,11 +366,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -327,11 +386,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -343,11 +406,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -359,11 +426,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -375,11 +446,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -387,6 +462,8 @@ const Home = () => {
     setErrorTitle([]);
     setErrorMsg([]);
     setIsError(false)
+    setIsSuccess(false);
+
     setAppPath(APP_PATH.VIEW_LEAVE);
   };
 
@@ -398,11 +475,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -414,11 +495,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -430,11 +515,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -446,11 +535,15 @@ const Home = () => {
       setErrorTitle([]);
       setErrorMsg([]);
       setIsError(false)
+      setIsSuccess(false);
+
     } else if (res && res["@controls"] && res["@error"]) {
       let err = res["@error"]["@messages"][0];
       setErrorTitle(res["@error"]["@message"]);
       setErrorMsg(err);
       setIsError(true);
+      setIsSuccess(false);
+
     }
   };
 
@@ -458,6 +551,8 @@ const Home = () => {
     setErrorTitle([]);
     setErrorMsg([]);
     setIsError(false)
+    setIsSuccess(false);
+
     setCurrentEmployee(employee);
     setAppPath(APP_PATH.VIEW_EMPLOYEE);
   };
@@ -466,6 +561,8 @@ const Home = () => {
     setErrorTitle([]);
     setErrorMsg([]);
     setIsError(false)
+    setIsSuccess(false);
+
     setCurrentRole(role);
     setAppPath(APP_PATH.VIEW_ROLE);
   };
@@ -474,6 +571,7 @@ const Home = () => {
     setErrorTitle([]);
     setErrorMsg([]);
     setIsError(false)
+    setIsSuccess(false);
     setCurrentOrg(org);
     setAppPath(APP_PATH.VIEW_ORG);
   };
@@ -482,10 +580,30 @@ const Home = () => {
     setErrorTitle([]);
     setErrorMsg([]);
     setIsError(false)
+    setIsSuccess(false);
     setCurrentDept(dept);
     setAppPath(APP_PATH.VIEW_DEPT);
   };
 
+  const getPayloadFile = async() => {
+    let body = await getResource("/api/employees/payroll/");
+    setErrorTitle([]);
+    setErrorMsg([]);
+    setIsError(false)
+    setIsSuccess(false);
+    if(body["payroll"]) {
+      let data = body["payroll"]
+      const csvFromArrayOfArrays = convertArrayToCSV(data ,{
+        separator: ';'
+      })
+
+      setCSVData(csvFromArrayOfArrays)
+      setIsSuccess(true)
+      
+    } 
+
+  }
+  
   const getRenderRoute = (path) => {
     switch (path) {
       case APP_PATH.EMPLOYEE_HOME:
@@ -618,6 +736,15 @@ const Home = () => {
             deleteDept={handleDeleteDept}
           ></ViewDept>
         );
+      case APP_PATH.PAYROLL_HOME:
+        return(
+          <PayrollHome
+            getPayloadFile = {getPayloadFile}
+            data={csvdata}
+            isSuccess = {isSuccess}
+            headers={['salary', 'basic','deducted', 'acc','id','date', 'sdate']}
+          ></PayrollHome>
+        )
       default:
         return <RoleHome></RoleHome>;
     }
@@ -675,6 +802,10 @@ const Home = () => {
             <Divider />
             <ListItem button onClick={getAllOrgs}>
               <ListItemText primary={"Organizations"} />
+            </ListItem>
+            <Divider />
+            <ListItem button onClick={getPayroll}>
+              <ListItemText primary={"Payroll"} />
             </ListItem>
           </List>
         </div>
