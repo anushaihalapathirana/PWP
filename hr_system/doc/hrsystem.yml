@@ -127,19 +127,23 @@ components:
           type: string
         date_of_birth:
           description: birth day of the employee
-          type: DateTime
+          type: string
+          format: DateTime 
         appointment_date:
           description: appointment date of the employee
-          type: DateTime
+          type: string
+          format: DateTime 
         active_emp:
           description: employee is working currently or not
           type: boolean
         prefix_title:
           description: employee title
-          type: enum
+          type: string
+          format: enum 
         marritial_status:
           description: marritial status
-          type: enum
+          type: string
+          format: enum 
         mobile_no:
           description: mobile number
           type: string
@@ -165,13 +169,15 @@ components:
       properties:
         leave_type:
           description: type of the leave
-          type: enum
+          type: string
+          format: enum 
         reason:
           description: reason for leave
           type: string
         leave_date:
           description: date of the leave
-          type: DateTime
+          type: string
+          format: DateTime 
       required:
       - id
       - leave_type
@@ -995,8 +1001,6 @@ paths:
         - HRSystemKey: [admin]
       requestBody:
         description: JSON document that contains basic data for a new department
-        security:
-        - HRSystemKey: [admin]
         content:
           application/vnd.mason+json:
             schema:
