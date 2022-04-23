@@ -2,20 +2,22 @@ const getResource = async (href) => {
   const res = await fetch(href);
   if (res.ok) {
     return res.json();
-  } else {
+  }  else if (!res.ok){
     return res.json()
+  } else {
+    throw new Error("Error while getting resource");
   }
-  throw new Error("Error while getting resource");
 };
 
 const deleteResource = async (href, method) => {
   const res = await fetch(href, { method: method });
   if (res.ok) {
     return res.ok;
-  } else {
+  } else if (!res.ok){
     return res.json()
+  } else {
+    throw new Error("Error while deleting resource");
   }
-  throw new Error("Error while deleting resource");
 };
 
 const addResource = async (href, body, method = "POST") => {
@@ -28,10 +30,11 @@ const addResource = async (href, body, method = "POST") => {
   });
   if (res.ok) {
     return res.ok;
-  } else {
+  }  else if (!res.ok){
     return res.json()
+  } else {
+    throw new Error("Error while adding resource");
   }
-  throw new Error("Error while adding new employee");
 };
 
 export { getResource, deleteResource, addResource };

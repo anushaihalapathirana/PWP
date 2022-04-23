@@ -1,16 +1,7 @@
 import React from "react";
 import {Button} from "@material-ui/core";
 import './index.css'
-import { 
-    TableHead, 
-    TableRow, 
-    Paper,
-    TableCell,
-    TableBody,
-    TableContainer,
-    Table
-} from '@material-ui/core';
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 

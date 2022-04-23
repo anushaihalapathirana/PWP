@@ -14,7 +14,6 @@ import {
   const AddDept = ({ addDeptControl, addDept }) => {
     let schema = addDeptControl["schema"];
   
-    let [error, setError] = useState(false);
     let [formSelectState, setFormSelectState] = useState({});
   
     let formContent = [];
@@ -98,7 +97,6 @@ import {
                 schema["required"].includes(property) &&
                 !e.target[property].value
               ) {
-                setError(true);
                 return;
               }
             }

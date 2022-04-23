@@ -13,8 +13,6 @@ import {
   
   const AddRole = ({ addRoleControl, addRole }) => {
     let schema = addRoleControl["schema"];
-  
-    let [error, setError] = useState(false);
     let [formSelectState, setFormSelectState] = useState({});
   
     let formContent = [];
@@ -99,7 +97,6 @@ import {
                 schema["required"].includes(property) &&
                 !e.target[property].value
               ) {
-                setError(true);
                 return;
               }
             }

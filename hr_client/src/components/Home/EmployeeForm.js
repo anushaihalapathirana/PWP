@@ -3,7 +3,7 @@ import {Button, TextField} from "@material-ui/core";
 import {useForm} from "react-hook-form";
 
 const EmployeeForm = props => {
-  const { register, handleSubmit, errors } = useForm();
+  const { handleSubmit } = useForm();
   const onSubmit = (data, e) => {
     e.preventDefault();
     console.log(data);

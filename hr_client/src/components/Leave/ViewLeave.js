@@ -8,14 +8,11 @@ import {
     TableContainer,
     Table
   } from "@material-ui/core";
-  import moment from "moment";
   import React, { useEffect, useState } from "react";
   import { getResource } from "../../services/hrservice";
   
   const ViewLeave = ({ employee, editLeave, deleteLeave }) => {
     const [leaveData, setLeaveData] = useState([]);
-  
-    const [leaveEdit, setLeaveEdit] = useState({});
     useEffect(() => {
       async function getLeave() {
         console.log(employee["@controls"])

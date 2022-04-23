@@ -15,8 +15,6 @@ import {
   const AddLeave = ({ employee, addLeave }) => {
     let [schema, setSchema] = useState()
     let [addLeaveControl, setAddLeaveControl] = useState()
-
-    let [error, setError] = useState(false);
     let [formSelectState, setFormSelectState] = useState({});
   
     useEffect(() => {
@@ -119,7 +117,6 @@ import {
                 schema["required"].includes(property) &&
                 !e.target[property].value
               ) {
-                setError(true);
                 return;
               }
             }

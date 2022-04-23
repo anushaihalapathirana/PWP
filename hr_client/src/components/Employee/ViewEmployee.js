@@ -27,10 +27,10 @@ const ViewEmployee = ({
     async function getEmployee() {
       let res = await getResource(employee["@controls"]["self"]["href"]);
       setEmployeeData(res);
-      setEmployeeControl(res)
+      setEmployeeControl(res);
     }
     getEmployee();
-  }, [employee]);
+  }, [employee, setEmployeeControl]);
 
   useEffect(() => {
     let temp = {};

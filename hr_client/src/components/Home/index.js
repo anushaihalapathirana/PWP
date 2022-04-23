@@ -23,7 +23,7 @@ import {
 } from "@material-ui/core";
 import "./home.css";
 import "react-dropdown/style.css";
-import { APP_PATH, UI_LOADING_STATES } from "../../util/constants";
+import { APP_PATH } from "../../util/constants";
 import { EmployeeHome } from "../Employee";
 import { RoleHome } from "../Role";
 import { AddEmployee } from "../Employee/AddEmployee";
@@ -43,7 +43,6 @@ import { PayrollHome } from "../Payroll/index";
 const Home = () => {
   const [appPath, setAppPath] = useState(APP_PATH.EMPLOYEE_HOME);
 
-  const [orgState, setOrgState] = useState(UI_LOADING_STATES.INIT);
   const [orgs, setOrgs] = useState([]);
   const [depts, setDepts] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -75,7 +74,6 @@ const Home = () => {
 
 
   useEffect(() => {
-    setOrgState(UI_LOADING_STATES.LOADING);
     async function callResource() {
       try {
         let orgBody = await getResource("/api/organizations/");
@@ -102,7 +100,7 @@ const Home = () => {
         setDeptControl(deptsBody["@controls"]);
         
       } catch (error) {
-        setOrgState(UI_LOADING_STATES.ERROR);
+        setIsError(true)
       }
     }
     callResource();

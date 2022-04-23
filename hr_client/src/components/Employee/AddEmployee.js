@@ -14,7 +14,6 @@ import moment from "moment";
 const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
   let schema = addEmployeeControl["schema"];
 
-  let [error, setError] = useState(false);
   let [formSelectState, setFormSelectState] = useState({});
 
   let formContent = [];
@@ -132,7 +131,6 @@ const AddEmployee = ({ addEmployeeControl, addEmployee }) => {
               schema["required"].includes(property) &&
               !e.target[property].value
             ) {
-              setError(true);
               return;
             }
           }

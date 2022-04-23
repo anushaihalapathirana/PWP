@@ -1,8 +1,3 @@
-const UI_LOADING_STATES = {
-  INIT: "INIT",
-  LOADING: "LOADING",
-  ERROR: "ERROR",
-};
 
 const APP_PATH = {
   EMPLOYEE_HOME: "EMP_HOME",
@@ -22,4 +17,4 @@ const APP_PATH = {
   PAYROLL_HOME: "PAYROLL_HOME"
 };
 
-export { UI_LOADING_STATES, APP_PATH };
+export { APP_PATH };
