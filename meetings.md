@@ -62,14 +62,19 @@ alternatives for using copy in delete
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
 
 ## Meeting 4.
-* **DATE:**
-* **ASSISTANTS:**
+* **DATE:** 2022-04-08
+* **ASSISTANTS:** Mika Oja
 
 ### Minutes
 *Summary of what was discussed during the meeting*
 
+Fix datetime type to string with datetime format in schemas
+
+
 ### Action points
 *List here the actions points discussed with assistants*
+
+Fixed date-time format issue in swagger schema
 
 
 ### Comments from staff
