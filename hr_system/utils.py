@@ -267,6 +267,17 @@ class HRSystemBuilder(MasonBuilder):
             method="GET",
             title="get employees by organization"
         )
+    
+    def add_control_employee_payroll(self):
+        """
+        custom relation method to add control to get employees payroll
+        """
+        self.add_control(
+            "hrsys:employee-payroll",
+            url_for("api.employeepayroll"),
+            method="GET",
+            title="get employees payroll"
+        )
 
     def add_control_employee_by_org_dept(self, organization, department):
         """

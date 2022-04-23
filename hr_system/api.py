@@ -7,7 +7,7 @@ from hr_system.resources.roles import RoleCollection, RoleItem
 from hr_system.resources.organizations import OrganizationCollection, OrganizationItem
 from hr_system.resources.departments import DepartmentCollection, DepartmentItem
 from hr_system.resources.employees import (
-    EmployeeByRlationCollection, EmployeeCollection, EmployeeItem
+    EmployeeByRlationCollection, EmployeeCollection, EmployeeItem, EmployeePayroll
 )
 from hr_system.resources.leaveplans import LeavePlanByEmployeellection, LeavePlanItem
 
@@ -41,6 +41,9 @@ api.add_resource(
     "/organizations/<Organization:organization>/departments/<Department:department>/roles/<Role:role>/employees/")
 api.add_resource(EmployeeItem,
                  "/employees/<Employee:employee>/")
+
+api.add_resource(EmployeePayroll, "/employees/payroll/")
+
 
 # leave plan related resources
 api.add_resource(LeavePlanByEmployeellection,

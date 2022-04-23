@@ -3,12 +3,13 @@
 """
 import json
 from copy import copy
+import requests
 from flask_restful import Resource
 from jsonschema import validate, ValidationError, draft7_format_checker
 from flask import Response, request, url_for
 from werkzeug.exceptions import HTTPException
 from hr_system import db
-from hr_system.models import Employee
+from hr_system.models import Employee, LeavePlan
 from hr_system.utils import create_error_message
 from hr_system import cache
 from hr_system import api
@@ -426,3 +427,42 @@ class EmployeeItem(Resource):
             )
 
         return Response(status=204, mimetype=MASON)
+
+
+class EmployeePayroll(Resource):
+    """
+    This class contains the GET method implementations for employee payroll
+        
+    Endpoint:
+        /employees/payroll/
+    """
+    def get(self):
+        employees = []
+
+        body = HRSystemBuilder()
+        body.add_namespace('hrsys', LINK_RELATIONS_URL)
+        body.add_control("profile", EMPLOYEE_PAYROLL)
+        body["items"] = []
+        obj={}
+
+        employees = Employee.query.all()
+            
+        body.add_control('self', url_for("api.employeepayroll"))
+        for employee in employees:
+            leaves = LeavePlan.query.join(LeavePlan.employee).filter(
+                LeavePlan.employee == employee
+            )
+            obj["emp"] = employee.serialize()
+            obj["leaves"] = []
+            for leave in leaves:
+                obj['leaves'].append(leave.serialize())
+
+            item = HRSystemBuilder(obj)
+            body["items"].append(item)
+
+        res = requests.post('http://127.0.0.1:5500/api/payrolls/',data = json.dumps(body),  headers={"Content-Type":"application/json"})
+        data = res.json()
+        return Response(json.dumps(data), status=200, mimetype="application/json")
+
+
+
