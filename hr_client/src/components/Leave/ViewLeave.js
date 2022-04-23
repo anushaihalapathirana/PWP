@@ -44,9 +44,6 @@ import {
             // alignItems: "center",
           }}
         >
-        <div className="drop-down">
-        
-            </div>
         </div>
         <div style={{
           margin: "20px",
@@ -54,7 +51,12 @@ import {
           display: "flex",
           justifyContent: "center"
           }}>
-          <TableContainer component={Paper}>
+          <TableContainer
+           style={{
+            height:"500px",
+            overflow: "scroll"
+          }} 
+           component={Paper}>
               <Table aria-label="simple table" stickyHeader>
                   <TableHead>
                     <TableRow>

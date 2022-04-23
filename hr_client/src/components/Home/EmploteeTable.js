@@ -14,7 +14,12 @@ const EmployeeTable = (props) => {
   console.log(props);
   return (
     <div>
-      <TableContainer component={Paper}>
+      <TableContainer 
+       style={{
+        height:"500px",
+        overflow: "scroll"
+      }} 
+      component={Paper}>
         <Table aria-label="simple table" stickyHeader>
           <TableHead>
             <TableRow>

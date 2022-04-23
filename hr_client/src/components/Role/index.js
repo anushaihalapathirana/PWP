@@ -49,8 +49,13 @@ const RoleHome = ({ roleList, viewRole, roleControl }) => {
           </Button>
           </div>
       </div>
-      <div style={{margin: "20px"}}>
-        <TableContainer component={Paper}>
+      <div style={{
+        margin: "20px"}}>
+        <TableContainer style={{
+          height:"500px",
+          width: "50%",
+          overflow: "scroll"
+        }} component={Paper}>
             <Table aria-label="simple table" stickyHeader>
                 <TableHead>
                   <TableRow>
