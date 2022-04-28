@@ -9,7 +9,10 @@ from hr_system.models import ApiKey
 from hr_system.constants import *
 from hr_system.models import *
 
-
+"""
+Mason builder class - original resource taken from Lovelace 
+link - https://lovelace.oulu.fi/ohjelmoitava-web/ohjelmoitava-web/exercise-3-api-documentation-and-hypermedia/
+"""
 class MasonBuilder(dict):
     """
     A convenience class for managing dictionaries that represent Mason
