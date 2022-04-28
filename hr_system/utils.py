@@ -244,7 +244,7 @@ class HRSystemBuilder(MasonBuilder):
             method="GET",
             title="get role"
         )
-    
+
     def add_control_role_list(self):
         """
         custom relation method to add control to roles
@@ -267,7 +267,7 @@ class HRSystemBuilder(MasonBuilder):
             method="GET",
             title="get employees by organization"
         )
-    
+
     def add_control_employee_payroll(self):
         """
         custom relation method to add control to get employees payroll
@@ -314,7 +314,7 @@ class HRSystemBuilder(MasonBuilder):
             method="GET",
             title="get employees by organization,department and role"
         )
-    
+
     def add_control_employee_by_org_dept_role_hrf(self):
         """
         custom relation method to add control to get employees by org, dept and role 
@@ -323,13 +323,13 @@ class HRSystemBuilder(MasonBuilder):
         self.add_control(
             "hrsys:by-org-dept-role-url-param",
             "/api/organizations/{organization}/departments/{department}/roles/{role}/employees/",
-            isHrefTemplate= True,
+            isHrefTemplate=True,
             method="GET",
             title="get employees by organization,department and role",
             schema=self._org_dept_role_schema()
-            
+
         )
-    
+
     def add_control_get_employee_all(self):
         """
         custom relation method to add control to get emp collection
@@ -338,6 +338,17 @@ class HRSystemBuilder(MasonBuilder):
             "hrsys:employee-all",
             url_for("api.employeebyrlationcollection",
                     organization=None, role=None, department=None),
+            method="GET",
+            title="get payroll"
+        )
+
+    def add_control_get_payroll_all(self):
+        """
+        custom relation method to calculate the payroll info
+        """
+        self.add_control(
+            "hrsys:payroll-all",
+            url_for("api.employeepayroll"),
             method="GET",
             title="get employees"
         )
@@ -468,7 +479,6 @@ class HRSystemBuilder(MasonBuilder):
             "default": "MAN",
         }
         return schema
-    
 
 
 def create_error_message(status_code, error, message=None):

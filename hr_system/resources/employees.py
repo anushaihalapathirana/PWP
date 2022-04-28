@@ -432,10 +432,11 @@ class EmployeeItem(Resource):
 class EmployeePayroll(Resource):
     """
     This class contains the GET method implementations for employee payroll
-        
+
     Endpoint:
         /employees/payroll/
     """
+
     def get(self):
         employees = []
 
@@ -443,10 +444,10 @@ class EmployeePayroll(Resource):
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
         body.add_control("profile", EMPLOYEE_PAYROLL)
         body["items"] = []
-        obj={}
+        obj = {}
 
         employees = Employee.query.all()
-            
+
         body.add_control('self', url_for("api.employeepayroll"))
         for employee in employees:
             leaves = LeavePlan.query.join(LeavePlan.employee).filter(
@@ -460,9 +461,7 @@ class EmployeePayroll(Resource):
             item = HRSystemBuilder(obj)
             body["items"].append(item)
 
-        res = requests.post('http://127.0.0.1:5500/api/payrolls/',data = json.dumps(body),  headers={"Content-Type":"application/json"})
+        res = requests.post(PAYROLL_SERVICE, data=json.dumps(
+            body),  headers={"Content-Type": "application/json"})
         data = res.json()
         return Response(json.dumps(data), status=200, mimetype="application/json")
-
-
-

@@ -17,6 +17,7 @@ ORGANIZATION_COLLECTION_PROFILE = "/profiles/organization_collection/"
 LEAVEPLAN_ITEM_PROFILE = "/profiles/leaveplan_item/"
 LEAVEPLAN_COLLECTION_PROFILE = "/profiles/leaveplan_collection/"
 
+PAYROLL_SERVICE = 'http://127.0.0.1:5500/api/payrolls/'
 
 
 MEASUREMENT_PAGE_SIZE = 50

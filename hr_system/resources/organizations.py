@@ -21,6 +21,7 @@ class OrganizationCollection(Resource):
 
     """
     # @require_admin
+
     def get(self):
         """ GET list of organizations
             Arguments:
@@ -33,14 +34,14 @@ class OrganizationCollection(Resource):
         body = HRSystemBuilder()
         body.add_namespace('hrsys', LINK_RELATIONS_URL)
         body.add_control('self', url_for("api.organizationcollection"))
-       
-       
+
         body.add_control_department_list()
         body.add_control_role_list()
         body.add_control_employee_by_org_dept_role_hrf()
 
         body.add_control_add_organization()
         body.add_control_get_employee_all()
+        body.add_control_get_payroll_all()
         body["items"] = []
 
         orgs = Organization.query.all()
@@ -124,6 +125,7 @@ class OrganizationItem(Resource):
         Endpoint: /api/organization/<organization>/
     """
     # @require_admin
+
     def get(self, organization):
         """ get details of one organization
         Arguments:
