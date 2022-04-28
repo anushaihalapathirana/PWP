@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
 import {
   TableHead,
   TableRow,
@@ -11,15 +11,15 @@ import {
 } from "@material-ui/core";
 
 const EmployeeTable = (props) => {
-  console.log(props);
   return (
     <div>
-      <TableContainer 
-       style={{
-        height:"500px",
-        overflow: "scroll"
-      }} 
-      component={Paper}>
+      <TableContainer
+        style={{
+          height: "500px",
+          overflow: "scroll",
+        }}
+        component={Paper}
+      >
         <Table aria-label="simple table" stickyHeader>
           <TableHead>
             <TableRow>

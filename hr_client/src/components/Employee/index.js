@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
-import { Button } from "@material-ui/core";
+import { Button, InputAdornment, TextField } from "@material-ui/core";
 import Dropdown from "react-dropdown";
 import { EmployeeTable } from "../Home/EmploteeTable";
+import Search from "@mui/icons-material/Search";
 
 const EmployeeHome = ({
   orgList,
@@ -15,6 +16,30 @@ const EmployeeHome = ({
   const [organization, setOrganization] = useState("Select");
   const [department, setDepartment] = useState("Select");
   const [currentRole, setRole] = useState("Select");
+  const [searchValue, setSearchvalue] = useState("");
+  const [filteredList, setFilteredSet] = useState([]);
+
+  useEffect(() => {
+    setFilteredSet(employeeList.items);
+  }, [employeeList.items]);
+  useEffect(() => {
+    let items = employeeList.items;
+    if (items && items.length > 0) {
+      if (searchValue === "") {
+        setFilteredSet(items);
+      } else {
+        items = items.filter((value) => {
+          return (
+            value.first_name
+              .toLowerCase()
+              .includes(searchValue.toLowerCase()) ||
+            value.last_name.toLowerCase().includes(searchValue.toLowerCase())
+          );
+        });
+        setFilteredSet(items);
+      }
+    }
+  }, [searchValue]);
 
   let orgItems = orgList.items.map((item) => (
     <option key={item.organization_id}>{item.name}</option>
@@ -29,7 +54,6 @@ const EmployeeHome = ({
   ));
 
   const handleOrganizationChange = (event) => {
-    // console.log(event);
     setOrganization(event.value.key);
   };
 
@@ -50,19 +74,41 @@ const EmployeeHome = ({
         marginLeft: "240px",
       }}
     >
-      <h1 style={{
-        justifyContent: "left",
-        display: "flex",
-        marginLeft: "20px",
-      }}>Employees</h1>
+      <h1
+        style={{
+          justifyContent: "left",
+          display: "flex",
+          marginLeft: "20px",
+        }}
+      >
+        Employees
+      </h1>
       <div
         style={{
           position: "relative",
           display: "flex",
           flexDirection: "row",
-          // alignItems: "center",
+          alignItems: "center",
         }}
       >
+        <TextField
+          style={{
+            marginLeft: "10px",
+          }}
+          label="Filter results"
+          value={searchValue}
+          onChange={(e) => {
+            e.preventDefault();
+            setSearchvalue(e.target.value);
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="end">
+                <Search />
+              </InputAdornment>
+            ),
+          }}
+        ></TextField>
         <div className="drop-down">
           <Dropdown
             className="org-drop"
@@ -105,7 +151,7 @@ const EmployeeHome = ({
               employeeList.get(organization, department, currentRole)
             }
           >
-            Filter
+            Get Employees
           </Button>
 
           <Button
@@ -118,7 +164,7 @@ const EmployeeHome = ({
               setOrganization("Select");
             }}
           >
-            Clear
+            Clear Filters
           </Button>
 
           <Button
@@ -129,7 +175,6 @@ const EmployeeHome = ({
               !(employeeControl && employeeControl["hrsys:add-employee"])
             }
             onClick={() => {
-              // console.log(employeeControl);
               if (employeeControl["hrsys:add-employee"]) {
                 employeeList.add();
               }
@@ -141,7 +186,7 @@ const EmployeeHome = ({
       </div>
       <div className="table-data">
         <EmployeeTable
-          employeeList={employeeList.items}
+          employeeList={filteredList}
           viewEmployee={viewEmployee}
         />
       </div>
