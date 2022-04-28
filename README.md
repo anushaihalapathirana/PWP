@@ -126,7 +126,7 @@ Run the application using ``` flask run ``` command and you can access swagger i
 
 # Setup and run client
 
-Client written in React JS
+Client written in React JS. Install Node and react (Tutorial - https://www.codecademy.com/article/react-setup-i)
 
 use below commands to setup react and run client
 
