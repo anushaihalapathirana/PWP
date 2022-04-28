@@ -110,6 +110,7 @@ const EmployeeHome = ({
           }}
         ></TextField>
         <div className="drop-down">
+          <div>Organization</div>
           <Dropdown
             className="org-drop"
             placeholder="Search categories..."
@@ -121,6 +122,8 @@ const EmployeeHome = ({
         </div>
 
         <div className="drop-down">
+          <div>Department</div>
+
           <Dropdown
             className="dept-drop"
             placeholder="Search categories..."
@@ -132,6 +135,8 @@ const EmployeeHome = ({
         </div>
 
         <div className="drop-down">
+          <div>Role</div>
+
           <Dropdown
             className="dept-drop"
             placeholder="Search categories..."

@@ -3,7 +3,7 @@
  * 
  * This file contains the constants  
  */
-const AUTH = 'yLFSNX01hx09YqjIaJujSuZWhu7S2EwytjnLfl0OZ5Q';
+const AUTH = 'xjw6rA7SF2RGOUQeslfJkOgc_9FPs-w-9-EIUu2RbKg';
 const APP_PATH = {
   EMPLOYEE_HOME: "EMP_HOME",
   ADD_EMPLOYEE: "ADD_EMP",

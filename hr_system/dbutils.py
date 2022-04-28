@@ -92,7 +92,7 @@ def generate_test_data():
         account_number="11233565456",
         role=role,
         organization=org,
-        department=depat2)
+        department=depat)
     emp2 = Employee(
         employee_id='E02',
         first_name="sameera",
@@ -117,8 +117,8 @@ def generate_test_data():
         prefix_title='MR',
         marritial_status='SINGLE',
         mobile_no='21456',
-        basic_salary=10000,
-        account_number="11233565456",
+        basic_salary=12000,
+        account_number="15898965456",
         role=role2,
         organization=org2,
         department=depat)
@@ -146,8 +146,8 @@ def generate_test_data():
         prefix_title='MRS',
         marritial_status='MARRIED',
         mobile_no='21456',
-        basic_salary=10000,
-        account_number="11233565456",
+        basic_salary=9500,
+        account_number="58745665456",
         role=role3,
         organization=org2,
         department=depat3)
@@ -182,11 +182,13 @@ def generate_test_data():
         department=depat)
 
     leav = LeavePlan(leave_type='MEDICAL', leave_date=datetime(
-        2018, 11, 21, 11, 20, 30), employee=emp)
+        2022, 4, 21, 11, 20, 30), employee=emp)
     leav2 = LeavePlan(leave_type='CASUAL', leave_date=datetime(
-        2018, 12, 1, 11, 20, 30), employee=emp3)
+        2022, 4, 1, 11, 20, 30), employee=emp3)
     leav3 = LeavePlan(leave_type='MEDICAL', leave_date=datetime(
-        2018, 1, 25, 11, 20, 30), employee=emp)
+        2022, 4, 5, 11, 20, 30), employee=emp)
+    leav3 = LeavePlan(leave_type='MEDICAL', leave_date=datetime(
+        2022, 4, 6, 11, 20, 30), employee=emp)
 
     # employee auth data
     token1 = secrets.token_urlsafe()
