@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="/static/css/admin.css">
+    <title>HR system admin site</title>
+    <script type="text/javascript" src="/static/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/static/scripts/admin_ivan.js"></script>
+</head>
+<style>
+    td {
+        border: solid 2px lightgrey;
+    }
+</style>
+<body> 
+    <h1>Organization Collection resource</h1>
+
+    <h2>Response</h2>
+    <code>
+        [{
+            "location": "oulu",
+            "name": "Org11",
+            "organization_id": "O01"
+        }, 
+        {
+            "location": "Helsonki",
+            "name": "Org2",
+            "organization_id": "O02"
+        }]
+    </code>
+
+    <h2>Resource properties</h2>
+    <table style="border: 1px;">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Required</th>
+
+        </tr>
+        <tr>
+            <td>name</td>
+            <td>unique name of organization</td>
+            <td>string</td>
+            <td>Yes</td>
+
+        </tr>
+        <tr>
+            <td>location</td>
+            <td>location of the organization</td>
+            <td>string</td>
+            <td>Yes</td>
+
+        </tr>
+        <tr>
+            <td>organization_id</td>
+            <td>Organization's unique id</td>
+            <td>string</td>
+            <td>Yes</td>
+
+          </tr>
+      </table>
+</body>
+
+

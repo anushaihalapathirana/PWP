@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="/static/css/admin.css">
+    <title>HR system admin site</title>
+    <script type="text/javascript" src="/static/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/static/scripts/admin_ivan.js"></script>
+</head>
+<style>
+  td {
+      border: solid 2px lightgrey;
+  }
+</style>
+<body> 
+    <h1>Employee Item resource</h1>
+    
+
+    <h2>Response</h2>
+    <code>
+        {
+            "account_number": "11233565456",
+            "active_emp": true,
+            "address": "oulu",
+            "appointment_date": "2018-11-21T11:20:30",
+            "basic_salary": 10000,
+            "date_of_birth": "1995-10-21T11:20:30",
+            "department": "D02",
+            "employee_id": "E01",
+            "first_name": "anusha",
+            "gender": "F",
+            "last_name": "pathirana",
+            "marritial_status": "SINGLE",
+            "middle_name": null,
+            "mobile_no": "21456",
+            "organization": "O01",
+            "prefix_title": "MISS",
+            "role": "MAN"
+        }
+    </code>
+
+    <h2>Resource properties</h2>
+
+
+    <h2>Resource properties</h2>
+    <table >
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Required</th>
+
+        </tr>
+        <tr>
+            <td>first_name</td>
+            <td>First name</td>
+            <td>string</td>
+            <td>Yes</td>
+
+        </tr>
+        <tr>
+          <td>last_name</td>
+          <td>Last name</td>
+          <td>string</td>
+          <td>Yes</td>
+
+        </tr>
+        <tr>
+          <td>middle_name</td>
+          <td>Middle name</td>
+          <td>string</td>
+          <td>No</td>
+
+        </tr>
+        <tr>
+            <td>address</td>
+            <td>employee address</td>
+            <td>string</td>
+            <td>Yes</td>
+
+        </tr>
+
+        <tr>
+            <td>gender</td>
+            <td>employee gender</td>
+            <td>string</td>
+            <td>Yes</td>
+
+        </tr>
+
+        <tr>
+            <td>appointment_date</td>
+            <td>appointment date</td>
+            <td>date</td>
+            <td>Yes</td>
+
+        </tr>
+
+        <tr>
+          <td>active_emp</td>
+          <td>employee corrently working or not</td>
+          <td>boolean</td>
+          <td>Yes</td>
+
+        </tr>
+        <tr>
+          <td>mobile_no</td>
+          <td>mobile number</td>
+          <td>string</td>
+          <td>Yes</td>
+
+        </tr>
+        <tr>
+          <td>basic_salary</td>
+          <td>initial salary of the employee</td>
+          <td>string</td>
+          <td>Yes</td>
+
+        </tr>
+        <tr>
+          <td>account_number</td>
+          <td>bank account number</td>
+          <td>string</td>
+          <td>Yes</td>
+
+        </tr>
+        <tr>
+          <td>marritial_status</td>
+          <td>marritial status</td>
+          <td>enum</td>
+          <td>No</td>
+
+        </tr>
+        <tr>
+          <td>prefix_title</td>
+          <td>title</td>
+          <td>enum</td>
+          <td>No</td>
+
+        </tr>
+        <tr>
+          <td>date_of_birth</td>
+          <td>birth date</td>
+          <td>date</td>
+          <td>No</td>
+
+        </tr>
+
+      </table>
+
+
+</body>
+
+

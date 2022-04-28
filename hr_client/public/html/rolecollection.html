@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Role Collection resource</title>
+  </head>
+  <style>
+    td {
+        border: solid 2px lightgrey;
+    }
+  </style>
+  <body>
+    <h1>Role Collection resource</h1>
+
+
+    <h2>Response</h2>
+    <code>
+        [{
+            "code": "MAN",
+            "description": "Role is manager",
+            "name": "Manager"
+        }, {
+            "code": "ENG",
+            "description": "Role is engineer",
+            "name": "Engineer"
+        }]
+    </code>
+
+    <h2>Resource properties</h2>
+    <table style="border: 1px;">
+      <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Required</th>
+      </tr>
+      <tr>
+          <td>code</td>
+          <td>unique code of role</td>
+          <td>string</td>
+          <th>yes</th>
+      </tr>
+      <tr>
+          <td>description</td>
+          <td>description of role</td>
+          <td>string or null</td>
+          <th>no</th>
+      </tr>
+      <tr>
+          <td>name</td>
+          <td>Role's unique name</td>
+          <td> string</td>
+          <th>yes</th>
+        </tr>
+    </table>
+</body>
+</html>
+
