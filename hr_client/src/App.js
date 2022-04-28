@@ -1,6 +1,9 @@
 import "./App.css";
 import { Home } from "./components/Home";
 
+/**
+ * method - entrypoint
+ */
 function App() {
   return (
     <div className="App">
