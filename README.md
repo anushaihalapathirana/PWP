@@ -126,21 +126,40 @@ Run the application using ``` flask run ``` command and you can access swagger i
 
 # Setup and run client
 
-Client written in React JS. Install Node and react (Tutorial - https://www.codecademy.com/article/react-setup-i)
+Client written in React JS. the project is generated from create-react-app tool.
 
-use below commands to setup react and run client
-
+#### Installing dependencies
 ```
 cd hr_client
 npm install
-npm start
 ```
 
-client will up and run in http://localhost:3000/
+#### Development
+During development, Dev server provided by the create-react-app tool can be used. It has a proxy defined to point the requests to the flask backend
+To start the server following command can be used
+```
+npm start
+```
+Development server is accisible in
+
+client will be accessible in http://localhost:3000
+
+#### Production build
+
+In order to generate the production build following command can be used. It generate the files and then copy the files to the static file folder in flask 
+project
+
+
+```
+npm run-build
+```
+
+client will be accessible in http://localhost:5000/hr_system
 
 ESlint is set up for client. Run below command to run eslint
 
 ```
-eslint hr_client/
+cd hr_client
+npm run eslint-run
 ```
 

@@ -37,7 +37,7 @@ class EmployeeByRlationCollection(Resource):
         """
         return str(request.path)
 
-    # @require_admin
+    @require_admin
     # @cache.cached(make_cache_key=page_key)
     def get(self, organization=None, department=None, role=None):
         """ GET list of employees
@@ -189,7 +189,7 @@ class EmployeeCollection(Resource):
                     department=None,
                     role=None)])
 
-    # @require_admin
+    @require_admin
     def post(self, organization, department, role):
         """ Create a new employee
         Arguments:
@@ -309,7 +309,7 @@ class EmployeeItem(Resource):
     def page_key(*args, **kwargs):
         return str(request.path)
 
-    # @require_employee_key
+    @require_employee_key
     # @cache.cached(make_cache_key=page_key)
     def get(self, employee):
         """ get details of one employee
@@ -349,7 +349,7 @@ class EmployeeItem(Resource):
         body.add_control_add_leave(emp=employee)
         return Response(json.dumps(body), status=200, mimetype=MASON)
 
-    # @require_employee_key
+    @require_employee_key
     def put(self, employee):
         """ Replace employee's basic data with new values
         Arguments:
@@ -400,7 +400,7 @@ class EmployeeItem(Resource):
 
         return Response(status=204, mimetype=MASON)
 
-    # @require_adminin
+    @require_admin
     def delete(self, employee):
         """ Delete the selected employee
         Arguments:

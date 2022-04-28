@@ -20,7 +20,7 @@ class OrganizationCollection(Resource):
         Endpoint: /api/organizations/
 
     """
-    # @require_admin
+    @require_admin
 
     def get(self):
         """ GET list of organizations
@@ -56,7 +56,7 @@ class OrganizationCollection(Resource):
             body["items"].append(item)
         return Response(json.dumps(body), 200, mimetype=MASON)
 
-    # @require_admin
+    @require_admin
     def post(self):
         """ Create a new organization
         Arguments:
@@ -124,7 +124,7 @@ class OrganizationItem(Resource):
         Returns:
         Endpoint: /api/organization/<organization>/
     """
-    # @require_admin
+    @require_admin
 
     def get(self, organization):
         """ get details of one organization
@@ -150,7 +150,7 @@ class OrganizationItem(Resource):
         body.add_control_modify_organization(organization)
         return Response(json.dumps(body), 200, mimetype=MASON)
 
-    # @require_admin
+    @require_admin
     def delete(self, organization):
         """ Delete the selected organization
         Arguments:
@@ -167,7 +167,7 @@ class OrganizationItem(Resource):
 
         return Response(status=204, mimetype=MASON)
 
-    # @require_admin
+    @require_admin
     def put(self, organization):
         """ Replace organization's basic data with new values
         Arguments:

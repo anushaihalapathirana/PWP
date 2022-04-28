@@ -1,4 +1,9 @@
-
+/**
+ * 
+ * 
+ * This file contains the constants  
+ */
+const AUTH = 'yLFSNX01hx09YqjIaJujSuZWhu7S2EwytjnLfl0OZ5Q';
 const APP_PATH = {
   EMPLOYEE_HOME: "EMP_HOME",
   ADD_EMPLOYEE: "ADD_EMP",
@@ -17,4 +22,4 @@ const APP_PATH = {
   PAYROLL_HOME: "PAYROLL_HOME"
 };
 
-export { APP_PATH };
+export { APP_PATH, AUTH};

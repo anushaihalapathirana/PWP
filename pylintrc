@@ -83,6 +83,7 @@ disable = duplicate-code, # This is due to the duplicate codes in error handling
       broad-except, # We need to use Exception to catch all the other exceptions
       # including server errors and run time errors
       no-member,
+      cyclic-import,
       import-outside-toplevel,
       wildcard-import, # in constant imports
       no-self-use # self variable not use in resorce get,post,put,delete method functions
