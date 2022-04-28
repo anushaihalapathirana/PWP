@@ -41,7 +41,7 @@ def generate_test_data():
     org3 = Organization(organization_id="O03", name="Org13", location="alsijdais")
     org4 = Organization(organization_id="O04", name="Org14", location="askjd")
     org5 = Organization(organization_id="O05", name="Org15", location="ouajsdhlu")
-    
+
 
     depat = Department(
         department_id='D01',

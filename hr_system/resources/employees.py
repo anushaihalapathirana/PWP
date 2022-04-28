@@ -309,7 +309,7 @@ class EmployeeItem(Resource):
     def page_key(*args, **kwargs):
         return str(request.path)
 
-    # @require_employee_key
+    @require_employee_key
     # @cache.cached(make_cache_key=page_key)
     def get(self, employee):
         """ get details of one employee
@@ -349,7 +349,7 @@ class EmployeeItem(Resource):
         body.add_control_add_leave(emp=employee)
         return Response(json.dumps(body), status=200, mimetype=MASON)
 
-    # @require_employee_key
+    @require_employee_key
     def put(self, employee):
         """ Replace employee's basic data with new values
         Arguments:
