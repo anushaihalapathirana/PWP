@@ -141,6 +141,7 @@ client will up and run in http://localhost:3000/
 ESlint is set up for client. Run below command to run eslint
 
 ```
-eslint hr_client/
+cd hr_client
+npm run eslint-run
 ```
 
