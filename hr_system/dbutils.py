@@ -33,14 +33,14 @@ def generate_test_data():
     role5 = Role(name="Developer", code='DEV')
     role6 = Role(name="Quality analysis", code='QA')
 
-    org = Organization(organization_id="O01", name="Org11", location="oulu")
+    org = Organization(organization_id="O01", name="Org1", location="oulu")
     org2 = Organization(
         organization_id="O02",
-        name="Org21",
+        name="Org2",
         location="helsinki")
-    org3 = Organization(organization_id="O03", name="Org13", location="alsijdais")
-    org4 = Organization(organization_id="O04", name="Org14", location="askjd")
-    org5 = Organization(organization_id="O05", name="Org15", location="ouajsdhlu")
+    org3 = Organization(organization_id="O03", name="Org3", location="alsijdais")
+    org4 = Organization(organization_id="O04", name="Org4", location="askjd")
+    org5 = Organization(organization_id="O05", name="Org5", location="ouajsdhlu")
 
 
     depat = Department(
@@ -181,14 +181,14 @@ def generate_test_data():
         organization=org,
         department=depat)
 
-    leav = LeavePlan(leave_type='MEDICAL', leave_date=datetime(
-        2022, 4, 21, 11, 20, 30), employee=emp)
+    leav = LeavePlan(leave_type='CASUAL', leave_date=datetime(
+        2022, 4, 21, 11, 20, 30), reason = 'Travel',employee=emp)
     leav2 = LeavePlan(leave_type='CASUAL', leave_date=datetime(
         2022, 4, 1, 11, 20, 30), employee=emp3)
     leav3 = LeavePlan(leave_type='MEDICAL', leave_date=datetime(
-        2022, 4, 5, 11, 20, 30), employee=emp)
+        2022, 4, 5, 11, 20, 30), reason = 'fever', employee=emp)
     leav3 = LeavePlan(leave_type='MEDICAL', leave_date=datetime(
-        2022, 4, 6, 11, 20, 30), employee=emp)
+        2022, 4, 6, 11, 20, 30), reason = 'fever', employee=emp)
 
     # employee auth data
     token1 = secrets.token_urlsafe()
